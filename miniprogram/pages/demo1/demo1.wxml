@@ -1,0 +1,16 @@
+<!--pages/demo1/demo1.wxml-->
+<input bindinput="handle" value="input">123</input>
+<!-- <view>传递参数</view> -->
+
+<button bindtap="click" data-operation="{{1}}">+</button>
+
+<button bindtap="click" data-operation="{{-1}}">-</button>
+
+<view>{{num}}</view>
+<image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" />
+<!-- 轮播图 -->
+<swiper></swiper>
+<!-- a标签 -->
+<navigator url="/pages/index/index">跳转</navigator>
+<!-- 可以放标签字符串 / 对象数组-->
+<rich-text>{{}}</rich-text>

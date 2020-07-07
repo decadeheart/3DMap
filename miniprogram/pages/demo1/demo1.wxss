@@ -1,0 +1,8 @@
+/* 通过相对路径导入样式 @import "../";  
+    通配符* 无效
+    不支持less
+    图片需上传到网络上
+*/
+input{
+    border: 1rpx solid red;
+}
