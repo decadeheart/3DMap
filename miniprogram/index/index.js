@@ -1,10 +1,5 @@
-// const { createScopedThreejs } = require('threejs-miniprogram')
-import { createScopedThreejs } from 'threejs-miniprogram'
-
-const { renderCube } = require('../test-cases/cube')
-const { renderCubes } = require('../test-cases/cubes')
-const { renderSphere } = require('../test-cases/sphere')
-const { renderModel } = require('../test-cases/model')
+const { createScopedThreejs } = require('../util/three')
+const { renderModel } = require('../js/model')
 
 const app = getApp()
 
@@ -18,10 +13,6 @@ Page({
         const canvas = res[0].node
         this.canvas = canvas
         const THREE = createScopedThreejs(canvas)
-        
-        // renderSphere(canvas, THREE)
-        // renderCube(canvas, THREE)
-        // renderCubes(canvas, THREE)
         renderModel(canvas, THREE)
       })
   },
