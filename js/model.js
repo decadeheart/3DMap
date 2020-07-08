@@ -1,4 +1,6 @@
-import { registerGLTFLoader } from '../util/gltf-loader'
+import {
+  registerGLTFLoader
+} from '../util/gltf-loader'
 import registerOrbit from "../util/orbit"
 
 export function renderModel(canvas, THREE) {
@@ -6,9 +8,12 @@ export function renderModel(canvas, THREE) {
 
   var container, stats, clock, gui, mixer, actions, activeAction, previousAction;
   var camera, scene, renderer, model, face, controls;
-  var api = { state: 'Walking' };
+  var api = {
+    state: 'Walking'
+  };
   init();
   animate();
+
   function init() {
     camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.25, 3000);
     scene = new THREE.Scene();
@@ -21,8 +26,11 @@ export function renderModel(canvas, THREE) {
     light.position.set(0, 20, 10);
     scene.add(light);
     // ground
-    var mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
-    mesh.rotation.x = - Math.PI / 2;
+    var mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000), new THREE.MeshPhongMaterial({
+      color: 0x999999,
+      depthWrite: false
+    }));
+    mesh.rotation.x = -Math.PI / 2;
     scene.add(mesh);
     var grid = new THREE.GridHelper(200, 40, 0x000000, 0x000000);
     grid.material.opacity = 0.2;
@@ -37,16 +45,20 @@ export function renderModel(canvas, THREE) {
     }, undefined, function (e) {
       console.error(e);
     });
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
     renderer.setPixelRatio(wx.getSystemInfoSync().pixelRatio);
     renderer.setSize(canvas.width, canvas.height);
     renderer.gammaOutput = true;
     renderer.gammaFactor = 2.2;
 
-    const { OrbitControls } = registerOrbit(THREE)
-    controls = new OrbitControls( camera, renderer.domElement );
+    const {
+      OrbitControls
+    } = registerOrbit(THREE)
+    controls = new OrbitControls(camera, renderer.domElement);
 
-    camera.position.set( 0, 0, 1000);
+    camera.position.set(0, 0, 1000);
     controls.update();
   }
 
@@ -84,6 +96,7 @@ export function renderModel(canvas, THREE) {
       .fadeIn(duration)
       .play();
   }
+
   function animate() {
     // var dt = clock.getDelta();
     // if (mixer) mixer.update(dt);
