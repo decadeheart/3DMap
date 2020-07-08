@@ -1,0 +1,14 @@
+
+<canvas
+  type="webgl"
+  id="webgl"
+  style="width: 100%; height: 100%;"
+  bindtouchstart="touchStart"
+  bindtouchmove="touchMove"
+  bindtouchend="touchEnd"
+></canvas>
+<!-- <canvas
+  type="webgl"
+  id="webgl"
+  style="width: 100%; height: 300px;"
+></canvas> -->
