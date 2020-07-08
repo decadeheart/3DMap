@@ -14,6 +14,7 @@
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
+		"compileHotReLoad": false,
 		"babelSetting": {
 			"ignore": [],
 			"disablePlugins": [],
@@ -21,12 +22,11 @@
 		},
 		"useIsolateContext": true,
 		"useCompilerModule": true,
-		"userConfirmedUseCompilerModuleSwitch": false,
-		"compileHotReLoad": false
+		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"appid": "wx5387df6615f202ed",
 	"projectname": "3d%E6%B8%B2%E6%9F%93",
-	"libVersion": "2.8.1",
+	"libVersion": "2.11.3",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
