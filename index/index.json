@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
-  "disableScroll": true
+  "usingComponents": {
+    "mp-icon": "weui-miniprogram/icon/icon"
+  },
+  "disableScroll": false
 }

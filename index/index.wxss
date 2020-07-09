@@ -1,4 +1,141 @@
-.intro {
-  margin: 30px;
-  text-align: center;
+.container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* <!-- 地图容器 --> */
+#map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: wheat;
+  z-index: 0;
+}
+
+/* 正上方搜索框 包括上下留白 16% */
+.search {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 7.5%;
+  width: 90%;
+  margin: 0 auto;
+  border: 2rpx solid gainsboro;
+  background-color: #fff;
+  border-radius: 10rpx;
+  z-index: 1;
+}
+
+.search .weui-icon {
+  margin-bottom: 4px;
+}
+
+.search:nth-child(2) {
+  color: #ccc;
+
+}
+
+/* <!-- 起点 终点 容器 16%--> */
+.navigator {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 16%;
+  background-color: ghostwhite;
+  z-index: 1;
+}
+
+.point-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 76%;
+  background-color: goldenrod;
+}
+
+.startPoint,
+.endPoint {
+  height: 50%;
+}
+
+.startPoint {
+  background-color: hotpink;
+}
+
+.endPoint {
+  background-color: pink;
+}
+
+.navigator-cancel,
+.exchange {
+  height: 100%;
+  width: 12%;
+  background-color: gold;
+}
+
+/* <!-- 导航提示 10%--> */
+
+/* <!-- 左上角指南针 10%--> */
+.compass {
+  position: absolute;
+  top: 16%;
+  height: 9%;
+  background-color: turquoise;
+  z-index: 1;
+}
+
+/* <!-- 左下角定位 9% --> */
+.myLocaiton {
+  position: absolute;
+  bottom: 16%;
+  height: 8%;
+  background-color: turquoise;
+  z-index: 1;
+}
+
+/* <!-- 右侧楼层容器 --> */
+.floor-container {
+  position: absolute;
+  overflow: hidden;
+  top: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  right: 5%;
+  width: 8%;
+  /* height: 50%; */
+  background-color: rgb(243,255,255);
+  border: 2rpx solid #ccc;
+  border-radius: 40rpx;
+  z-index: 1;
+}
+
+.floor-item {
+  width: 50rpx;
+  height: 50rpx;
+  margin: 5rpx 0;
+  border-bottom: 2rpx solid #ccc;
+}
+.floor-item:last-child{
+  border-bottom: 0;
+}
+.floor-space{
+  width: 15rpx;
+  height: 15rpx;
+}
+
+/* <!-- 选择的地点提示信息 16% --> */
+.point-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 16%;
+  background-color: thistle;
+  z-index: 1;
 }

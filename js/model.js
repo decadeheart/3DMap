@@ -15,6 +15,8 @@ export function renderModel(canvas, THREE) {
   animate();
 
   function init() {
+    
+    
     camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.25, 3000);
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);

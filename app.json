@@ -1,6 +1,7 @@
 {
   "pages": [
-    "index/index"
+    "index/index",
+    "search/search"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -8,5 +9,8 @@
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "useExtendedLib": {
+    "weui": true
+  }
 }
