@@ -1,16 +1,14 @@
 const { createScopedThreejs } = require("../util/three");
 const { renderModel } = require("../js/model");
 
-var dataInit = require('../js/data')
-const { initData } = require('../js/data')
-const { map_conf } = require('../js/config')
-var nodeList = []
-var beaconCoordinate = []
-var POItarget = []
+var dataInit = require("../js/data");
+const { initData } = require("../js/data");
+const { map_conf } = require("../js/config");
+var nodeList = [];
+var beaconCoordinate = [];
+var POItarget = [];
 
-var test = "测试"
-
-const app = getApp()
+const app = getApp();
 
 Page({
     data: {
@@ -20,20 +18,6 @@ Page({
         allFloorImgUrl: "",
         floorImgUrl: [],
     },
-    onPageScroll:function () {
-        wx.createSelectorQuery()
-            .select("#map")
-            .node()
-            .exec((res) => {
-                const canvas = res[0].node;
-                this.canvas = canvas;
-                // var gl = canvas.getContext('webgl', {
-                //   alpha: true
-                // });
-                const THREE = createScopedThreejs(canvas);
-                renderModel(canvas, THREE);
-            });
-    }
     onLoad: function () {
         wx.createSelectorQuery()
             .select("#map")
