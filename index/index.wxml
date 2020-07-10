@@ -5,7 +5,7 @@
 	<!-- 正上方搜索框 16%-->
 	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="goSearch">
 		<mp-icon type="field" icon="search" color="#ccc"></mp-icon>
-		<text>搜索目的地</text>
+		<text>搜索目的位置</text>
 	</view>
 
 
