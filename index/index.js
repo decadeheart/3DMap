@@ -7,7 +7,10 @@ const {
 
 var dataInit = require('../js/data')
 const { initData } = require('../js/data')
-var nodeList=[]
+const { map_conf } = require('../js/config')
+var nodeList = []
+var beaconCoordinate = []
+var POItarget = []
 
 
 const app = getApp()
@@ -51,9 +54,33 @@ Page({
       ]
     })
 
+    /**处理数据 */
     initData.then(res=>{
       console.log(res)
-      nodeList = res.data.nodeList
+      let data = res.data
+
+      nodeList = data.nodeList
+      let target = data.target
+      beaconCoordinate = data.beaconCoordinate
+
+      for(let build in target) {
+        for(let floor in target[build]) {
+          target[build][floor].forEach(function(item){
+            item.z = (item.floor-1)*map_conf.layerHeight;
+            item.floor = parseInt(floor);
+            item.building = build;
+            POItarget.push(item)
+          })
+        }
+      }
+      console.log(POItarget)
+      nodeList.forEach(function (node) {
+        node.z = (node.floor - 1) * map_conf.layerHeight;
+      })
+      beaconCoordinate.forEach(function (node) {
+        node.z = (node.floor - 1) * map_conf.layerHeight;
+      })
+
       console.log(nodeList)
     }),err=>{
       console.log(err)
