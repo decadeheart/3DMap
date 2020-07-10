@@ -9,6 +9,7 @@ var nodeList = []
 var beaconCoordinate = []
 var POItarget = []
 
+var test = "测试"
 
 const app = getApp()
 
