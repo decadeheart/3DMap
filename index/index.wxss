@@ -1,141 +1,198 @@
 .container {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* <!-- 地图容器 --> */
 #map {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: wheat;
-  z-index: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: wheat;
+    z-index: 0;
 }
 
 /* 正上方搜索框 包括上下留白 16% */
 .search {
-  position: absolute;
-  top: 5%;
-  left: 50%;
-  transform: translate(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 7.5%;
-  width: 90%;
-  margin: 0 auto;
-  border: 2rpx solid gainsboro;
-  background-color: #fff;
-  border-radius: 10rpx;
-  z-index: 1;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7.5%;
+    width: 90%;
+    margin: 0 auto;
+    border: 2rpx solid gainsboro;
+    background-color: #fff;
+    border-radius: 10rpx;
+    z-index: 10;
 }
 
 .search .weui-icon {
-  margin-bottom: 4px;
+    margin-bottom: 4px;
 }
 
 .search:nth-child(2) {
-  color: #ccc;
-
+    color: #ccc;
 }
 
 /* <!-- 起点 终点 容器 16%--> */
 .navigator {
-  display: flex;
-  position: absolute;
-  width: 100%;
-  height: 16%;
-  background-color: ghostwhite;
-  z-index: 1;
+    display: flex;
+    position: absolute;
+    top: 0;
+    padding-top: 1rpx;
+    width: 100%;
+    height: 16%;
+    background-color: rgb(254, 255, 255);
+    z-index: 10;
 }
 
 .point-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 76%;
-  background-color: goldenrod;
+    display: flex;
+    height: 98%;
+    width: 88%;
+    margin-bottom: 1%;
+    background-color: rgb(254, 255, 255);
 }
-
+.point-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: rgb(254, 255, 255);
+    border-radius: 15rpx;
+    overflow: hidden;
+}
 .startPoint,
 .endPoint {
-  height: 50%;
+    display: flex;
+    align-items: center;
+    height: 50%;
+    background-color: rgb(246, 247, 248);
 }
-
 .startPoint {
-  background-color: hotpink;
+    border-bottom: 1rpx solid rgba(240, 240, 240, 1);
+}
+.roundIcon {
+    margin: 0 20rpx;
+    height: 20rpx;
+    width: 20rpx;
+    background: #ffffff;
+    border-radius: 50%;
+}
+.green {
+    border: 5rpx solid rgb(133, 212, 166);
+}
+.red {
+    border: 5rpx solid rgb(220, 95, 90);
 }
 
-.endPoint {
-  background-color: pink;
+.navigator-back,
+.switch {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 12%;
+}
+.switch {
+    background-color: rgb(246, 247, 248);
+}
+.switch .weui-icon {
+    transform: rotate(90deg);
+    margin-right: 60rpx;
 }
 
-.navigator-cancel,
-.exchange {
-  height: 100%;
-  width: 12%;
-  background-color: gold;
+/* <!-- 导航提示 16%--> */
+.navigating-info {
+    display: flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    top: 2%;
+    left: 5%;
+    padding-top: 1rpx;
+    width: 90%;
+    height: 16%;
+    background-color: rgb(43, 54, 73);
+    border-radius: 20rpx;
+    z-index: 10;
 }
-
-/* <!-- 导航提示 10%--> */
-
+.nav-text {
+    font-size: x-large;
+    color: #fff;
+}
 /* <!-- 左上角指南针 10%--> */
 .compass {
-  position: absolute;
-  top: 16%;
-  height: 9%;
-  background-color: turquoise;
-  z-index: 1;
+    position: absolute;
+    top: 20%;
+    height: 9%;
+    background-color: turquoise;
+    z-index: 10;
 }
 
 /* <!-- 左下角定位 9% --> */
-.myLocaiton {
-  position: absolute;
-  bottom: 16%;
-  height: 8%;
-  background-color: turquoise;
-  z-index: 1;
+.myLocation {
+    position: absolute;
+    bottom: 16%;
+    height: 8%;
+    background-color: turquoise;
+    z-index: 10;
 }
 
 /* <!-- 右侧楼层容器 --> */
 .floor-container {
-  position: absolute;
-  overflow: hidden;
-  top: 22%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  right: 5%;
-  width: 8%;
-  /* height: 50%; */
-  background-color: rgb(243,255,255);
-  border: 2rpx solid #ccc;
-  border-radius: 40rpx;
-  z-index: 1;
+    position: absolute;
+    overflow: hidden;
+    top: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    right: 5%;
+    width: 8%;
+    /* height: 50%; */
+    background-color: rgb(243, 255, 255);
+    border: 2rpx solid #ccc;
+    border-radius: 40rpx;
+    box-shadow: 0px 2px 4px 2px #dddddd;
+    z-index: 10;
 }
 
 .floor-item {
-  width: 50rpx;
-  height: 50rpx;
-  margin: 5rpx 0;
-  border-bottom: 2rpx solid #ccc;
+    width: 50rpx;
+    height: 50rpx;
+    margin: 5rpx 0;
+    border-bottom: 2rpx solid #ccc;
 }
-.floor-item:last-child{
-  border-bottom: 0;
+.floor-item:last-child {
+    border-bottom: 0;
 }
-.floor-space{
-  width: 15rpx;
-  height: 15rpx;
+.floor-space {
+    width: 15rpx;
+    height: 15rpx;
 }
 
 /* <!-- 选择的地点提示信息 16% --> */
 .point-info {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 16%;
-  background-color: thistle;
-  z-index: 1;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 16%;
+    /* background-color: thistle; */
+    z-index: 10;
+}
+
+/* logo */
+.logo {
+    position: absolute;
+    bottom: 8%;
+    right: 4%;
+    width: 80rpx;
+    height: 80rpx;
+    z-index: 1;
 }
