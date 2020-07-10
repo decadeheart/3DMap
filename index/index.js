@@ -5,6 +5,7 @@ const {
   renderModel
 } = require('../js/model')
 
+
 var dataInit = require('../js/data')
 const { initData } = require('../js/data')
 const { map_conf } = require('../js/config')
@@ -60,6 +61,7 @@ Page({
       let data = res.data
 
       nodeList = data.nodeList
+      
       let target = data.target
       beaconCoordinate = data.beaconCoordinate
 
@@ -82,10 +84,12 @@ Page({
       })
 
       console.log(nodeList)
+
     }),err=>{
       console.log(err)
     }
 
+    
   },
   changeDimension() {
     let index = this.data.dimension == 2 ? 3 : 2;
@@ -136,3 +140,7 @@ Page({
     })
   }
 })
+
+module.exports = {
+  nodeList: nodeList
+}
