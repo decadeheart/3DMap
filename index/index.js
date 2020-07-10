@@ -22,7 +22,7 @@ Page({
         navFlag: 3,
         startPointName: "我的位置",
         endPointName: "华中科技大学",
-        navInformation: "前方路口右转",
+        navInformation: "前方路口右转前方路口右转前方路口右",
     },
     onLoad: function () {
         wx.createSelectorQuery()
