@@ -3,55 +3,63 @@
 	<canvas type="webgl" id="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd"></canvas>
 
 	<!-- 正上方搜索框 16%-->
-	<view class="search" bindtap="goSearch">
+	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="goSearch">
 		<mp-icon type="field" icon="search" color="#ccc"></mp-icon>
 		<text>搜索目的地</text>
 	</view>
 
-	<!-- 点击搜索的模态框 -->
-
 	<!-- 起点 终点 容器 16%-->
-	<!-- <view class="navigator">
-		<view class="navigator-cancel"></view>
-
-		<view class="point-container">
-			<view class="startPoint">
-				<icon></icon><text>111</text>
-			</view>
-			<view class="endPoint">
-				<icon></icon><text>111</text>
-			</view>
+	<view wx:elif="{{ navFlag == 2 }}" class="navigator">
+		<view class="navigator-back" bindtap="switchNavFlag" data-flag="1">
+			<mp-icon type="field" icon="back" size="{{ 15 }}" color="#999"></mp-icon>
 		</view>
 
-		<view class="exchange"></view>
-	</view> -->
+		<view class="point-container">
+			<view class="point-box">
 
-	<!-- 导航提示 10%-->
-	<view class="navigating-info"></view>
+				<view class="startPoint">
+					<view class="roundIcon green"></view>
+					<text>{{startPointName}}</text>
+				</view>
+
+				<view class="endPoint">
+					<view class="roundIcon red"></view>
+					<text>{{endPointName}}</text>
+				</view>
+			</view>
+			<view class="switch" bindtap="switchPoint">
+				<mp-icon type="field" icon="transfer2" size="{{ 30 }}" color="#ccc"></mp-icon>
+			</view>
+		</view>
+	</view>
+
+	<!-- 导航提示 16%-->
+	<view wx:else="{{ navFlag == 3 }}" class="navigating-info">
+		<text class="nav-text">{{navInformation}}</text>	  
+	</view>
 
 	<!-- 左上角指南针 10%-->
-	<view class="compass">指南针</view>
+	<view class="compass" bindtap="test">指南针</view>
 
 	<!-- 左下角定位 9% -->
-	<view class="myLocaiton">我的位置</view>
+	<view class="myLocation">我的位置</view>
 
 	<!-- 右侧楼层容器 -->
 	<view class="floor-container">
 		<view class="floor-space"></view>
 
-		<image src="{{dimensionImgUrl[dimension-2]}}" class="floor-item" bindtap="changeDimension"></image>
+		<image src="{{ dimensionImgUrl[dimension - 2] }}" class="floor-item" bindtap="changeDimension" mode="aspectFit"></image>
 
-		<image src="{{allFloorImgUrl}}" class="floor-item"></image>
+		<image src="{{ allFloorImgUrl }}" class="floor-item"></image>
 
-		<block wx:key="index" wx:for="{{floorImgUrl}}">
-			<image src="{{item}}" class="floor-item" bindtap="selectFloor" data-floor="{{index}}"></image>
+		<block wx:key="index" wx:for="{{ floorImgUrl }}">
+			<image src="{{ item }}" class="floor-item" bindtap="selectFloor" data-floor="{{ index }}"></image>
 		</block>
 		<view class="floor-space"></view>
-
 	</view>
 
 	<!-- 选择的地点提示信息 16% -->
-	<view class="point-info">
-	</view>
+	<view class="point-info"> </view>
 
+	<image class="logo" src="{{ logoUrl }}"></image>
 </view>

@@ -1,3 +1,7 @@
+/**
+ * @description 地图配置
+ * @date 2020-07-10
+ */
 const building_conf = [
     {
         building_id: "1",
