@@ -17,7 +17,20 @@ Page({
         endPointName: "华中科技大学",
         navInformation: "前方路口右转",
     },
-
+    onHide:function(){
+      wx.createSelectorQuery()
+      .select("#map")
+      .node()
+      .exec((res) => {
+          const canvas = res[0].node;
+          this.canvas = canvas;
+          // var gl = canvas.getContext('webgl', {
+          //   alpha: true
+          // });
+          const THREE = createScopedThreejs(canvas);
+          renderModel(canvas, THREE);
+      });
+    },
     onLoad: function () {
         wx.createSelectorQuery()
             .select("#map")
