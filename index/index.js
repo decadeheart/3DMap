@@ -18,20 +18,6 @@ Page({
         allFloorImgUrl: "",
         floorImgUrl: [],
     },
-    onHide: function () {
-        wx.createSelectorQuery()
-            .select("#map")
-            .node()
-            .exec((res) => {
-                const canvas = res[0].node;
-                this.canvas = canvas;
-                // var gl = canvas.getContext('webgl', {
-                //   alpha: true
-                // });
-                const THREE = createScopedThreejs(canvas);
-                renderModel(canvas, THREE);
-            });
-    },
     onLoad: function () {
         wx.createSelectorQuery()
             .select("#map")
