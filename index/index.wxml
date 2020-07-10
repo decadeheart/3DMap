@@ -8,6 +8,7 @@
 		<text>搜索目的地</text>
 	</view>
 
+
 	<!-- 起点 终点 容器 16%-->
 	<view wx:elif="{{ navFlag == 2 }}" class="navigator">
 		<view class="navigator-back" bindtap="switchNavFlag" data-flag="1">
