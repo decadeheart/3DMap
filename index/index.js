@@ -1,14 +1,16 @@
 const { createScopedThreejs } = require("../util/three");
 const { renderModel } = require("../js/model");
 
-var dataInit = require("../js/data");
-const { initData } = require("../js/data");
-const { map_conf } = require("../js/config");
-var nodeList = [];
-var beaconCoordinate = [];
-var POItarget = [];
+var dataInit = require('../js/data')
+const { initData } = require('../js/data')
+const { map_conf } = require('../js/config')
+var nodeList = []
+var beaconCoordinate = []
+var POItarget = []
 
-const app = getApp();
+var test = "测试"
+
+const app = getApp()
 
 Page({
     data: {
