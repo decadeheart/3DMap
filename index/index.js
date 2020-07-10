@@ -29,7 +29,7 @@ Page({
                 //   alpha: true
                 // });
                 const THREE = createScopedThreejs(canvas);
-                renderModel(canvas, THREE);
+                // renderModel(canvas, THREE);
             });
 
         //初始化图片url

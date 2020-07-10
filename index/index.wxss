@@ -17,7 +17,7 @@
 /* 正上方搜索框 包括上下留白 16% */
 .search {
     position: absolute;
-    top: 5%;
+    top: 3%;
     left: 50%;
     transform: translate(-50%);
     display: flex;
