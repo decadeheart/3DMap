@@ -5,6 +5,9 @@ const {
   renderModel
 } = require('../js/model')
 
+var dataInit = require('../js/data')
+
+
 const app = getApp()
 
 Page({
@@ -46,6 +49,7 @@ Page({
       ]
     })
 
+    dataInit.initData()
   },
   changeDimension() {
     let index = this.data.dimension == 2 ? 3 : 2;
