@@ -17,6 +17,12 @@ Page({
         dimension: 3,
         allFloorImgUrl: "",
         floorImgUrl: [],
+        logoUrl: "",
+        // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
+        navFlag: 3,
+        startPointName: "我的位置",
+        endPointName: "华中科技大学",
+        navInformation: "前方路口右转",
     },
     onLoad: function () {
         wx.createSelectorQuery()
@@ -29,7 +35,7 @@ Page({
                 //   alpha: true
                 // });
                 const THREE = createScopedThreejs(canvas);
-                renderModel(canvas, THREE);
+                // renderModel(canvas, THREE);
             });
 
         //初始化图片url
@@ -47,6 +53,7 @@ Page({
                 this.data.baseUrl + "ui_img/5F.png",
                 this.data.baseUrl + "ui_img/6F.png",
             ],
+            logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
         });
 
         /**处理数据 */
@@ -83,16 +90,49 @@ Page({
                 console.log(err);
             };
     },
+    /**
+     * @description 地图二维和三维视角切换
+     */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
         this.setData({
             dimension: index,
         });
     },
+    /**
+     * @description 页面点击楼层图片，切换楼层
+     * @param {*} e wxml的参数通过e获取
+     */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
         console.log(floor);
     },
+    /**
+     * @description 切换起点终点
+     */
+    switchPoint() {
+        this.setData({
+            startPointName: this.data.endPointName,
+            endPointName: this.data.startPointName,
+        });
+    },
+    /**
+     * @description 切换页面上方的提示  1 显示搜索框 2 显示起点终点 3 显示导航路线提示
+     * @param {*} e 根据传来的参数切换
+     */
+    switchNavFlag(e) {
+        this.setData({
+            navFlag: e.currentTarget.dataset.flag,
+        });
+    },
+    test() {
+        this.setData({
+            navFlag: this.data.navFlag == 3 ? 0 : this.data.navFlag + 1,
+        });
+    },
+    /**
+     * @description 点击搜索栏，页面跳转
+     */
     goSearch() {
         wx.navigateTo({
             url: "../search/search",
