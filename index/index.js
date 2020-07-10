@@ -6,6 +6,8 @@ const {
 } = require('../js/model')
 
 var dataInit = require('../js/data')
+const { initData } = require('../js/data')
+var nodeList=[]
 
 
 const app = getApp()
@@ -49,7 +51,14 @@ Page({
       ]
     })
 
-    dataInit.initData()
+    initData.then(res=>{
+      console.log(res)
+      nodeList = res.data.nodeList
+      console.log(nodeList)
+    }),err=>{
+      console.log(err)
+    }
+
   },
   changeDimension() {
     let index = this.data.dimension == 2 ? 3 : 2;
