@@ -102,6 +102,12 @@ function initnode() {
     resultParent = [];
 }
 
+function navigation() {
+
+    initnode();
+
+}
+
 
 module.exports = {
     setBeginAndEndNode: setBeginAndEndNode
