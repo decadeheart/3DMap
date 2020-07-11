@@ -1,9 +1,17 @@
-const { createScopedThreejs } = require("../util/three");
-const { renderModel } = require("../js/model");
+const {
+    createScopedThreejs
+} = require("../util/three");
+const {
+    renderModel
+} = require("../js/model");
 
 var dataInit = require("../js/data");
-const { initData } = require("../js/data");
-const { map_conf } = require("../js/config");
+const {
+    initData
+} = require("../js/data");
+const {
+    map_conf
+} = require("../js/config");
 var nodeList = [];
 var beaconCoordinate = [];
 var POItarget = [];
@@ -22,7 +30,11 @@ Page({
         navFlag: 3,
         startPointName: "我的位置",
         endPointName: "华中科技大学",
-        navInformation: "前方路口右转前方路口右转前方路口右",
+        navInformation: "前方路口右转",
+        currentPointName:"华中科技大学",
+        distanceInfo:"全程100米，大约耗时2分钟 ",
+        // 1 设置起点终点 2 导航和模拟导航 3 结束导航
+        infoFlag: 2
     },
     onLoad: function () {
         wx.createSelectorQuery()
@@ -58,34 +70,34 @@ Page({
 
         /**处理数据 */
         initData.then((res) => {
-            console.log(res);
-            let data = res.data;
+                console.log(res);
+                let data = res.data;
 
-            nodeList = data.nodeList;
+                nodeList = data.nodeList;
 
-            let target = data.target;
-            beaconCoordinate = data.beaconCoordinate;
+                let target = data.target;
+                beaconCoordinate = data.beaconCoordinate;
 
-            for (let build in target) {
-                for (let floor in target[build]) {
-                    target[build][floor].forEach(function (item) {
-                        item.z = (item.floor - 1) * map_conf.layerHeight;
-                        item.floor = parseInt(floor);
-                        item.building = build;
-                        POItarget.push(item);
-                    });
+                for (let build in target) {
+                    for (let floor in target[build]) {
+                        target[build][floor].forEach(function (item) {
+                            item.z = (item.floor - 1) * map_conf.layerHeight;
+                            item.floor = parseInt(floor);
+                            item.building = build;
+                            POItarget.push(item);
+                        });
+                    }
                 }
-            }
-            console.log(POItarget);
-            nodeList.forEach(function (node) {
-                node.z = (node.floor - 1) * map_conf.layerHeight;
-            });
-            beaconCoordinate.forEach(function (node) {
-                node.z = (node.floor - 1) * map_conf.layerHeight;
-            });
+                // console.log(POItarget);
+                nodeList.forEach(function (node) {
+                    node.z = (node.floor - 1) * map_conf.layerHeight;
+                });
+                beaconCoordinate.forEach(function (node) {
+                    node.z = (node.floor - 1) * map_conf.layerHeight;
+                });
 
-            console.log(nodeList);
-        }),
+                // console.log(nodeList);
+            }),
             (err) => {
                 console.log(err);
             };
@@ -125,10 +137,19 @@ Page({
             navFlag: e.currentTarget.dataset.flag,
         });
     },
+    /**
+     * @description 获取当前的位置
+     * @param {*} 
+     */
+    getMyLocation(){
+        console.log("我在这");
+    },
     test() {
         this.setData({
-            navFlag: this.data.navFlag == 3 ? 0 : this.data.navFlag + 1,
+            navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
+            infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
+        console.log(this.data.navFlag,this.data.infoFlag)
     },
     /**
      * @description 点击搜索栏，页面跳转

@@ -10,7 +10,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: wheat;
+    /* background-color: wheat; */
     z-index: 0;
 }
 
@@ -115,34 +115,19 @@
     justify-content: center;
     align-items: center;
     top: 2%;
-    left: 5%;
+    left: 2%;
     padding-top: 1rpx;
-    width: 90%;
+    width: 96%;
     height: 16%;
     background-color: rgb(43, 54, 73);
     border-radius: 20rpx;
     z-index: 10;
 }
 .nav-text {
+    width: 80%;
     font-size: x-large;
+    text-align: center;
     color: #fff;
-}
-/* <!-- 左上角指南针 10%--> */
-.compass {
-    position: absolute;
-    top: 20%;
-    height: 9%;
-    background-color: turquoise;
-    z-index: 10;
-}
-
-/* <!-- 左下角定位 9% --> */
-.myLocation {
-    position: absolute;
-    bottom: 16%;
-    height: 8%;
-    background-color: turquoise;
-    z-index: 10;
 }
 
 /* <!-- 右侧楼层容器 --> */
@@ -159,7 +144,7 @@
     background-color: rgb(243, 255, 255);
     border: 2rpx solid #ccc;
     border-radius: 40rpx;
-    box-shadow: 0px 2px 4px 2px #dddddd;
+    box-shadow: 0 2rpx 4rpx 2rpx #dddddd;
     z-index: 10;
 }
 
@@ -177,20 +162,141 @@
     height: 15rpx;
 }
 
-/* <!-- 选择的地点提示信息 16% --> */
-.point-info {
+/* <!-- 左上角指南针 10%--> */
+.compass {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 16%;
-    /* background-color: thistle; */
+    top: 20%;
+    height: 9%;
+    background-color: turquoise;
     z-index: 10;
 }
 
+/* <!-- 左下角定位 9% --> */
+.myLocation {
+    position: absolute;
+    bottom: 14%;
+    left: 2%;
+    height: 8%;
+    /* background-color: #fff; */
+    z-index: 10;
+}
+
+
+/* <!-- 选择的地点提示信息 20% --> */
+.point-info,.navigating-simu,.navigating-end{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 2%;
+    width: 96%;
+    height: 16%;
+    font-size: x-large;
+    background-color: rgb(254, 254, 255);
+    border-radius: 10rpx;
+    border: 2rpx solid rgb(141,200,245);
+    /* border-bottom: 0; */
+    box-shadow: 0 2rpx 4rpx 2rpx #dddddd;
+    z-index: 10;
+}
+.currentPoint{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 5%;
+    height: 58%;
+    width: 100%;
+    border-bottom: 1rpx solid #ccc;
+}
+.settingBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 42%;
+    width: 100%;
+}
+
+.settingBox view{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+    font-size: 28rpx;
+    /* flex: 1; */
+}
+.settingBox view:first-child{
+    width: 50%;
+    border-right: 1rpx solid #ccc;
+}
+
+/* <!-- 开始导航、模拟导航 结束导航--> */
+.navigating-simu, .navigating-end{
+    flex-direction: row;
+    height: 14%;
+}
+.detail-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+}
+.detail-info text:first-child{
+    display: inline-block;
+    height: 60%;
+    width: 80%;
+    font-size: x-large;
+    text-align: center;
+    
+}
+.detail-info text:nth-child(2){
+    display: inline-block;
+    height: 40%;
+    width: 80%;
+    border-top: 2rpx solid #ccc;
+    text-align: center;
+    font-size: small;
+    color: #555;
+}
+
+.navigating-btnBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+}
+#navigating-btn-start{
+    background-color: rgb(72,131,246);
+    color:#fff;
+}
+#navigating-btn-simu{
+    margin-top: 3%;
+    background-color:#fff;
+    border:1rpx solid rgb(72,131,246);
+    color:rgb(72,131,246);
+}
+
+.navigating-end button{
+    background-color:rgb(224,83,65);
+    /* border:5rpx solid rgb(224,83,65); */
+    color:#fff;
+}
+.btn-hover{
+  position: relative;
+  top: 3rpx;
+  left: 3rpx;
+  opacity: 0.9;
+  transform: scale(0.95, 0.95);
+
+}
 /* logo */
 .logo {
     position: absolute;
-    bottom: 8%;
+    bottom: 6%;
     right: 4%;
     width: 80rpx;
     height: 80rpx;
