@@ -1,10 +1,9 @@
-
 /**
  * @description 导航算法
  * @date 2020-07-10
  */
 var beginLi; //开始节点
-var endLi;   //目的节点
+var endLi; //目的节点
 
 //算法实现
 /**
@@ -13,12 +12,12 @@ var endLi;   //目的节点
  *
  */
 
- //当前定位节点  路径为空
+//当前定位节点  路径为空
 var yournode;
 //可能要走的路线
-var openArr = []
+var openArr = [];
 //已经关闭的路线
-var closeArr = []
+var closeArr = [];
 
 //最终线路数组
 var resultParent = [];
@@ -30,16 +29,15 @@ var resultParent = [];
  * @param {*} nodeList 节点组
  * @returns
  */
-function getObj (id, nodeList){
-    for(var i=0; i < nodeList.length; i++){
-        if (nodeList[i].id == id){
-            return nodeList[i]
-        } 
+function getObj(id, nodeList) {
+    for (var i = 0; i < nodeList.length; i++) {
+        if (nodeList[i].id == id) {
+            return nodeList[i];
+        }
     }
-    alert("null" + ":" + id)
-    return null
+    alert("null" + ":" + id);
+    return null;
 }
-
 
 /**
  * @description 设置开始和目的节点
@@ -48,12 +46,10 @@ function getObj (id, nodeList){
  * @param {*} end 结束下标
  * @param {*} nodeList 节点组
  */
-function setBeginAndEndNode (begin, end, nodeList) {
+function setBeginAndEndNode(begin, end, nodeList) {
     beginLi = getObj(begin, nodeList);
     endLi = getObj(end, nodeList);
-
 }
-
 
 /**
  * @description 在三维空间中用勾股定理计算两个节点之间的距离
@@ -62,14 +58,13 @@ function setBeginAndEndNode (begin, end, nodeList) {
  * @param {*} node2 节点二
  * @returns
  */
-function CalculateNodeDis (node1, node2){
-    let a = node1.x - node2.x
-    let b = node1.y - node2.y
-    let c = node1.z - node2.z
+function CalculateNodeDis(node1, node2) {
+    let a = node1.x - node2.x;
+    let b = node1.y - node2.y;
+    let c = node1.z - node2.z;
     let d = Math.sqrt(a * a + b * b + c * c);
     return d;
 }
-
 
 /**
  * @description 根据距离排序，算出离当前节点最近的节点
@@ -78,16 +73,15 @@ function CalculateNodeDis (node1, node2){
  * @param {*} nodeList 节点组
  * @returns
  */
-function findnearest2 (vector3, nodeList) {
-
-    if(nodeList.length == 0){
+function findnearest2(vector3, nodeList) {
+    if (nodeList.length == 0) {
         alert(" no node ");
         return;
     }
 
-    nodeList.sort(function (a,b){
-        return CalculateNodeDis(a, vector3) - (b, vector3)
-    })
+    nodeList.sort(function (a, b) {
+        return CalculateNodeDis(a, vector3) - (b, vector3);
+    });
 
     let nearnode = nodeList[0];
     return nearnode;
@@ -103,12 +97,9 @@ function initnode() {
 }
 
 function navigation() {
-
     initnode();
-
 }
-
 
 module.exports = {
-    setBeginAndEndNode: setBeginAndEndNode
-}
+    setBeginAndEndNode: setBeginAndEndNode,
+};

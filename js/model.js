@@ -4,14 +4,7 @@ import registerOrbit from "../util/orbit";
 export function renderModel(canvas, THREE) {
     registerGLTFLoader(THREE);
 
-    var container,
-        stats,
-        clock,
-        gui,
-        mixer,
-        actions,
-        activeAction,
-        previousAction;
+    var container, stats, clock, gui, mixer, actions, activeAction, previousAction;
     var camera, scene, renderer, model, face, controls;
     var api = {
         state: "Walking",
@@ -20,12 +13,7 @@ export function renderModel(canvas, THREE) {
     animate();
 
     function init() {
-        camera = new THREE.PerspectiveCamera(
-            45,
-            canvas.width / canvas.height,
-            0.25,
-            3000
-        );
+        camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.25, 3000);
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff);
         // lights
@@ -78,15 +66,7 @@ export function renderModel(canvas, THREE) {
         controls.update();
     }
     function createGUI(model, animations) {
-        var states = [
-            "Idle",
-            "Walking",
-            "Running",
-            "Dance",
-            "Death",
-            "Sitting",
-            "Standing",
-        ];
+        var states = ["Idle", "Walking", "Running", "Dance", "Death", "Sitting", "Standing"];
         var emotes = ["Jump", "Yes", "No", "Wave", "Punch", "ThumbsUp"];
         mixer = new THREE.AnimationMixer(model);
         actions = {};
@@ -94,10 +74,7 @@ export function renderModel(canvas, THREE) {
             var clip = animations[i];
             var action = mixer.clipAction(clip);
             actions[clip.name] = action;
-            if (
-                emotes.indexOf(clip.name) >= 0 ||
-                states.indexOf(clip.name) >= 4
-            ) {
+            if (emotes.indexOf(clip.name) >= 0 || states.indexOf(clip.name) >= 4) {
                 action.clampWhenFinished = true;
                 action.loop = THREE.LoopOnce;
             }
@@ -115,12 +92,7 @@ export function renderModel(canvas, THREE) {
         if (previousAction !== activeAction) {
             previousAction.fadeOut(duration);
         }
-        activeAction
-            .reset()
-            .setEffectiveTimeScale(1)
-            .setEffectiveWeight(1)
-            .fadeIn(duration)
-            .play();
+        activeAction.reset().setEffectiveTimeScale(1).setEffectiveWeight(1).fadeIn(duration).play();
     }
 
     function animate() {
