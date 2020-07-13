@@ -12,6 +12,7 @@ const {
 const {
     map_conf
 } = require("../js/config");
+const { naviagte } = require("../js/astar");
 var nodeList = [];
 var beaconCoordinate = [];
 var POItarget = [];
@@ -97,11 +98,15 @@ Page({
                     node.z = (node.floor - 1) * map_conf.layerHeight;
                 });
 
-                // console.log(nodeList);
+                console.log(nodeList);
+
+                naviagte(nodeList);
             }),
             (err) => {
                 console.log(err);
             };
+
+            
     },
     /**
      * @description 地图二维和三维视角切换

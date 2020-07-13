@@ -1,4 +1,3 @@
-const { nodeList } = require("../index");
 
 /**
  * @description 导航算法
@@ -92,7 +91,7 @@ function findnearest2(vector3, nodeList) {
  * @description 初始化
  * @date 2020-07-10
  */
-function initnode() {
+function initnode(nodeList) {
     for (var i = 0; i < nodeList.length; i++) {
         nodeList[i].gn = 0;
         nodeList[i].num = 0;
@@ -241,7 +240,7 @@ function findParent(li) {
  * @returns
  */
 function navigation(nodeList) {
-    initnode();
+    initnode(nodeList);
 
     if (beginLi.id === endLi.id){
         resultParent.push(endLi);
@@ -258,11 +257,20 @@ function navigation(nodeList) {
     resultParent.push(endLi);
 
 }
+//function naviagte(start, end, nodeList)
+/**
+ * @description 点击后开始导航
+ * @date 2020-07-13
+ * @param {*} nodeList
+ */
+function naviagte(nodeList) {
 
-function naviagte(start, end, nodeList) {
 
-    let startNode = findnearest2(start, nodeList);
-    let endNode = findnearest2(end, nodeList);
+    // let startNode = findnearest2(start, nodeList);
+    // let endNode = findnearest2(end, nodeList);
+
+    let startNode = nodeList[0];
+    let endNode = nodeList[10];
 
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
     navigation(nodeList);
