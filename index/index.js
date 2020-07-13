@@ -13,6 +13,7 @@ const {
     map_conf
 } = require("../js/config");
 const { naviagte } = require("../js/astar");
+const { toList } = require("../js/blueLocation");
 var nodeList = [];
 var beaconCoordinate = [];
 var POItarget = [];
@@ -105,6 +106,23 @@ Page({
             (err) => {
                 console.log(err);
             };
+
+
+            wx.getSetting({
+                success(res) {
+                  if (!res.authSetting['scope.userLocation']) {
+                    wx.authorize({
+                      scope: 'scope.userLocation',
+                      success () {
+                        // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+                        wx.getLocation();
+                        /** 蓝牙调用测试 */
+                        toList();
+                      }
+                    })
+                  }
+                }
+              })
 
             
     },
