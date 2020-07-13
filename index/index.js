@@ -2,21 +2,20 @@ const {
     createScopedThreejs
 } = require("../util/three");
 const {
-    renderModel
+    renderModel,cameraExchange
 } = require("../js/model");
-
-var dataInit = require("../js/data");
 const {
     initData
 } = require("../js/data");
 const {
     map_conf
 } = require("../js/config");
+
 var nodeList = [];
 var beaconCoordinate = [];
 var POItarget = [];
 
-const app = getApp();
+var app = getApp();
 
 Page({
     data: {
@@ -43,11 +42,10 @@ Page({
             .exec((res) => {
                 const canvas = res[0].node;
                 this.canvas = canvas;
-                // var gl = canvas.getContext('webgl', {
-                //   alpha: true
-                // });
                 const THREE = createScopedThreejs(canvas);
-                // renderModel(canvas, THREE);
+                app.canvas = canvas;
+                app.THREE = THREE;
+                renderModel(canvas, THREE);
             });
 
         //初始化图片url
@@ -71,34 +69,34 @@ Page({
 
         /**处理数据 */
         initData.then((res) => {
-                console.log(res);
-                let data = res.data;
+            console.log(res);
+            let data = res.data;
 
-                nodeList = data.nodeList;
+            nodeList = data.nodeList;
 
-                let target = data.target;
-                beaconCoordinate = data.beaconCoordinate;
+            let target = data.target;
+            beaconCoordinate = data.beaconCoordinate;
 
-                for (let build in target) {
-                    for (let floor in target[build]) {
-                        target[build][floor].forEach(function (item) {
-                            item.z = (item.floor - 1) * map_conf.layerHeight;
-                            item.floor = parseInt(floor);
-                            item.building = build;
-                            POItarget.push(item);
-                        });
-                    }
+            for (let build in target) {
+                for (let floor in target[build]) {
+                    target[build][floor].forEach(function (item) {
+                        item.z = (item.floor - 1) * map_conf.layerHeight;
+                        item.floor = parseInt(floor);
+                        item.building = build;
+                        POItarget.push(item);
+                    });
                 }
-                // console.log(POItarget);
-                nodeList.forEach(function (node) {
-                    node.z = (node.floor - 1) * map_conf.layerHeight;
-                });
-                beaconCoordinate.forEach(function (node) {
-                    node.z = (node.floor - 1) * map_conf.layerHeight;
-                });
+            }
+            // console.log(POItarget);
+            nodeList.forEach(function (node) {
+                node.z = (node.floor - 1) * map_conf.layerHeight;
+            });
+            beaconCoordinate.forEach(function (node) {
+                node.z = (node.floor - 1) * map_conf.layerHeight;
+            });
 
-                // console.log(nodeList);
-            }),
+            // console.log(nodeList);
+        }),
             (err) => {
                 console.log(err);
             };
@@ -108,8 +106,10 @@ Page({
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
+        cameraExchange(app.canvas, app.THREE);
         this.setData({
             dimension: index,
+
         });
     },
     /**
