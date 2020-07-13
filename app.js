@@ -1,6 +1,11 @@
 App({
   onLaunch: function () {
+    
   },
+
+  canvas:null,
+  THREE:null,
+  
   nodeList : [],
   beaconCoordinate : [],
   POItarget : [],

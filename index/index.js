@@ -2,17 +2,15 @@ const {
     createScopedThreejs
 } = require("../util/three");
 const {
-    renderModel
+    renderModel,cameraExchange
 } = require("../js/model");
-
-var dataInit = require("../js/data");
 const {
     initData
 } = require("../js/data");
 
 const { naviagte } = require("../js/astar");
 
-const app = getApp();
+var app = getApp();
 
 
 Page({
@@ -50,11 +48,10 @@ Page({
             .exec((res) => {
                 const canvas = res[0].node;
                 this.canvas = canvas;
-                // var gl = canvas.getContext('webgl', {
-                //   alpha: true
-                // });
                 const THREE = createScopedThreejs(canvas);
-                // renderModel(canvas, THREE);
+                app.canvas = canvas;
+                app.THREE = THREE;
+                renderModel(canvas, THREE);
             });
 
         //初始化图片url
@@ -78,8 +75,8 @@ Page({
 
         /**处理数据 */
         initData.then((res) => {
-                console.log(res);
-                let data = res.data;
+            console.log(res);
+            let data = res.data;
 
                 app.nodeList = data.nodeList;
 
@@ -196,6 +193,7 @@ Page({
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
+        cameraExchange(app.canvas, app.THREE);
         this.setData({
             dimension: index,
         });
