@@ -17,7 +17,6 @@ var beaconCoordinate = [];
 var POItarget = [];
 
 const app = getApp();
-
 Page({
     data: {
         baseUrl: "https://www.cleverguided.com/iLaN/3D-jxqzf/",
@@ -27,14 +26,14 @@ Page({
         floorImgUrl: [],
         logoUrl: "",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
-        navFlag: 3,
+        navFlag: 1,
         startPointName: "我的位置",
         endPointName: "华中科技大学",
         navInformation: "前方路口右转",
         currentPointName: "华中科技大学",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
-        infoFlag: 2,
+        infoFlag: 1,
     },
     onLoad: function () {
         wx.createSelectorQuery()
@@ -43,9 +42,6 @@ Page({
             .exec((res) => {
                 const canvas = res[0].node;
                 this.canvas = canvas;
-                // var gl = canvas.getContext('webgl', {
-                //   alpha: true
-                // });
                 const THREE = createScopedThreejs(canvas);
                 // renderModel(canvas, THREE);
             });
@@ -71,7 +67,7 @@ Page({
 
         /**处理数据 */
         initData.then((res) => {
-                console.log(res);
+                // console.log(res);
                 let data = res.data;
 
                 nodeList = data.nodeList;
@@ -150,7 +146,7 @@ Page({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
-        console.log(this.data.navFlag, this.data.infoFlag);
+        // console.log(this.data.navFlag, this.data.infoFlag);
     },
     /**
      * @description 点击搜索栏，页面跳转
@@ -192,6 +188,9 @@ Page({
             ...e,
             type: "touchend",
         });
+    },
+    onPullDownRefresh: function () {
+        wx.stopPullDownRefresh();
     }
 
 });

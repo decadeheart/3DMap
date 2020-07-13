@@ -192,7 +192,6 @@
     z-index: 10;
 }
 
-
 /* <!-- 选择的地点提示信息 20% --> */
 .point-info,
 .navigating-simu,
@@ -217,12 +216,23 @@
 
 .currentPoint {
     display: flex;
-    justify-content: center;
+    justify-content:center;
     align-items: center;
-    padding-left: 5%;
+    /* padding-left: 30%; */
     height: 58%;
     width: 100%;
     border-bottom: 1rpx solid #ccc;
+}
+.currentPoint text:first-child{
+    font-size: 45rpx;
+    /* height: 55%; */
+}
+
+#navigating-btn-go {
+    background-color: #fff;
+    color: rgb(72, 131, 246);
+    margin-left: 85rpx;
+    border:5rpx solid rgb(72, 131, 246);
 }
 
 .settingBox {
@@ -243,7 +253,7 @@
     /* flex: 1; */
 }
 
-.settingBox view:first-child {
+.settingBox view:nth-child(-n+2){
     width: 50%;
     border-right: 1rpx solid #ccc;
 }

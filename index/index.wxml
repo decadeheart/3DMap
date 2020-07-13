@@ -57,13 +57,14 @@
 	<!-- 左下角定位 9% -->
 	<view class="myLocation" bindtap="getMyLocation">
 		<mp-icon type="field" icon="discover" size="{{ 30 }} " color="rgb(72,131,246)"></mp-icon>
+		
 	</view>
 
 	<!-- 选择的地点提示信息 设置起点终点 20% -->
 	<view wx:if="{{ infoFlag == 1 }}" class="point-info">
 		<view class="currentPoint">
 			<text>{{ currentPointName }} </text>
-			<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)"></mp-icon>
+			<!-- <button id="navigating-btn-go" size="mini" hover-class="btn-hover">到这去</button> -->
 		</view>
 		<view class="settingBox">
 			<view>
@@ -71,6 +72,9 @@
 			</view>
 			<view>
 				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)"></mp-icon>设为终点
+			</view>
+			<view>
+				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)"></mp-icon>到这去
 			</view>
 		</view>
 	</view>

@@ -2,9 +2,9 @@
   "pages": [
     "index/index",
     "search/search"
+
   ],
   "window": {
-    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
