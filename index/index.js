@@ -13,7 +13,7 @@ const {
     map_conf
 } = require("../js/config");
 const { naviagte } = require("../js/astar");
-const { toList } = require("../js/blueLocation");
+const { openBluetoothAdapter, initBeacon } = require("../js/blueLocation");
 var nodeList = [];
 var beaconCoordinate = [];
 var POItarget = [];
@@ -37,7 +37,23 @@ Page({
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
         infoFlag: 2,
+        showBlue: false,
+        buttons: [
+            {
+                type: 'default',
+                className: '',
+                text: '取消',
+                value: 0
+            },
+            {
+                type: 'primary',
+                className: '',
+                text: '确认',
+                value: 1
+            }
+        ]
     },
+
     onLoad: function () {
         wx.createSelectorQuery()
             .select("#map")
@@ -116,13 +132,39 @@ Page({
                       success () {
                         // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
                         wx.getLocation();
-                        /** 蓝牙调用测试 */
-                        toList();
+
                       }
                     })
                   }
                 }
               })
+
+        /** 蓝牙调用测试 */
+        openBluetoothAdapter();
+
+        /** ibeacon 打开测试 */
+        wx.startBeaconDiscovery({
+            uuids: ['FDA50693-A4E2-4FB1-AFCF-C6EB07647825'],
+            success: (result)=>{
+                console.log("开始扫描设备")
+                wx.showToast({
+                    title: '扫描成功',
+                    icon: 'none',
+                    image: '',
+                    duration: 1500,
+                    mask: true,
+                });
+                
+            },
+            fail: (res)=>{
+                console.log(res);
+                if(res.errCode === 11000) {
+                    this.setData({
+                        showBlue: true
+                    })
+                }
+            },
+        })
 
             
     },
