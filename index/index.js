@@ -11,7 +11,6 @@ const {
 } = require("../js/data");
 
 const { naviagte } = require("../js/astar");
-const { openBluetoothAdapter} = require("../js/blueLocation");
 
 const app = getApp();
 
@@ -129,8 +128,6 @@ Page({
                 }
               })
 
-        /** 蓝牙调用测试 */
-        openBluetoothAdapter();
         /** ibeacon 打开测试 */
         wx.startBeaconDiscovery({
             uuids: ['FDA50693-A4E2-4FB1-AFCF-C6EB07647825'],

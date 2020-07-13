@@ -104,7 +104,7 @@
   	maskClosable="{{false}}" 
   	title="蓝牙连接" 
   	desc="当前蓝牙未打开，请打开蓝牙"
-  	tips="打开蓝牙后，请在点击确认"
+  	tips="打开蓝牙后，请再点击确认"
   	buttons="{{buttons}}"
 	></mp-halfScreenDialog>
 
