@@ -9,14 +9,9 @@ var dataInit = require("../js/data");
 const {
     initData
 } = require("../js/data");
-const {
-    map_conf
-} = require("../js/config");
+
 const { naviagte } = require("../js/astar");
 const { openBluetoothAdapter, initBeacon } = require("../js/blueLocation");
-var nodeList = [];
-var beaconCoordinate = [];
-var POItarget = [];
 
 const app = getApp();
 
@@ -92,32 +87,32 @@ Page({
                 console.log(res);
                 let data = res.data;
 
-                nodeList = data.nodeList;
+                app.nodeList = data.nodeList;
 
                 let target = data.target;
-                beaconCoordinate = data.beaconCoordinate;
+                app.beaconCoordinate = data.beaconCoordinate;
 
                 for (let build in target) {
                     for (let floor in target[build]) {
                         target[build][floor].forEach(function (item) {
-                            item.z = (item.floor - 1) * map_conf.layerHeight;
+                            item.z = (item.floor - 1) * app.map_conf.layerHeight;
                             item.floor = parseInt(floor);
                             item.building = build;
-                            POItarget.push(item);
+                            app.POItarget.push(item);
                         });
                     }
                 }
-                // console.log(POItarget);
-                nodeList.forEach(function (node) {
-                    node.z = (node.floor - 1) * map_conf.layerHeight;
+
+                app.nodeList.forEach(function (node) {
+                    node.z = (node.floor - 1) * app.map_conf.layerHeight;
                 });
-                beaconCoordinate.forEach(function (node) {
-                    node.z = (node.floor - 1) * map_conf.layerHeight;
+                app.beaconCoordinate.forEach(function (node) {
+                    node.z = (node.floor - 1) * app.map_conf.layerHeight;
                 });
 
-                console.log(nodeList);
+                console.log(app.nodeList);
 
-                naviagte(nodeList);
+                naviagte(app.nodeList);
             }),
             (err) => {
                 console.log(err);
@@ -260,7 +255,3 @@ Page({
     }
 
 });
-
-module.exports = {
-    nodeList: nodeList,
-};
