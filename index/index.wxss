@@ -59,6 +59,7 @@
     margin-bottom: 1%;
     background-color: rgb(254, 255, 255);
 }
+
 .point-box {
     display: flex;
     flex-direction: column;
@@ -67,6 +68,7 @@
     border-radius: 15rpx;
     overflow: hidden;
 }
+
 .startPoint,
 .endPoint {
     display: flex;
@@ -74,9 +76,11 @@
     height: 50%;
     background-color: rgb(246, 247, 248);
 }
+
 .startPoint {
     border-bottom: 1rpx solid rgba(240, 240, 240, 1);
 }
+
 .roundIcon {
     margin: 0 20rpx;
     height: 20rpx;
@@ -84,9 +88,11 @@
     background: #ffffff;
     border-radius: 50%;
 }
+
 .green {
     border: 5rpx solid rgb(133, 212, 166);
 }
+
 .red {
     border: 5rpx solid rgb(220, 95, 90);
 }
@@ -100,9 +106,11 @@
     height: 100%;
     width: 12%;
 }
+
 .switch {
     background-color: rgb(246, 247, 248);
 }
+
 .switch .weui-icon {
     transform: rotate(90deg);
     margin-right: 60rpx;
@@ -123,6 +131,7 @@
     border-radius: 20rpx;
     z-index: 10;
 }
+
 .nav-text {
     width: 80%;
     font-size: x-large;
@@ -154,9 +163,11 @@
     margin: 5rpx 0;
     border-bottom: 2rpx solid #ccc;
 }
+
 .floor-item:last-child {
     border-bottom: 0;
 }
+
 .floor-space {
     width: 15rpx;
     height: 15rpx;
@@ -183,7 +194,9 @@
 
 
 /* <!-- 选择的地点提示信息 20% --> */
-.point-info,.navigating-simu,.navigating-end{
+.point-info,
+.navigating-simu,
+.navigating-end {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -196,12 +209,13 @@
     font-size: x-large;
     background-color: rgb(254, 254, 255);
     border-radius: 10rpx;
-    border: 2rpx solid rgb(141,200,245);
+    border: 2rpx solid rgb(141, 200, 245);
     /* border-bottom: 0; */
     box-shadow: 0 2rpx 4rpx 2rpx #dddddd;
     z-index: 10;
 }
-.currentPoint{
+
+.currentPoint {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -210,7 +224,8 @@
     width: 100%;
     border-bottom: 1rpx solid #ccc;
 }
-.settingBox{
+
+.settingBox {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -218,7 +233,7 @@
     width: 100%;
 }
 
-.settingBox view{
+.settingBox view {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -227,32 +242,37 @@
     font-size: 28rpx;
     /* flex: 1; */
 }
-.settingBox view:first-child{
+
+.settingBox view:first-child {
     width: 50%;
     border-right: 1rpx solid #ccc;
 }
 
 /* <!-- 开始导航、模拟导航 结束导航--> */
-.navigating-simu, .navigating-end{
+.navigating-simu,
+.navigating-end {
     flex-direction: row;
     height: 14%;
 }
-.detail-info{
+
+.detail-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 60%;
 }
-.detail-info text:first-child{
+
+.detail-info text:first-child {
     display: inline-block;
     height: 60%;
     width: 80%;
     font-size: x-large;
     text-align: center;
-    
+
 }
-.detail-info text:nth-child(2){
+
+.detail-info text:nth-child(2) {
     display: inline-block;
     height: 40%;
     width: 80%;
@@ -262,37 +282,41 @@
     color: #555;
 }
 
-.navigating-btnBox{
+.navigating-btnBox {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 40%;
 }
-#navigating-btn-start{
-    background-color: rgb(72,131,246);
-    color:#fff;
+
+#navigating-btn-start {
+    background-color: rgb(72, 131, 246);
+    color: #fff;
 }
-#navigating-btn-simu{
+
+#navigating-btn-simu {
     margin-top: 3%;
-    background-color:#fff;
-    border:1rpx solid rgb(72,131,246);
-    color:rgb(72,131,246);
+    background-color: #fff;
+    border: 1rpx solid rgb(72, 131, 246);
+    color: rgb(72, 131, 246);
 }
 
-.navigating-end button{
-    background-color:rgb(224,83,65);
+.navigating-end button {
+    background-color: rgb(224, 83, 65);
     /* border:5rpx solid rgb(224,83,65); */
-    color:#fff;
+    color: #fff;
 }
-.btn-hover{
-  position: relative;
-  top: 3rpx;
-  left: 3rpx;
-  opacity: 0.9;
-  transform: scale(0.95, 0.95);
+
+.btn-hover {
+    position: relative;
+    top: 3rpx;
+    left: 3rpx;
+    opacity: 0.9;
+    transform: scale(0.95, 0.95);
 
 }
+
 /* logo */
 .logo {
     position: absolute;

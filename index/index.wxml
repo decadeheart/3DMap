@@ -16,15 +16,14 @@
 
 		<view class="point-container">
 			<view class="point-box">
-
 				<view class="startPoint">
 					<view class="roundIcon green"></view>
-					<text>{{startPointName}}</text>
+					<text>{{ startPointName }}</text>
 				</view>
 
 				<view class="endPoint">
 					<view class="roundIcon red"></view>
-					<text>{{endPointName}}</text>
+					<text>{{ endPointName }}</text>
 				</view>
 			</view>
 			<view class="switch" bindtap="switchPoint">
@@ -35,7 +34,7 @@
 
 	<!-- 导航提示 16%-->
 	<view wx:elif="{{ navFlag == 3 }}" class="navigating-info">
-		<text class="nav-text">{{navInformation}}</text>
+		<text class="nav-text">{{ navInformation }}</text>
 	</view>
 
 	<!-- 右侧楼层容器 -->
@@ -61,9 +60,9 @@
 	</view>
 
 	<!-- 选择的地点提示信息 设置起点终点 20% -->
-	<view wx:if="{{infoFlag==1}}" class="point-info">
-		<view class="currentPoint"> 
-			<text>{{currentPointName}} </text>
+	<view wx:if="{{ infoFlag == 1 }}" class="point-info">
+		<view class="currentPoint">
+			<text>{{ currentPointName }} </text>
 			<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)"></mp-icon>
 		</view>
 		<view class="settingBox">
@@ -77,10 +76,10 @@
 	</view>
 
 	<!-- 开始导航、模拟导航 -->
-	<view wx:elif="{{infoFlag==2}}" class="navigating-simu">
+	<view wx:elif="{{ infoFlag == 2 }}" class="navigating-simu">
 		<view class="detail-info">
-			<text> {{currentPointName}} </text>
-			<text> {{distanceInfo}}</text>
+			<text> {{ currentPointName }} </text>
+			<text> {{ distanceInfo }}</text>
 		</view>
 
 		<view class="navigating-btnBox">
@@ -90,15 +89,13 @@
 	</view>
 
 	<!-- 结束导航 -->
-	<view wx:elif="{{infoFlag==3}}" class="navigating-end">
+	<view wx:elif="{{ infoFlag == 3 }}" class="navigating-end">
 		<view class="detail-info">
-			<text> {{currentPointName}} </text>
-			<text> {{distanceInfo}}</text>
+			<text> {{ currentPointName }} </text>
+			<text> {{ distanceInfo }}</text>
 		</view>
 		<button size="mini" hover-class="btn-hover">结束导航</button>
-
 	</view>
-
 
 	<image class="logo" src="{{ logoUrl }}"></image>
 </view>
