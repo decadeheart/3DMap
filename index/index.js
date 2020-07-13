@@ -1,22 +1,11 @@
-const {
-    createScopedThreejs
-} = require("../util/three");
-const {
-    renderModel
-} = require("../js/model");
+const { createScopedThreejs } = require("../util/three");
+const { renderModel, cameraExchange } = require("../js/model");
+const { initData } = require("../js/data");
 
-var dataInit = require("../js/data");
-const {
-    initData
-} = require("../js/data");
-const {
-    map_conf
-} = require("../js/config");
-var nodeList = [];
-var beaconCoordinate = [];
-var POItarget = [];
+const { naviagte } = require("../js/astar");
 
-const app = getApp();
+var app = getApp();
+
 Page({
     data: {
         baseUrl: "https://www.cleverguided.com/iLaN/3D-jxqzf/",
@@ -33,8 +22,18 @@ Page({
         currentPointName: "华中科技大学",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
-        infoFlag: 1,
+        infoFlag: 2,
+        showBlue: false,
+        buttons: [
+            {
+                type: "primary",
+                className: "",
+                text: "确认",
+                value: 1,
+            },
+        ],
     },
+
     onLoad: function () {
         wx.createSelectorQuery()
             .select("#map")
@@ -43,7 +42,9 @@ Page({
                 const canvas = res[0].node;
                 this.canvas = canvas;
                 const THREE = createScopedThreejs(canvas);
-                // renderModel(canvas, THREE);
+                app.canvas = canvas;
+                app.THREE = THREE;
+                renderModel(canvas, THREE);
             });
 
         //初始化图片url
@@ -67,43 +68,119 @@ Page({
 
         /**处理数据 */
         initData.then((res) => {
-                // console.log(res);
-                let data = res.data;
+            console.log(res);
+            let data = res.data;
 
-                nodeList = data.nodeList;
+            app.nodeList = data.nodeList;
 
-                let target = data.target;
-                beaconCoordinate = data.beaconCoordinate;
+            let target = data.target;
+            app.beaconCoordinate = data.beaconCoordinate;
 
-                for (let build in target) {
-                    for (let floor in target[build]) {
-                        target[build][floor].forEach(function (item) {
-                            item.z = (item.floor - 1) * map_conf.layerHeight;
-                            item.floor = parseInt(floor);
-                            item.building = build;
-                            POItarget.push(item);
-                        });
-                    }
+            for (let build in target) {
+                for (let floor in target[build]) {
+                    target[build][floor].forEach(function (item) {
+                        item.z = (item.floor - 1) * app.map_conf.layerHeight;
+                        item.floor = parseInt(floor);
+                        item.building = build;
+                        app.POItarget.push(item);
+                    });
                 }
-                // console.log(POItarget);
-                nodeList.forEach(function (node) {
-                    node.z = (node.floor - 1) * map_conf.layerHeight;
-                });
-                beaconCoordinate.forEach(function (node) {
-                    node.z = (node.floor - 1) * map_conf.layerHeight;
-                });
+            }
 
-                // console.log(nodeList);
-            }),
+            app.nodeList.forEach(function (node) {
+                node.z = (node.floor - 1) * app.map_conf.layerHeight;
+            });
+            app.beaconCoordinate.forEach(function (node) {
+                node.z = (node.floor - 1) * app.map_conf.layerHeight;
+            });
+
+            console.log(app.nodeList);
+
+            naviagte(app.nodeList);
+        }),
             (err) => {
                 console.log(err);
             };
+
+        wx.getSetting({
+            success(res) {
+                if (!res.authSetting["scope.userLocation"]) {
+                    wx.authorize({
+                        scope: "scope.userLocation",
+                        success() {
+                            // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+                            wx.getLocation();
+                        },
+                    });
+                }
+            },
+        });
+
+        /** ibeacon 打开测试 */
+        wx.startBeaconDiscovery({
+            uuids: ["FDA50693-A4E2-4FB1-AFCF-C6EB07647825"],
+            success: (result) => {
+                console.log("开始扫描设备");
+                wx.showToast({
+                    title: "扫描成功",
+                    icon: "none",
+                    image: "",
+                    duration: 1500,
+                    mask: true,
+                });
+            },
+            fail: (res) => {
+                console.log(res);
+                if (res.errCode === 11000 || res.errCode === 11001) {
+                    this.setData({
+                        showBlue: true,
+                    });
+                }
+            },
+        });
+    },
+
+    /**
+     * @description 弹窗事件
+     * @date 2020-07-13
+     * @param {*} e
+     */
+    buttontap(e) {
+        console.log(e.detail);
+        this.setData({
+            showBlue: true,
+        });
+        wx.startBeaconDiscovery({
+            uuids: ["FDA50693-A4E2-4FB1-AFCF-C6EB07647825"],
+            success: (result) => {
+                console.log("开始扫描设备");
+                wx.showToast({
+                    title: "扫描成功",
+                    icon: "none",
+                    image: "",
+                    duration: 1500,
+                    mask: true,
+                });
+                this.setData({
+                    showBlue: false,
+                });
+            },
+            fail: (res) => {
+                console.log(res);
+                if (res.errCode === 11000 || res.errCode === 11001) {
+                    this.setData({
+                        showBlue: true,
+                    });
+                }
+            },
+        });
     },
     /**
      * @description 地图二维和三维视角切换
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
+        cameraExchange(app.canvas, app.THREE);
         this.setData({
             dimension: index,
         });
@@ -191,10 +268,5 @@ Page({
     },
     onPullDownRefresh: function () {
         wx.stopPullDownRefresh();
-    }
-
+    },
 });
-
-module.exports = {
-    nodeList: nodeList,
-};

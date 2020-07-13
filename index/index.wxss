@@ -216,14 +216,14 @@
 
 .currentPoint {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
     /* padding-left: 30%; */
     height: 58%;
     width: 100%;
     border-bottom: 1rpx solid #ccc;
 }
-.currentPoint text:first-child{
+.currentPoint text:first-child {
     font-size: 45rpx;
     /* height: 55%; */
 }
@@ -232,7 +232,7 @@
     background-color: #fff;
     color: rgb(72, 131, 246);
     margin-left: 85rpx;
-    border:5rpx solid rgb(72, 131, 246);
+    border: 5rpx solid rgb(72, 131, 246);
 }
 
 .settingBox {
@@ -253,7 +253,7 @@
     /* flex: 1; */
 }
 
-.settingBox view:nth-child(-n+2){
+.settingBox view:nth-child(-n + 2) {
     width: 50%;
     border-right: 1rpx solid #ccc;
 }
@@ -279,7 +279,6 @@
     width: 80%;
     font-size: x-large;
     text-align: center;
-
 }
 
 .detail-info text:nth-child(2) {
@@ -324,7 +323,6 @@
     left: 3rpx;
     opacity: 0.9;
     transform: scale(0.95, 0.95);
-
 }
 
 /* logo */
