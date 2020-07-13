@@ -107,7 +107,6 @@
   	tips="打开蓝牙后，请在点击确认"
   	buttons="{{buttons}}"
 	></mp-halfScreenDialog>
-	<button class="weui-btn" type="primary" bindtap="open">Open</button>
 
 	<image class="logo" src="{{ logoUrl }}"></image>
 </view>
