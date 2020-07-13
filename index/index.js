@@ -193,11 +193,11 @@ Page({
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
-        cameraExchange(app.canvas, app.THREE);
         this.setData({
             dimension: index,
 
         });
+        cameraExchange(app.canvas, app.THREE);
     },
     /**
      * @description 页面点击楼层图片，切换楼层
