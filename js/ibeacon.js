@@ -39,12 +39,29 @@ function beaconUpdate() {
             return;
         }
 
-        console.log(result);
-
         app.localization.getBlue(result.x, result.y, result.z, result.floor);
+        // 超时停止扫描  
+        setTimeout(function () {
+            wx.stopBeaconDiscovery({
+              success: function () {
+                console.log("停止扫描设备！");
+                console.log(result)
+                wx.showToast({
+                  title: '停止扫描设备！定位结果',
+                  icon:'success',
+                  duration:1500
+                })
+              }
+            });
+          }, 1 * 1500); 
     });
 }
-
+/**
+ * @description 和列表中的蓝牙进行比对
+ * @date 2020-07-14
+ * @param {*} obj
+ * @returns
+ */
 function matchRecord(obj) {
     for(let i=0; i<app.beaconCoordinate.length; i++){
         if(obj.major == app.beaconCoordinate[i].major && obj.minor == app.beaconCoordinate[i].minor) {
@@ -124,6 +141,10 @@ function getMaxPossiblePoint() {
     });
 
     return temp[0];
+}
+
+function closeBlueScan() {
+
 }
 
 module.exports = {

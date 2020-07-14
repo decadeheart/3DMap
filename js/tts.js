@@ -33,7 +33,7 @@ var getAudioSrc = (text) => {
 /**
  * @description 播放语音
  */
-async function tts() {
+async function tts(text) {
 	const innerAudioContext = wx.createInnerAudioContext()
 	wx.setInnerAudioOption({
 		obeyMuteSwitch: false
