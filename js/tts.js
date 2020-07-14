@@ -33,14 +33,14 @@ var getAudioSrc = (text) => {
 /**
  * @description 播放语音
  */
-async function tts() {
+ async function tts(text) {
 	const innerAudioContext = wx.createInnerAudioContext()
 	wx.setInnerAudioOption({
 		obeyMuteSwitch: false
 	})
 	innerAudioContext.playbackRate = 2;
 	innerAudioContext.autoplay = true;
-	innerAudioContext.src = encodeURI(await getAudioSrc(text))
+	innerAudioContext.src = encodeURI( await getAudioSrc(text))
 	innerAudioContext.onPlay(() => {
 		console.log('开始播放')
 	})
@@ -61,6 +61,4 @@ async function tts() {
 	// 	})
 	// }
 }
-module.exports = {
-	tts: tts
-}
+export default tts

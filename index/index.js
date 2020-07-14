@@ -1,10 +1,9 @@
-const { createScopedThreejs } = require("../util/three");
-const { renderModel, cameraExchange } = require("../js/model");
-const { initData } = require("../js/data");
-const { naviagte } = require("../js/astar");
-const {tts}=require("../js/tts");
+import { createScopedThreejs } from "../util/three";
+import { renderModel, cameraExchange } from "../js/model";
+import { initData } from "../js/data";
+import { naviagte } from "../js/astar";
+import main from "./main";
 var app = getApp();
-
 Page({
     data: {
         baseUrl: "https://www.cleverguided.com/iLaN/3D-jxqzf/",
@@ -34,6 +33,7 @@ Page({
     },
 
     onLoad: function () {
+        // tts("你好")
         wx.createSelectorQuery()
             .select("#map")
             .node()
@@ -215,10 +215,10 @@ Page({
      */
     getMyLocation() {
         console.log("我在这");
-        tts("你好世界");
-        tts("你好中国");
-        tts("你好湖北");
-        tts("你好武汉");
+        main.tts("你好世界");
+        // tts("你好中国");
+        // tts("你好湖北");
+        // tts("你好武汉");
     },
     test() {
         this.setData({

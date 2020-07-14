@@ -17,6 +17,5 @@ function beaconUpdate() {
 }
 
 module.exports = {
-
     beaconUpdate: beaconUpdate
 }
