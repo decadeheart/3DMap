@@ -1,10 +1,10 @@
 const { createScopedThreejs } = require("../util/three");
 const { renderModel, cameraExchange } = require("../js/model");
 const { initData } = require("../js/data");
-
 const { naviagte } = require("../js/astar");
 const { beaconUpdate } = require("../js/ibeacon");
 
+const {tts}=require("../js/tts");
 var app = getApp();
 
 Page({
@@ -221,6 +221,10 @@ Page({
      */
     getMyLocation() {
         console.log("我在这");
+        tts("你好世界");
+        tts("你好中国");
+        tts("你好湖北");
+        tts("你好武汉");
     },
     test() {
         this.setData({
