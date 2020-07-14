@@ -45,7 +45,7 @@ Page({
                 const THREE = createScopedThreejs(canvas);
                 app.canvas = canvas;
                 app.THREE = THREE;
-                //renderModel(canvas, THREE);
+                renderModel(canvas, THREE);
             });
 
         //初始化图片url
