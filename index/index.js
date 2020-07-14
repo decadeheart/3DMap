@@ -3,6 +3,7 @@ const { renderModel, cameraExchange } = require("../js/model");
 const { initData } = require("../js/data");
 
 const { naviagte } = require("../js/astar");
+const { beaconUpdate } = require("../js/ibeacon");
 
 var app = getApp();
 
@@ -44,7 +45,7 @@ Page({
                 const THREE = createScopedThreejs(canvas);
                 app.canvas = canvas;
                 app.THREE = THREE;
-                renderModel(canvas, THREE);
+                //renderModel(canvas, THREE);
             });
 
         //初始化图片url
@@ -98,17 +99,18 @@ Page({
 
             naviagte(app.nodeList);
         }),
-            (err) => {
+        (err) => {
                 console.log(err);
-            };
+        };
 
+        /** 初始化授权 */
         wx.getSetting({
             success(res) {
                 if (!res.authSetting["scope.userLocation"]) {
                     wx.authorize({
                         scope: "scope.userLocation",
                         success() {
-                            // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+                            // 用户已经同意小程序使用定位功能
                             wx.getLocation();
                         },
                     });
@@ -128,6 +130,7 @@ Page({
                     duration: 1500,
                     mask: true,
                 });
+                beaconUpdate();
             },
             fail: (res) => {
                 console.log(res);
@@ -164,6 +167,7 @@ Page({
                 this.setData({
                     showBlue: false,
                 });
+                beaconUpdate();
             },
             fail: (res) => {
                 console.log(res);

@@ -6,6 +6,7 @@ App({
 
     nodeList: [],
     beaconCoordinate: [],
+
     POItarget: [],
     map_conf: {
         map_id: "jxqzf",
@@ -40,4 +41,45 @@ App({
             layer_height: 10,
         },
     ],
+    localization :{
+      lastBluePosition: {x: null, y: null, z: null, floor: null},
+      lastBluePosition: 1,
+      isWXReady: false,
+      GPSOpen: 0,
+      BluetoothOpen: 1,
+      Counter: 0,
+      BluetoothState: false,
+      GPSx: 0,
+      GPSy: 0,
+      setModel: function (mode) {
+          switch (mode) {
+              case "GPS":
+                  this.GPSOpen = 1;
+                  this.BluetoothOpen = 1;
+                  break;
+              case "BLUE":
+                  this.GPSOpen = 0;
+                  this.BluetoothOpen = 1;//蓝牙一直打开
+                  break;
+              case "OFF":
+                  this.GPSOpen = 0;
+                  this.BluetoothOpen = 0;
+                  break;
+          }
+      },
+      getBlue: function (x, y, z, floor) {
+  
+          this.lastBluePosition = {x: x, y: y, z: z, floor: floor};
+          if (this.BluetoothOpen === 1) {
+              this.setModel("BLUE");
+              this.Counter = 0;
+              // if (!systemControl.isStimulation()) {
+  
+              //     TWEEN.remove(TweenControl.preLocationTween);
+              //     TweenControl.preLocationTween = userControl.changePosition(x, y, z, "animation");
+              // }
+  
+          }
+      },
+  }    
 });
