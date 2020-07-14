@@ -1,9 +1,8 @@
 const { createScopedThreejs } = require("../util/three");
 const { renderModel, cameraExchange } = require("../js/model");
 const { initData } = require("../js/data");
-
 const { naviagte } = require("../js/astar");
-
+const {tts}=require("../js/tts");
 var app = getApp();
 
 Page({
@@ -44,7 +43,7 @@ Page({
                 const THREE = createScopedThreejs(canvas);
                 app.canvas = canvas;
                 app.THREE = THREE;
-                renderModel(canvas, THREE);
+                // renderModel(canvas, THREE);
             });
 
         //初始化图片url
@@ -108,7 +107,6 @@ Page({
                     wx.authorize({
                         scope: "scope.userLocation",
                         success() {
-                            // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
                             wx.getLocation();
                         },
                     });
@@ -217,6 +215,10 @@ Page({
      */
     getMyLocation() {
         console.log("我在这");
+        tts("你好世界");
+        tts("你好中国");
+        tts("你好湖北");
+        tts("你好武汉");
     },
     test() {
         this.setData({
