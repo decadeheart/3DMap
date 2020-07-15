@@ -4,6 +4,8 @@ import naviagte from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
+import accChange from "../js/motionDetection";
+
 
 var app = getApp();
 var nodeList;
@@ -19,7 +21,7 @@ main.initData = function () {
             const THREE = createScopedThreejs(canvas);
             app.canvas = canvas;
             app.THREE = THREE;
-            renderModel(canvas, THREE);
+            //renderModel(canvas, THREE);
         });
     // wx.createSelectorQuery()
     //     .select("#font")
@@ -120,4 +122,9 @@ main.startBeaconDiscovery = function () {
         });
     });
 };
+
+main.stepChange = function (that) {
+    accChange(that);
+}
+
 export default main;
