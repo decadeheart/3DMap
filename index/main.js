@@ -1,7 +1,8 @@
-import tts from "../js/tts";
 import { createScopedThreejs } from "../util/three";
 import { renderModel, cameraExchange } from "../js/model";
-import { naviagte } from "../js/astar";
+import naviagte from "../js/astar";
+import initData from "../js/data";
+import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 
 var app = getApp();
@@ -19,24 +20,7 @@ main.initData = function () {
             main.THREE = THREE;
             // renderModel(canvas, THREE);
         });
-    /**获取数据 */
-    const initData = new Promise((resolve, reject) => {
-        wx.request({
-            url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
-            data: {},
-            header: { "content-type": "application/json" },
-            method: "GET",
-            dataType: "json",
-            responseType: "text",
-            success: (res) => {
-                resolve(res);
-            },
-            fail: (err) => {
-                reject(err);
-            },
-        });
-	});
-	// 处理数据 
+    // 处理数据
     initData.then((res) => {
         // console.log(res);
         let data = res.data;
@@ -89,38 +73,37 @@ main.cameraExchange = function () {
     cameraExchange(main.canvas, main.THREE);
 };
 /** ibeacon 打开测试 */
-main.startBeaconDiscovery=function(){
-	return new Promise((resolve,reject)=>{
-		wx.startBeaconDiscovery({
-			uuids: ["FDA50693-A4E2-4FB1-AFCF-C6EB07647825"],
-			success: (result) => {
-				console.log("开始扫描设备");
-				wx.showToast({
-					title: "扫描成功",
-					icon: "none",
-					image: "",
-					duration: 1500,
-					mask: true,
-				});
-				// beaconUpdate();
-				var data={
-					status:"success",
-					showBlueStatus:false
-				}
-				resolve(data);
-			},
-			fail: (res) => {
-				console.log(res);
-				if (res.errCode === 11000 || res.errCode === 11001) {
-					var data={
-						status:"error",
-						showBlueStatus:true
-					}
-					resolve(data)
-				}
-			},
-		});
-	})
-	
-}
+main.startBeaconDiscovery = function () {
+    return new Promise((resolve, reject) => {
+        wx.startBeaconDiscovery({
+            uuids: ["FDA50693-A4E2-4FB1-AFCF-C6EB07647825"],
+            success: (result) => {
+                console.log("开始扫描设备");
+                wx.showToast({
+                    title: "扫描成功",
+                    icon: "none",
+                    image: "",
+                    duration: 1500,
+                    mask: true,
+                });
+                beaconUpdate();
+                var data = {
+                    status: "success",
+                    showBlueStatus: false,
+                };
+                resolve(data);
+            },
+            fail: (res) => {
+                console.log(res);
+                if (res.errCode === 11000 || res.errCode === 11001) {
+                    var data = {
+                        status: "error",
+                        showBlueStatus: true,
+                    };
+                    resolve(data);
+                }
+            },
+        });
+    });
+};
 export default main;

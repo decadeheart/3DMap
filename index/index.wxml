@@ -140,7 +140,7 @@
 
     <!-- 蓝牙反馈-->
     <mp-halfScreenDialog
-        bindbuttontap="buleToothTap"
+        bindbuttontap="blueToothTap"
         show="{{ showBlue }}"
         maskClosable="{{ false }}"
         title="蓝牙连接"

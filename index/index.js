@@ -17,7 +17,7 @@ Page({
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
         infoFlag: 2,
-        showBlue: true,
+        showBlue: false,
         buttons: [
             {
                 type: "primary",
@@ -48,13 +48,13 @@ Page({
         });
 
         main.initData();
-        var that=this;
-        main.startBeaconDiscovery().then((res=>{
-            console.log(res,this);
+        var that = this;
+        main.startBeaconDiscovery().then((res) => {
+            console.log(res, this);
             that.setData({
                 showBlue: res.showBlueStatus,
             });
-        }))
+        });
     },
 
     /**
@@ -62,25 +62,25 @@ Page({
      * @date 2020-07-13
      * @param {*} e
      */
-    buleToothTap(e) {
+    blueToothTap(e) {
         // console.log(e.detail);
         this.setData({
             showBlue: true,
         });
-        var that=this;
-        main.startBeaconDiscovery().then((res=>{
-            console.log(res,this);
+        var that = this;
+        main.startBeaconDiscovery().then((res) => {
+            console.log(res, this);
             that.setData({
                 showBlue: res.showBlueStatus,
             });
-        }))
+        });
     },
     /**
      * @description 地图二维和三维视角切换
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
-        // main.cameraExchange();
+        main.cameraExchange();
         this.setData({
             dimension: index,
         });
