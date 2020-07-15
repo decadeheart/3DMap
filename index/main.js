@@ -1,16 +1,30 @@
 import { createScopedThreejs } from "../util/three";
-import { renderModel, cameraExchange } from "../js/model";
+import * as MODEL from "../js/model";
 import naviagte from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
+import accChange from "../js/motionDetection";
+
 
 var app = getApp();
 var nodeList;
 
 var main = {};
 main.initData = function () {
-    //分别获取地图、文字精灵和图片精灵canvas并创建相应处理Threejs实例
+    //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
+    wx.createSelectorQuery()
+        .select("#font")
+        .node()
+        .exec((res) => {
+            app.canvasFont = res[0].node;
+        });
+    wx.createSelectorQuery()
+        .select("#img")
+        .node()
+        .exec((res) => {
+            app.canvasImg = res[0].node;
+        });
     wx.createSelectorQuery()
         .select("#map")
         .node()
@@ -18,22 +32,11 @@ main.initData = function () {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
             app.canvas = canvas;
-            app.THREE = THREE;
-            renderModel(canvas, THREE);
+            app.THREE = THREE;            
+            MODEL.renderModel(canvas,THREE);
+            MODEL.loadTargetText();
         });
-    // wx.createSelectorQuery()
-    //     .select("#font")
-    //     .node()
-    //     .exec((res) => {
-    //         app.canvasFont = res[0].node;
-    //     });
-    // wx.createSelectorQuery()
-    //     .select("#img")
-    //     .node()
-    //     .exec((res) => {
-    //         app.canvasImg = res[0].node;
-    //         MODEL.loadTargetText();
-    //     });
+    
     // 处理数据
     initData.then((res) => {
         // console.log(res);
@@ -84,7 +87,7 @@ main.initData = function () {
     });
 };
 main.cameraExchange = function () {
-    cameraExchange(main.canvas, main.THREE);
+    MODEL.cameraExchange();
 };
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
@@ -120,4 +123,9 @@ main.startBeaconDiscovery = function () {
         });
     });
 };
+
+main.stepChange = function (that) {
+    accChange(that);
+}
+
 export default main;

@@ -12,8 +12,7 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true,
-    "disableScroll": true
+    "enablePullDownRefresh": true
   },
   "sitemapLocation": "sitemap.json",
   "useExtendedLib": {
