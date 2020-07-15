@@ -10,16 +10,30 @@ var nodeList;
 
 var main = {};
 main.initData = function () {
+    //分别获取地图、文字精灵和图片精灵canvas并创建相应处理Threejs实例
     wx.createSelectorQuery()
         .select("#map")
         .node()
         .exec((res) => {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
-            main.canvas = canvas;
-            main.THREE = THREE;
-            // renderModel(canvas, THREE);
+            app.canvas = canvas;
+            app.THREE = THREE;
+            renderModel(canvas, THREE);
         });
+    // wx.createSelectorQuery()
+    //     .select("#font")
+    //     .node()
+    //     .exec((res) => {
+    //         app.canvasFont = res[0].node;
+    //     });
+    // wx.createSelectorQuery()
+    //     .select("#img")
+    //     .node()
+    //     .exec((res) => {
+    //         app.canvasImg = res[0].node;
+    //         MODEL.loadTargetText();
+    //     });
     // 处理数据
     initData.then((res) => {
         // console.log(res);

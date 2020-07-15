@@ -1,16 +1,16 @@
 <view class="container">
     <!-- 地图容器 -->
-    <!-- <canvas
+    <canvas
         type="webgl"
         id="map"
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd"
-    ></canvas> -->
-    <canvas
+    ></canvas>
+    <!-- <canvas
         type="webgl"
         id="map"
-    ></canvas>
+    ></canvas> -->
 
     <!-- 正上方搜索框 16%-->
     <view wx:if="{{ navFlag == 1 }}" class="search" bindtap="goSearch">
