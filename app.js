@@ -4,6 +4,7 @@ App({
 
     canvas: null,
     canvasFont: null,
+    canvasImg: null,
     THREE: null,
     nodeList: [],
     beaconCoordinate: [],
@@ -12,7 +13,7 @@ App({
     map_conf: {
         map_id: "jxqzf",
         map_name: "江夏区政府",
-        img_dir: "../target_img/",
+        img_dir: "https://www.cleverguided.com/iLaN/3D-jxqzf/target_img/",
         defaultFocus: { x: 0, y: 0 },
         defaultCameraPosi: { x: 0, y: -100, z: 200 },
         defaultUserPosition: { x: 0, y: 0 },

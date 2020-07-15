@@ -19,5 +19,4 @@ const initData = new Promise((resolve,reject)=>{
   })
 })
 
-
-// export default initData
+export default initData

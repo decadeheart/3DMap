@@ -1,7 +1,8 @@
-import tts from "../js/tts";
 import { createScopedThreejs } from "../util/three";
-import * as model from "../js/model";
-import { naviagte } from "../js/astar";
+import * as MODEL from "../js/model";
+import naviagte from "../js/astar";
+import initData from "../js/data";
+import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 
 var app = getApp();
@@ -9,41 +10,32 @@ var nodeList;
 
 var main = {};
 main.initData = function () {
+    //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
+    wx.createSelectorQuery()
+        .select("#font")
+        .node()
+        .exec((res) => {
+            app.canvasFont = res[0].node;
+        });
+    wx.createSelectorQuery()
+        .select("#img")
+        .node()
+        .exec((res) => {
+            app.canvasImg = res[0].node;
+        });
     wx.createSelectorQuery()
         .select("#map")
         .node()
         .exec((res) => {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
-            main.canvas = canvas;
-            main.THREE = THREE;
-            model.renderModel(canvas, THREE);
+            app.canvas = canvas;
+            app.THREE = THREE;            
+            MODEL.renderModel();
+            MODEL.loadTargetText();
         });
-    wx.createSelectorQuery()
-        .select("#font")
-        .node()
-        .exec((res) => {
-            main.canvasFont = res[0].node;
-            model.renderModel(canvas, THREE);
-        });
-    /**获取数据 */
-    const initData = new Promise((resolve, reject) => {
-        wx.request({
-            url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
-            data: {},
-            header: { "content-type": "application/json" },
-            method: "GET",
-            dataType: "json",
-            responseType: "text",
-            success: (res) => {
-                resolve(res);
-            },
-            fail: (err) => {
-                reject(err);
-            },
-        });
-    });
-    // 处理数据 
+    
+    // 处理数据
     initData.then((res) => {
         // console.log(res);
         let data = res.data;
@@ -93,7 +85,7 @@ main.initData = function () {
     });
 };
 main.cameraExchange = function () {
-    cameraExchange(main.canvas, main.THREE);
+    MODEL.cameraExchange();
 };
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
@@ -109,11 +101,11 @@ main.startBeaconDiscovery = function () {
                     duration: 1500,
                     mask: true,
                 });
-                // beaconUpdate();
+                beaconUpdate();
                 var data = {
                     status: "success",
-                    showBlueStatus: false
-                }
+                    showBlueStatus: false,
+                };
                 resolve(data);
             },
             fail: (res) => {
@@ -121,13 +113,12 @@ main.startBeaconDiscovery = function () {
                 if (res.errCode === 11000 || res.errCode === 11001) {
                     var data = {
                         status: "error",
-                        showBlueStatus: true
-                    }
-                    resolve(data)
+                        showBlueStatus: true,
+                    };
+                    resolve(data);
                 }
             },
         });
-    })
-
-}
+    });
+};
 export default main;

@@ -11,6 +11,7 @@ var app = getApp();
  * @date 2020-07-13
  */
 function beaconUpdate() { 
+    console.log(123)
     wx.onBeaconUpdate((res) => {
         let data = [];
 
@@ -147,6 +148,7 @@ function closeBlueScan() {
 
 }
 
-module.exports = {
-    beaconUpdate: beaconUpdate
-}
+// module.exports = {
+//     beaconUpdate: beaconUpdate
+// }
+export default beaconUpdate;

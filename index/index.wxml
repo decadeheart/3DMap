@@ -1,20 +1,19 @@
 <view class="container">
     <!-- 地图容器 -->
-    <!-- <canvas
+    <canvas
         type="webgl"
         id="map"
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd"
-    ></canvas> -->
-    <canvas
-        type="webgl"
-        id="map"
     ></canvas>
+    <!-- 文字精灵容器 -->
     <canvas
         type="2d"
         id="font"
+        canvas-id="test"
     ></canvas>
+    <!-- 图片精灵容器 -->
     <canvas
         type="2d"
         id="img"
@@ -148,7 +147,7 @@
 
     <!-- 蓝牙反馈-->
     <mp-halfScreenDialog
-        bindbuttontap="buleToothTap"
+        bindbuttontap="blueToothTap"
         show="{{ showBlue }}"
         maskClosable="{{ false }}"
         title="蓝牙连接"

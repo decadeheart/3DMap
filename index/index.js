@@ -17,7 +17,7 @@ Page({
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
         infoFlag: 2,
-        showBlue: true,
+        showBlue: false,
         buttons: [
             {
                 type: "primary",
@@ -29,33 +29,6 @@ Page({
     },
 
     onLoad: function () {
-        //分别获取地图、文字精灵和图片精灵canvas并创建相应处理Threejs实例
-        wx.createSelectorQuery()
-            .select("#map")
-            .node()
-            .exec((res) => {
-                const canvas = res[0].node;
-                this.canvas = canvas;
-                const THREE = createScopedThreejs(canvas);
-                app.canvas = canvas;
-                app.THREE = THREE;
-                MODEL.renderModel();
-            });
-        wx.createSelectorQuery()
-            .select("#font")
-            .node()
-            .exec((res) => {
-                app.canvasFont = res[0].node;
-
-            });
-        wx.createSelectorQuery()
-            .select("#img")
-            .node()
-            .exec((res) => {
-                app.canvasImg = res[0].node;
-                MODEL.loadTargetText();
-            });
-
         //初始化图片url
         this.setData({
             dimensionImgUrl: [
@@ -75,13 +48,13 @@ Page({
         });
 
         main.initData();
-        var that=this;
-        main.startBeaconDiscovery().then((res=>{
-            console.log(res,this);
+        var that = this;
+        main.startBeaconDiscovery().then((res) => {
+            console.log(res, this);
             that.setData({
                 showBlue: res.showBlueStatus,
             });
-        }))
+        });
     },
 
     /**
@@ -89,18 +62,18 @@ Page({
      * @date 2020-07-13
      * @param {*} e
      */
-    buleToothTap(e) {
+    blueToothTap(e) {
         // console.log(e.detail);
         this.setData({
             showBlue: true,
         });
-        var that=this;
-        main.startBeaconDiscovery().then((res=>{
-            console.log(res,this);
+        var that = this;
+        main.startBeaconDiscovery().then((res) => {
+            console.log(res, this);
             that.setData({
                 showBlue: res.showBlueStatus,
             });
-        }))
+        });
     },
 
     /**
@@ -108,7 +81,7 @@ Page({
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
-        // main.cameraExchange();
+        main.cameraExchange();
         this.setData({
             dimension: index,
         });
@@ -186,19 +159,19 @@ Page({
     },
 
     touchStart(e) {
-        main.canvas.dispatchTouchEvent({
+        app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchstart",
         });
     },
     touchMove(e) {
-        main.canvas.dispatchTouchEvent({
+        app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchmove",
         });
     },
     touchEnd(e) {
-        main.canvas.dispatchTouchEvent({
+        app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchend",
         });

@@ -277,6 +277,4 @@ function naviagte(nodeList) {
     console.log("结果: ", resultParent);
 }
 
-module.exports = {
-    naviagte: naviagte,
-};
+export default naviagte;

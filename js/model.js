@@ -30,7 +30,7 @@ export function renderModel() {
         //设置相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.5, 2000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0, 200, 300);
+        camera.position.set(0, 0, 400);
 
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
@@ -43,7 +43,7 @@ export function renderModel() {
             function (gltf) {
                 model = gltf.scene;
                 //微调位置
-                model.rotation.x += -Math.PI / 2;
+                //model.rotation.x += -Math.PI / 2;
                 model.position.x += -60;
                 model.position.y += -20;
                 scene.add(model);
@@ -63,9 +63,9 @@ export function renderModel() {
         renderer.gammaOutput = true;
         renderer.gammaFactor = 2.2;
 
-        //加载手势控制器
-        const { OrbitControls } = registerOrbit(THREE);
-        controls = new OrbitControls(camera, renderer.domElement);
+        //加载手势控制器，有MapControls和OrbitControls两种操作方式
+        const { MapControls } = registerOrbit(THREE);
+        controls = new MapControls(camera, renderer.domElement);
         controls.update();
     }
     /**
@@ -100,11 +100,16 @@ export function cameraExchange() {
     function animate() {
         canvas.requestAnimationFrame(animate);
         renderer.render(scene, camera);
-        TWEEN.update(); //更新动画，配合initTween使用
         camera.lookAt(new THREE.Vector3(0, 0, 0)); //保持注视位置不变
+        TWEEN.update(); //更新动画，配合initTween使用
+
     }
 }
-
+/**
+ * @description 计算一个数字转为二进制后同位数最大值+1（如：5=>101的同位最大值为111，加一后为1000）
+ * @param {*} x 数字
+ * @returns 见描述
+ */
 function maxnum_exp2(x) {
     let position, num = 1;
     if (x !== 0) {
@@ -113,10 +118,13 @@ function maxnum_exp2(x) {
         }
     }
     num = 1 << (position);
-
     return num;
 }
-
+/**
+ * @description 获取文字长度
+ * @param {*} val 文字信息
+ * @returns 返回文字长度
+ */
 function getByteLen(val) {
     let len = 0;
     for (let i = 0; i < val.length; i++) {
@@ -130,15 +138,21 @@ function getByteLen(val) {
     }
     return len / 2;
 }
-
+/**
+ * @description 创建文字和图片精灵
+ * @param {*} message 文字信息
+ * @param {*} imageURL 图片地址
+ * @returns 返回创建完成的精灵
+ */
 function makeSprite(message, imageURL) {
+    //为全局变量改名
     let THREE = app.THREE;
     let map_conf = app.map_conf;
+
     //字体类型、大小、颜色
     let fontface = "Arial"
     let fontsize = 60;
     let fontColor = "#000000";
-
     //创建画布并设置宽高
     let canvas = app.canvasFont;
     let messageLen = getByteLen(message);
@@ -146,7 +160,6 @@ function makeSprite(message, imageURL) {
     let height = fontsize * 1.3;
     canvas.width = width;
     canvas.height = height;
-
     //在画布上创建字体原型
     let context = canvas.getContext('2d');
     context.fillStyle = fontColor;
@@ -154,85 +167,104 @@ function makeSprite(message, imageURL) {
     context.fillText(message, 0, fontsize);
     //获取文字的大小数据，高度取决于文字的大小
     let textWidth = context.measureText(message).width;
-    //console.log(textWidth, height);
-    //获取画布的图像信息,一个副本
+    //获取画布的图像信息，一个副本
     let textdata = context.getImageData(0, 0, textWidth, height);
-    context.clearRect(0, 0, canvas.width, canvas.height);
 
     //重新设置画布的大小
     let width2 = maxnum_exp2(textWidth);
     let height2 = maxnum_exp2(height);
     canvas.width = width2;
     canvas.height = height2;
-    //canvas.setAttribute("width", width2);
-    //canvas.setAttribute("height", height2);
     context.putImageData(textdata, (width2 - textWidth) / 2, (height2 - height) / 2);
-    //画布内容用于纹理贴图
-    // let texture = new THREE.Texture(canvas);
-    // texture.needsUpdate = true;
-    var texture = THREE.ImageUtils.loadTexture("../style/black.jpg",null,function(t)
-        {
-        });
-    //texture.setCrossOrigin( 'Anonymous');
+
+    //将canvas转换为图片，方便进行纹理贴图（canvas直接贴图会报没有相应转换函数的错误）
+    var dataUrl = canvas.toDataURL('../style/word.png')
+    //纹理贴图
+    var texture = new THREE.TextureLoader().load(dataUrl);
+    //创建精灵
     let spriteMaterial = new THREE.SpriteMaterial({ map: texture, depthTest: true });
     let sprite = new THREE.Sprite(spriteMaterial);
-    //sprite.material.map.minFilter = THREE.LinearFilter;
-
+    //这句为了防止warning
+    sprite.material.map.minFilter = THREE.LinearFilter;
     //缩放比例
     sprite.scale.set(map_conf.TargetSpriteScale * width2 / height2, map_conf.TargetSpriteScale, 1);
     sprite.initScale = { x: map_conf.TargetSpriteScale * width2 / height2, y: map_conf.TargetSpriteScale, z: 1 };
-    //绘制相应图标
-    // if (imageURL !== null) {
-    //     let img = canvas.createImage();
-    //     let imgsize = 128;
-    //     img.src = imageURL;
-    //     img.onload = function () {
-    //         let canvas2 = app.canvasImg;
-    //         let context2 = canvas2.getContext('2d');
-    //         canvas2.setAttribute("width", imgsize);
-    //         canvas2.setAttribute("height", imgsize);
-    //         context2.drawImage(img, 0, 0, imgsize, imgsize);
-    //         let imagedata = context2.getImageData(0, 0, imgsize, imgsize);
-    //         let width3 = maxnum_exp2(Math.max(textWidth, imgsize));
-    //         let height3 = maxnum_exp2(height + imgsize);
+    //通过重设canvas大小清空内容（因为需要的内容已经传到sprite中）
+    canvas.width = 0;
 
-    //         canvas.setAttribute("width", width3);
-    //         canvas.setAttribute("height", height3);
-    //         context.putImageData(imagedata, (width3 - imgsize) / 2, 0);
-    //         context.putImageData(textdata, (width3 - textWidth) / 2, imgsize);
-    //         let texture2 = new THREE.Texture(canvas);
-    //         texture2.needsUpdate = true;
-    //         let spriteMaterial = new THREE.SpriteMaterial({ map: texture2, depthTest: true });
-    //         sprite.material = spriteMaterial;
-    //         sprite.scale.set(map_conf.TargetSpriteScale * (height3 / height2) * (width3 / height3), map_conf.TargetSpriteScale * (height3 / height2), 1);
-    //         sprite.initScale = {
-    //             x: sprite.scale.x,
-    //             y: sprite.scale.y,
-    //             z: 1
-    //         };
-    //     }
-    // }
+    //绘制相应图标
+    if (imageURL !== null) {
+        //创建图像实例并设置相关参数
+        let img = canvas.createImage();
+        let imgsize = 64;
+        img.src = imageURL;
+        //加载图片
+        img.onload = function () {
+            //在画布上创建图片原型并绘制
+            let canvas2 = app.canvasImg;
+            let context2 = canvas2.getContext('2d');
+            canvas2.width = imgsize;
+            canvas2.height = imgsize;
+            context2.drawImage(img, 0, 0, imgsize, imgsize);
+            //获取画布的图像信息，一个副本
+            let imagedata = context2.getImageData(0, 0, imgsize, imgsize);
+            //重新设置画布的大小
+            let width3 = maxnum_exp2(Math.max(textWidth, imgsize));
+            let height3 = maxnum_exp2(height + imgsize);
+            canvas.width = width3;
+            canvas.height = height3;
+            context.putImageData(imagedata, (width3 - imgsize) / 2, 0);
+            context.putImageData(textdata, (width3 - textWidth) / 2, imgsize);
+            //转为图片并作为纹理贴图
+            var dataUrl = canvas2.toDataURL('../style/word.png');
+            var texture2 = new THREE.TextureLoader().load(dataUrl);
+            let spriteMaterial = new THREE.SpriteMaterial({ map: texture2, depthTest: true });
+            sprite.material = spriteMaterial;
+            //这句为了防止warning
+            sprite.material.map.minFilter = THREE.LinearFilter;
+            //缩放比例
+            sprite.scale.set(map_conf.TargetSpriteScale * (height3 / height2) * (width3 / height3), map_conf.TargetSpriteScale * (height3 / height2), 1);
+            sprite.initScale = {
+                x: sprite.scale.x,
+                y: sprite.scale.y,
+                z: 1
+            };
+            //通过重设canvas大小清空内容
+            canvas.width = 0;
+            canvas2.width = 0;
+        }
+    }
     return sprite;
 }
-
+/**
+ * @description 加载所有精灵并显示在scene中
+ * @export
+ */
 export function loadTargetText() {
+    //为全局变量改名
     let POItarget = app.POItarget;
     let THREE = app.THREE;
+    //创建精灵组
     let spriteGroup = new THREE.Group();
     let sprite;
+    //添加精灵到精灵组
     POItarget.forEach(function (item) {
-        if (item.img) {
-            sprite = makeSprite(item.name, app.map_conf.img_dir + item.img)
+        if (item.floor == 1) { //暂时只显示第一层
+            if (item.img) {
+                sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
+            }
+            else {
+                sprite = makeSprite(item.name, null);
+            }
+            sprite.level = item.level;
+            sprite.position.set(item.x, item.y, item.z + 15);
+            //微调位置
+            sprite.position.x += -60;
+            sprite.position.y += -20;
+            sprite.floor = item.floor;
+            sprite.center = new THREE.Vector2(0.5, 0.5);
+            spriteGroup.add(sprite);
         }
-        else {
-            sprite = makeSprite(item.name, null);
-        }
-        sprite.level = item.level;
-        sprite.position.set(item.x, item.y, item.z + 15);
-        sprite.floor = item.floor;
-        sprite.center = new THREE.Vector2(0.5, 0.5);
-        spriteGroup.add(sprite);
-
     });
     spriteGroup.name = "text";
     scene.add(spriteGroup);
