@@ -24,7 +24,7 @@
 		},
 		"bundle": true,
 		"useIsolateContext": true,
-		"useCompilerModule": false,
+		"useCompilerModule": true,
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"appid": "wx5387df6615f202ed",

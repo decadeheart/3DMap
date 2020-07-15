@@ -4,6 +4,8 @@ App({
   },
 
   canvas:null,
+  canvasFont:null,
+  canvasImg:null,
   THREE:null,
   
   nodeList : [],

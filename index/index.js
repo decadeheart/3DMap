@@ -1,9 +1,8 @@
+import * as MODEL from "../js/model"; //地图相关操作
+
 const {
     createScopedThreejs
 } = require("../util/three");
-const {
-    renderModel,cameraExchange
-} = require("../js/model");
 const {
     initData
 } = require("../js/data");
@@ -42,6 +41,7 @@ Page({
     },
 
     onLoad: function () {
+        //分别获取地图、文字精灵和图片精灵canvas并创建相应处理Threejs实例
         wx.createSelectorQuery()
             .select("#map")
             .node()
@@ -51,11 +51,24 @@ Page({
                 const THREE = createScopedThreejs(canvas);
                 app.canvas = canvas;
                 app.THREE = THREE;
-                renderModel(canvas, THREE);
+                MODEL.renderModel();
+            });
+        wx.createSelectorQuery()
+            .select("#font")
+            .node()
+            .exec((res) => {
+                app.canvasFont = res[0].node;
+
+            });
+        wx.createSelectorQuery()
+            .select("#img")
+            .node()
+            .exec((res) => {
+                app.canvasImg = res[0].node;
+                MODEL.loadTargetText();
             });
 
         //初始化图片url
-
         this.setData({
             dimensionImgUrl: [
                 this.data.baseUrl + "ui_img/2D.png",
@@ -78,57 +91,58 @@ Page({
             console.log(res);
             let data = res.data;
 
-                app.nodeList = data.nodeList;
+            app.nodeList = data.nodeList;
 
-                let target = data.target;
-                app.beaconCoordinate = data.beaconCoordinate;
+            let target = data.target;
+            app.beaconCoordinate = data.beaconCoordinate;
 
-                for (let build in target) {
-                    for (let floor in target[build]) {
-                        target[build][floor].forEach(function (item) {
-                            item.z = (item.floor - 1) * app.map_conf.layerHeight;
-                            item.floor = parseInt(floor);
-                            item.building = build;
-                            app.POItarget.push(item);
-                        });
-                    }
+            for (let build in target) {
+                for (let floor in target[build]) {
+                    target[build][floor].forEach(function (item) {
+                        item.z = (item.floor - 1) * app.map_conf.layerHeight;
+                        item.floor = parseInt(floor);
+                        item.building = build;
+                        app.POItarget.push(item);
+                    });
                 }
+            }
 
-                app.nodeList.forEach(function (node) {
-                    node.z = (node.floor - 1) * app.map_conf.layerHeight;
-                });
-                app.beaconCoordinate.forEach(function (node) {
-                    node.z = (node.floor - 1) * app.map_conf.layerHeight;
-                });
+            app.nodeList.forEach(function (node) {
+                node.z = (node.floor - 1) * app.map_conf.layerHeight;
+            });
+            app.beaconCoordinate.forEach(function (node) {
+                node.z = (node.floor - 1) * app.map_conf.layerHeight;
+            });
 
-                console.log(app.nodeList);
+            console.log(app.nodeList);
+            console.log(app.POItarget);
 
-                naviagte(app.nodeList);
-            }),
+            naviagte(app.nodeList);
+        }),
             (err) => {
                 console.log(err);
             };
 
 
-            wx.getSetting({
-                success(res) {
-                  if (!res.authSetting['scope.userLocation']) {
+        wx.getSetting({
+            success(res) {
+                if (!res.authSetting['scope.userLocation']) {
                     wx.authorize({
-                      scope: 'scope.userLocation',
-                      success () {
-                        // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
-                        wx.getLocation();
+                        scope: 'scope.userLocation',
+                        success() {
+                            // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+                            wx.getLocation();
 
-                      }
+                        }
                     })
-                  }
                 }
-              })
+            }
+        })
 
         /** ibeacon 打开测试 */
         wx.startBeaconDiscovery({
             uuids: ['FDA50693-A4E2-4FB1-AFCF-C6EB07647825'],
-            success: (result)=>{
+            success: (result) => {
                 console.log("开始扫描设备")
                 wx.showToast({
                     title: '扫描成功',
@@ -137,20 +151,16 @@ Page({
                     duration: 1500,
                     mask: true,
                 });
-                
             },
-            fail: (res)=>{
+            fail: (res) => {
                 console.log(res);
-                if(res.errCode === 11000 || res.errCode === 11001 ) {
+                if (res.errCode === 11000 || res.errCode === 11001) {
                     this.setData({
                         showBlue: true
                     })
                 }
             },
         })
-
-
-            
     },
 
     /**
@@ -165,7 +175,7 @@ Page({
         })
         wx.startBeaconDiscovery({
             uuids: ['FDA50693-A4E2-4FB1-AFCF-C6EB07647825'],
-            success: (result)=>{
+            success: (result) => {
                 console.log("开始扫描设备")
                 wx.showToast({
                     title: '扫描成功',
@@ -173,14 +183,14 @@ Page({
                     image: '',
                     duration: 1500,
                     mask: true,
-                });   
+                });
                 this.setData({
                     showBlue: false
-                })             
+                })
             },
-            fail: (res)=>{
+            fail: (res) => {
                 console.log(res);
-                if(res.errCode === 11000 || res.errCode === 11001 ) {
+                if (res.errCode === 11000 || res.errCode === 11001) {
                     this.setData({
                         showBlue: true
                     })
@@ -188,16 +198,18 @@ Page({
             },
         })
     },
+
     /**
      * @description 地图二维和三维视角切换
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
-        cameraExchange(app.canvas, app.THREE);
+        MODEL.cameraExchange();
         this.setData({
             dimension: index,
         });
     },
+
     /**
      * @description 页面点击楼层图片，切换楼层
      * @param {*} e wxml的参数通过e获取
@@ -206,6 +218,7 @@ Page({
         let floor = e.currentTarget.dataset.floor;
         console.log(floor);
     },
+
     /**
      * @description 切换起点终点
      */
@@ -215,6 +228,7 @@ Page({
             endPointName: this.data.startPointName,
         });
     },
+
     /**
      * @description 切换页面上方的提示  1 显示搜索框 2 显示起点终点 3 显示导航路线提示
      * @param {*} e 根据传来的参数切换
@@ -224,6 +238,7 @@ Page({
             navFlag: e.currentTarget.dataset.flag,
         });
     },
+
     /**
      * @description 获取当前的位置
      * @param {*}
@@ -238,6 +253,7 @@ Page({
         });
         console.log(this.data.navFlag, this.data.infoFlag);
     },
+
     /**
      * @description 点击搜索栏，页面跳转
      */
@@ -261,6 +277,7 @@ Page({
             },
         });
     },
+
     touchStart(e) {
         this.canvas.dispatchTouchEvent({
             ...e,
