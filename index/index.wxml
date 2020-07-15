@@ -1,11 +1,15 @@
 <view class="container">
     <!-- 地图容器 -->
-    <canvas
+    <!-- <canvas
         type="webgl"
         id="map"
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd"
+    ></canvas> -->
+    <canvas
+        type="webgl"
+        id="map"
     ></canvas>
 
     <!-- 正上方搜索框 16%-->
@@ -136,7 +140,7 @@
 
     <!-- 蓝牙反馈-->
     <mp-halfScreenDialog
-        bindbuttontap="buttontap"
+        bindbuttontap="buleToothTap"
         show="{{ showBlue }}"
         maskClosable="{{ false }}"
         title="蓝牙连接"
