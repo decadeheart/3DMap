@@ -1,2 +1,4 @@
-<!--search/search.wxml-->
-<text>search/search.wxml</text>
+<view>
+	<text>{{buildingName}}欢迎您！</text>
+	<mp-searchbar></mp-searchbar>	
+</view>

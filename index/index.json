@@ -1,7 +1,9 @@
 {
-  "usingComponents": {
-    "mp-icon": "weui-miniprogram/icon/icon",
-    "mp-halfScreenDialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog"
-  },
-  "disableScroll": false
+    "usingComponents": {
+        "mp-icon": "weui-miniprogram/icon/icon",
+        "mp-halfScreenDialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog"
+    },
+    "disableScroll": false,
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": false
 }

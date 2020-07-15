@@ -1,17 +1,5 @@
-import * as MODEL from "../js/model"; //地图相关操作
-
-const {
-    createScopedThreejs
-} = require("../util/three");
-const {
-    initData
-} = require("../js/data");
-
-const { naviagte } = require("../js/astar");
-
+import main from "./main";
 var app = getApp();
-
-
 Page({
     data: {
         baseUrl: "https://www.cleverguided.com/iLaN/3D-jxqzf/",
@@ -21,7 +9,7 @@ Page({
         floorImgUrl: [],
         logoUrl: "",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
-        navFlag: 3,
+        navFlag: 1,
         startPointName: "我的位置",
         endPointName: "华中科技大学",
         navInformation: "前方路口右转",
@@ -29,15 +17,15 @@ Page({
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
         infoFlag: 2,
-        showBlue: false,
+        showBlue: true,
         buttons: [
             {
-                type: 'primary',
-                className: '',
-                text: '确认',
-                value: 1
-            }
-        ]
+                type: "primary",
+                className: "",
+                text: "确认",
+                value: 1,
+            },
+        ],
     },
 
     onLoad: function () {
@@ -86,81 +74,14 @@ Page({
             logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
         });
 
-        /**处理数据 */
-        initData.then((res) => {
-            console.log(res);
-            let data = res.data;
-
-            app.nodeList = data.nodeList;
-
-            let target = data.target;
-            app.beaconCoordinate = data.beaconCoordinate;
-
-            for (let build in target) {
-                for (let floor in target[build]) {
-                    target[build][floor].forEach(function (item) {
-                        item.z = (item.floor - 1) * app.map_conf.layerHeight;
-                        item.floor = parseInt(floor);
-                        item.building = build;
-                        app.POItarget.push(item);
-                    });
-                }
-            }
-
-            app.nodeList.forEach(function (node) {
-                node.z = (node.floor - 1) * app.map_conf.layerHeight;
+        main.initData();
+        var that=this;
+        main.startBeaconDiscovery().then((res=>{
+            console.log(res,this);
+            that.setData({
+                showBlue: res.showBlueStatus,
             });
-            app.beaconCoordinate.forEach(function (node) {
-                node.z = (node.floor - 1) * app.map_conf.layerHeight;
-            });
-
-            console.log(app.nodeList);
-            console.log(app.POItarget);
-
-            naviagte(app.nodeList);
-        }),
-            (err) => {
-                console.log(err);
-            };
-
-
-        wx.getSetting({
-            success(res) {
-                if (!res.authSetting['scope.userLocation']) {
-                    wx.authorize({
-                        scope: 'scope.userLocation',
-                        success() {
-                            // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
-                            wx.getLocation();
-
-                        }
-                    })
-                }
-            }
-        })
-
-        /** ibeacon 打开测试 */
-        wx.startBeaconDiscovery({
-            uuids: ['FDA50693-A4E2-4FB1-AFCF-C6EB07647825'],
-            success: (result) => {
-                console.log("开始扫描设备")
-                wx.showToast({
-                    title: '扫描成功',
-                    icon: 'none',
-                    image: '',
-                    duration: 1500,
-                    mask: true,
-                });
-            },
-            fail: (res) => {
-                console.log(res);
-                if (res.errCode === 11000 || res.errCode === 11001) {
-                    this.setData({
-                        showBlue: true
-                    })
-                }
-            },
-        })
+        }))
     },
 
     /**
@@ -168,35 +89,18 @@ Page({
      * @date 2020-07-13
      * @param {*} e
      */
-    buttontap(e) {
-        console.log(e.detail)
+    buleToothTap(e) {
+        // console.log(e.detail);
         this.setData({
-            showBlue: true
-        })
-        wx.startBeaconDiscovery({
-            uuids: ['FDA50693-A4E2-4FB1-AFCF-C6EB07647825'],
-            success: (result) => {
-                console.log("开始扫描设备")
-                wx.showToast({
-                    title: '扫描成功',
-                    icon: 'none',
-                    image: '',
-                    duration: 1500,
-                    mask: true,
-                });
-                this.setData({
-                    showBlue: false
-                })
-            },
-            fail: (res) => {
-                console.log(res);
-                if (res.errCode === 11000 || res.errCode === 11001) {
-                    this.setData({
-                        showBlue: true
-                    })
-                }
-            },
-        })
+            showBlue: true,
+        });
+        var that=this;
+        main.startBeaconDiscovery().then((res=>{
+            console.log(res,this);
+            that.setData({
+                showBlue: res.showBlueStatus,
+            });
+        }))
     },
 
     /**
@@ -204,7 +108,7 @@ Page({
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
-        MODEL.cameraExchange();
+        // main.cameraExchange();
         this.setData({
             dimension: index,
         });
@@ -245,13 +149,16 @@ Page({
      */
     getMyLocation() {
         console.log("我在这");
+        // tts("你好中国");
+        // tts("你好湖北");
+        // tts("你好武汉");
     },
     test() {
         this.setData({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
-        console.log(this.data.navFlag, this.data.infoFlag);
+        // console.log(this.data.navFlag, this.data.infoFlag);
     },
 
     /**
@@ -279,22 +186,24 @@ Page({
     },
 
     touchStart(e) {
-        this.canvas.dispatchTouchEvent({
+        main.canvas.dispatchTouchEvent({
             ...e,
             type: "touchstart",
         });
     },
     touchMove(e) {
-        this.canvas.dispatchTouchEvent({
+        main.canvas.dispatchTouchEvent({
             ...e,
             type: "touchmove",
         });
     },
     touchEnd(e) {
-        this.canvas.dispatchTouchEvent({
+        main.canvas.dispatchTouchEvent({
             ...e,
             type: "touchend",
         });
-    }
-
+    },
+    onPullDownRefresh: function () {
+        wx.stopPullDownRefresh();
+    },
 });
