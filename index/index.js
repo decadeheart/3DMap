@@ -29,6 +29,33 @@ Page({
     },
 
     onLoad: function () {
+        //分别获取地图、文字精灵和图片精灵canvas并创建相应处理Threejs实例
+        wx.createSelectorQuery()
+            .select("#map")
+            .node()
+            .exec((res) => {
+                const canvas = res[0].node;
+                this.canvas = canvas;
+                const THREE = createScopedThreejs(canvas);
+                app.canvas = canvas;
+                app.THREE = THREE;
+                MODEL.renderModel();
+            });
+        wx.createSelectorQuery()
+            .select("#font")
+            .node()
+            .exec((res) => {
+                app.canvasFont = res[0].node;
+
+            });
+        wx.createSelectorQuery()
+            .select("#img")
+            .node()
+            .exec((res) => {
+                app.canvasImg = res[0].node;
+                MODEL.loadTargetText();
+            });
+
         //初始化图片url
         this.setData({
             dimensionImgUrl: [
@@ -75,6 +102,7 @@ Page({
             });
         });
     },
+
     /**
      * @description 地图二维和三维视角切换
      */
@@ -85,6 +113,7 @@ Page({
             dimension: index,
         });
     },
+
     /**
      * @description 页面点击楼层图片，切换楼层
      * @param {*} e wxml的参数通过e获取
@@ -93,6 +122,7 @@ Page({
         let floor = e.currentTarget.dataset.floor;
         console.log(floor);
     },
+
     /**
      * @description 切换起点终点
      */
@@ -102,6 +132,7 @@ Page({
             endPointName: this.data.startPointName,
         });
     },
+
     /**
      * @description 切换页面上方的提示  1 显示搜索框 2 显示起点终点 3 显示导航路线提示
      * @param {*} e 根据传来的参数切换
@@ -111,6 +142,7 @@ Page({
             navFlag: e.currentTarget.dataset.flag,
         });
     },
+
     /**
      * @description 获取当前的位置
      * @param {*}
@@ -128,6 +160,7 @@ Page({
         });
         // console.log(this.data.navFlag, this.data.infoFlag);
     },
+
     /**
      * @description 点击搜索栏，页面跳转
      */
@@ -151,6 +184,7 @@ Page({
             },
         });
     },
+
     touchStart(e) {
         main.canvas.dispatchTouchEvent({
             ...e,
