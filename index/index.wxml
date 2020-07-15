@@ -11,6 +11,14 @@
         type="webgl"
         id="map"
     ></canvas>
+    <canvas
+        type="2d"
+        id="font"
+    ></canvas>
+    <canvas
+        type="2d"
+        id="img"
+    ></canvas>
 
     <!-- 正上方搜索框 16%-->
     <view wx:if="{{ navFlag == 1 }}" class="search" bindtap="goSearch">

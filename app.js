@@ -3,6 +3,7 @@ App({
     onLaunch: function () {},
 
     canvas: null,
+    canvasFont: null,
     THREE: null,
     nodeList: [],
     beaconCoordinate: [],

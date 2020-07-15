@@ -1,6 +1,6 @@
 import tts from "../js/tts";
 import { createScopedThreejs } from "../util/three";
-import { renderModel, cameraExchange } from "../js/model";
+import * as model from "../js/model";
 import { naviagte } from "../js/astar";
 import beaconUpdate from "../js/ibeacon";
 
@@ -17,7 +17,14 @@ main.initData = function () {
             const THREE = createScopedThreejs(canvas);
             main.canvas = canvas;
             main.THREE = THREE;
-            // renderModel(canvas, THREE);
+            model.renderModel(canvas, THREE);
+        });
+    wx.createSelectorQuery()
+        .select("#font")
+        .node()
+        .exec((res) => {
+            main.canvasFont = res[0].node;
+            model.renderModel(canvas, THREE);
         });
     /**获取数据 */
     const initData = new Promise((resolve, reject) => {
@@ -35,8 +42,8 @@ main.initData = function () {
                 reject(err);
             },
         });
-	});
-	// 处理数据 
+    });
+    // 处理数据 
     initData.then((res) => {
         // console.log(res);
         let data = res.data;
@@ -89,38 +96,38 @@ main.cameraExchange = function () {
     cameraExchange(main.canvas, main.THREE);
 };
 /** ibeacon 打开测试 */
-main.startBeaconDiscovery=function(){
-	return new Promise((resolve,reject)=>{
-		wx.startBeaconDiscovery({
-			uuids: ["FDA50693-A4E2-4FB1-AFCF-C6EB07647825"],
-			success: (result) => {
-				console.log("开始扫描设备");
-				wx.showToast({
-					title: "扫描成功",
-					icon: "none",
-					image: "",
-					duration: 1500,
-					mask: true,
-				});
-				// beaconUpdate();
-				var data={
-					status:"success",
-					showBlueStatus:false
-				}
-				resolve(data);
-			},
-			fail: (res) => {
-				console.log(res);
-				if (res.errCode === 11000 || res.errCode === 11001) {
-					var data={
-						status:"error",
-						showBlueStatus:true
-					}
-					resolve(data)
-				}
-			},
-		});
-	})
-	
+main.startBeaconDiscovery = function () {
+    return new Promise((resolve, reject) => {
+        wx.startBeaconDiscovery({
+            uuids: ["FDA50693-A4E2-4FB1-AFCF-C6EB07647825"],
+            success: (result) => {
+                console.log("开始扫描设备");
+                wx.showToast({
+                    title: "扫描成功",
+                    icon: "none",
+                    image: "",
+                    duration: 1500,
+                    mask: true,
+                });
+                // beaconUpdate();
+                var data = {
+                    status: "success",
+                    showBlueStatus: false
+                }
+                resolve(data);
+            },
+            fail: (res) => {
+                console.log(res);
+                if (res.errCode === 11000 || res.errCode === 11001) {
+                    var data = {
+                        status: "error",
+                        showBlueStatus: true
+                    }
+                    resolve(data)
+                }
+            },
+        });
+    })
+
 }
 export default main;
