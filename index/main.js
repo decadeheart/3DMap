@@ -39,7 +39,6 @@ main.initData = function () {
     
     // 处理数据
     initData.then((res) => {
-        // console.log(res);
         let data = res.data;
 
         nodeList = data.nodeList;
@@ -64,8 +63,6 @@ main.initData = function () {
         app.beaconCoordinate.forEach(function (node) {
             node.z = (node.floor - 1) * app.map_conf.layerHeight;
         });
-
-        // console.log(nodeList);
         naviagte(nodeList);
     }),
         (err) => {

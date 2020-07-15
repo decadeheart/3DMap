@@ -33,9 +33,18 @@ export function renderModel() {
         camera.position.set(0, 0, 400);
 
         //设置灯光，当前为白色环境光
-        var light = new THREE.AmbientLight(0xffffff);
+        let light = new THREE.AmbientLight(0xffffff);
+        light.position.set(100, 100, 200);
+
+        scene.add(light);
+        // 方向光
+        light = new THREE.DirectionalLight(0xffffff, 0.5);
+        light.position.set(0, 0, 1);
         scene.add(light);
 
+        light = new THREE.PointLight(0x00FF00, 1, 400, 1);
+        light.position.set(0, 0, 25);
+        // scene.add(light);
         //加载模型
         var loader = new THREE.GLTFLoader(); //根据模型类型选择相应加载器
         loader.load(
@@ -64,8 +73,8 @@ export function renderModel() {
         renderer.gammaFactor = 2.2;
 
         //加载手势控制器，有MapControls和OrbitControls两种操作方式
-        const { MapControls } = registerOrbit(THREE);
-        controls = new MapControls(camera, renderer.domElement);
+        const { OrbitControls } = registerOrbit(THREE);
+        controls = new OrbitControls(camera, renderer.domElement);
         controls.update();
     }
     /**
@@ -203,8 +212,8 @@ function makeSprite(message, imageURL) {
             //在画布上创建图片原型并绘制
             let canvas2 = app.canvasImg;
             let context2 = canvas2.getContext('2d');
-            canvas2.width = imgsize;
-            canvas2.height = imgsize;
+            canvas2.width = 128;
+            canvas2.height = 64;
             context2.drawImage(img, 0, 0, imgsize, imgsize);
             //获取画布的图像信息，一个副本
             let imagedata = context2.getImageData(0, 0, imgsize, imgsize);
@@ -269,5 +278,5 @@ export function loadTargetText() {
     spriteGroup.name = "text";
     scene.add(spriteGroup);
     //spriteControl.targetSprites.push(spriteGroup);
-    console.log(spriteGroup)
+    //console.log(spriteGroup)
 }

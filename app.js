@@ -19,7 +19,7 @@ App({
         defaultUserPosition: { x: 0, y: 0 },
         default_layer: 1,
         int_userHeight: 2,
-        TargetSpriteScale: 5,
+        TargetSpriteScale: 2,
         noTargetSpriteScale: 10,
         float_mapProportion: 0.3,
         layerHeight: 15,
