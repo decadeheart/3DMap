@@ -18,6 +18,7 @@ Page({
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
         infoFlag: 2,
         showBlue: false,
+        step: 0,
         buttons: [
             {
                 type: "primary",
@@ -55,6 +56,10 @@ Page({
                 showBlue: res.showBlueStatus,
             });
         });
+
+
+        /** 步数监测 */
+        main.stepChange(that);
     },
 
     /**

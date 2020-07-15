@@ -79,7 +79,7 @@
     </view>
 
     <!-- 左上角指南针 10%-->
-    <view class="compass" bindtap="test">指南针</view>
+    <view class="compass" bindtap="test">走了 {{step}} 步</view>
 
     <!-- 左下角定位 9% -->
     <view class="myLocation" bindtap="getMyLocation">

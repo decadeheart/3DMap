@@ -4,6 +4,8 @@ import naviagte from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
+import accChange from "../js/motionDetection";
+
 
 var app = getApp();
 var nodeList;
@@ -121,4 +123,9 @@ main.startBeaconDiscovery = function () {
         });
     });
 };
+
+main.stepChange = function (that) {
+    accChange(that);
+}
+
 export default main;
