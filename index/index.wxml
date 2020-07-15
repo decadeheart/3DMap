@@ -7,10 +7,6 @@
         bindtouchmove="touchMove"
         bindtouchend="touchEnd"
     ></canvas>
-    <!-- <canvas
-        type="webgl"
-        id="map"
-    ></canvas> -->
 
     <!-- 正上方搜索框 16%-->
     <view wx:if="{{ navFlag == 1 }}" class="search" bindtap="goSearch">

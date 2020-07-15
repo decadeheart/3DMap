@@ -29,6 +29,7 @@ Page({
     },
 
     onLoad: function () {
+        
         //初始化图片url
         this.setData({
             dimensionImgUrl: [
@@ -174,7 +175,9 @@ Page({
         app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchend",
+            
         });
+
     },
     onPullDownRefresh: function () {
         wx.stopPullDownRefresh();

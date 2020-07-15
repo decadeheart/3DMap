@@ -27,10 +27,13 @@ export function renderModel() {
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
 
-        //设置相机位置及注视点
+        //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.5, 2000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0, 200, 300);
+        camera.position.set(0, 400, 0);
+        camera.up.x = 0;
+        camera.up.y = 0;
+        camera.up.z = 1;
 
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
@@ -43,9 +46,12 @@ export function renderModel() {
             function (gltf) {
                 model = gltf.scene;
                 //微调位置
-                model.rotation.x += -Math.PI / 2;
-                model.position.x += -60;
-                model.position.y += -20;
+                // model.rotation.x = Math.PI /4;
+                // model.rotation.y = Math.PI/4;
+                // model.rotation.z = -Math.PI/2;
+                
+                // model.position.x += -60;
+                // model.position.y += -20;
                 scene.add(model);
             },
             undefined,
@@ -64,8 +70,8 @@ export function renderModel() {
         renderer.gammaFactor = 2.2;
 
         //加载手势控制器
-        const { OrbitControls } = registerOrbit(THREE);
-        controls = new OrbitControls(camera, renderer.domElement);
+        const { MapControls } = registerOrbit(THREE);
+        controls = new MapControls(camera, renderer.domElement);
         controls.update();
     }
     /**

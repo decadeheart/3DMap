@@ -68,7 +68,7 @@ const registerOrbit = (THREE) => {
 		this.zoomSpeed = 1.0;
 
 		// Set to false to disable rotating
-		this.enableRotate = true;
+		this.enableRotate = false;
 		this.rotateSpeed = 1.0;
 
 		// Set to false to disable panning
