@@ -1,6 +1,7 @@
 import { registerGLTFLoader } from "../util/gltf-loader"; //加载模型
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
+import userControl from "./user";
 
 //全局变量，供各个函数调用
 var camera, scene, renderer, model, controls;
@@ -62,6 +63,32 @@ export function renderModel() {
                 console.error(e);
             }
         );
+        loader.load('https://www.cleverguided.com/iLaN/3D-jxqzf/data/arrow.gltf', function (obj) {
+
+            let arrow = obj.scene.children[0];
+            //console.log(arrow)
+        });
+
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load('../style/me.png', function (texture) {
+            let usergeometry = new THREE.PlaneGeometry(15, 15, 32);
+            let material = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: texture,
+                transparent: true,
+                opacity: 1,
+                depthTest:false
+            });
+            app.me = new THREE.Mesh(usergeometry, material);
+            let me = app.me
+
+            userControl.isInitUser = true;
+            userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+            //me.position.set(-5, 10, 0)
+            me.name = 'user';
+            me.floor = app.map.curFloor;
+            scene.add(me);
+        });
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -76,6 +103,8 @@ export function renderModel() {
         const { OrbitControls } = registerOrbit(THREE);
         controls = new OrbitControls(camera, renderer.domElement);
         controls.update();
+
+
     }
     /**
      * @description 渲染循环
