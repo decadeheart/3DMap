@@ -102,6 +102,13 @@ systemControl : {
     isStimulation: function () {
         return systemControl.state === "navigating" && !systemControl.realMode
     }
+},
+
+TweenControl : {
+    preLocationTween: null,
+    autoMoveTween: [],
+    cameraTween: null
+
 }
 
 });

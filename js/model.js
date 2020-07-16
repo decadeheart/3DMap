@@ -83,7 +83,6 @@ export function renderModel(canvasDom,Three) {
         loader.load('https://www.cleverguided.com/iLaN/3D-jxqzf/data/arrow.gltf', function (obj) {
 
             let arrow = obj.scene.children[0];
-            //console.log(arrow)
         });
 
         let textureLoader = new THREE.TextureLoader();
@@ -97,15 +96,8 @@ export function renderModel(canvasDom,Three) {
                 depthTest:false
             });
             app.me = new THREE.Mesh(usergeometry, material);
-            let me = app.me
-
-            userControl.isInitUser = true;
-            userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
-            //me.position.set(-5, 10, 0)
-            me.name = 'user';
-            me.floor = app.map.curFloor;
-            userControl.changeRotation(null, null, Math.PI / 2);
-            scene.add(me);
+            userControl.initUser();
+            scene.add(app.me);
         });
 
 
@@ -332,7 +324,7 @@ export function loadTargetText() {
                 sprite = makeSprite(item.name, null);
             }
             sprite.level = item.level;
-            sprite.position.set(item.x, item.y, item.z + 15);
+            sprite.position.set(item.x, item.y, item.z + 5);
             //微调位置
             sprite.position.x += -50;
             // sprite.position.y += -20;

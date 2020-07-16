@@ -1,3 +1,5 @@
+import userControl from "./user";
+
 //存放三轴数据
 let oriValues = [];
 //当前传感器的值
@@ -59,8 +61,8 @@ function detectorNewStep(values) {
                  * 3.连续记录了9步用户还在运动，之前的数据才有效
                  * */
                 timeOfLastStep = timeOfNow;
-                //applicationCache.userControl.moveDetect();
-                app.map.stepCount += 1;
+                userControl.moveDetect()
+                //app.map.stepCount += 1;
             }
 
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= InitialValue)) {
@@ -122,16 +124,6 @@ function detectorPeak(newValue, oldValue) {
     }
 }
 
-
-/*
- * 阈值的计算
- * 1.通过波峰波谷的差值计算阈值
- * 2.记录4个值，存入tempValue[]数组中
- * 3.在将数组传入函数averageValue中计算阈值
- * */
-function peakValleyThread(value) {
-
-}
 
 
 

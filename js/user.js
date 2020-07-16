@@ -16,19 +16,23 @@ function dis3(nowLi, nowLi2) {
     return Math.sqrt(a * a + b * b + c * c);
 }
 
+
 const userControl = {
     isInitUser: false,
     userToCamera: 0,
     userDefaultPosition: {x: -5, y: 0, z: 0},
     moveDetect: function () {
+        let map = app.map
+        let me = app.me
         map.stepCount += 1;
         if (map.stepCount - map.preStep > 0) {
-            let distance = map_conf.float_mapProportion * (map.stepCount - map.preStep) * 0.5;
+            let distance = app.map_conf.float_mapProportion * (map.stepCount - map.preStep) * 0.5;
             let x = me.position.x + Math.sin(map.mapOrientation * Math.PI / 180) * distance;
             let y = me.position.y + Math.cos(map.mapOrientation * Math.PI / 180) * distance;
-            if (!systemControl.isStimulation()) {
-                userControl.changePosition(x, y, null, "direction");
-            }
+            // if (! app.systemControl.isStimulation() ) {
+            //     userControl.changePosition(x, y, null, "animation");
+            // }
+            userControl.changePosition(x, y, null, "animation");
             map.preStep = map.stepCount;
         }
     },
@@ -46,6 +50,7 @@ const userControl = {
             z = (z === null) ? me.rotation.z : z;
             if (mode === "animation") {
                 //tweenjs类库主要用来调整和动画html5和js
+                console.log(123);
                 new TWEEN.Tween(me.rotation).to({x: x, y: y, z: z}, dis3(me.rotation, {
                     x: x,
                     y: y,
@@ -55,13 +60,13 @@ const userControl = {
                 me.rotation.x = x;
                 me.rotation.y = y;
                 me.rotation.z = z;
-
             }
 
         }
     },
     changePosition: function (x, y, z, mode, Group) {
         let me = app.me
+       
         if (this.isInitUser === false) {
             return;
         }
@@ -77,22 +82,26 @@ const userControl = {
         switch (mode) {
             case "direction":
                 me.position.set(nextpoint.x, nextpoint.y, nextpoint.z);
+                console.log(me.position);
                 break;
             case "animation":
-                let meTween;
-                meTween = new TWEEN.Tween(me.position).to(nextpoint, dis3(me.position, nextpoint) * 100);
+                let meTween = new TWEEN.Tween(me.position).to(nextpoint, dis3(me.position, nextpoint) * 100);
                 meTween.start();
-                return meTween;
-                // if (TweenControl.preLocationTween != null) {
-                //     TweenControl.preLocationTween.chain(meTween);
-                // }else {
-                //     meTween.start();
-                // }
-
+                //meTween.update();
                 break;
         }
 
+    },
+    initUser :function () {
+        let me = app.me
+        userControl.isInitUser = true;
+        userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+        me.name = 'user';
+        me.floor = app.map.curFloor;
+        //userControl.changeRotation(null, null, Math.PI * 2 - (Math.PI / 180) * (app.map.mapOrientation));
+        userControl.changeRotation(null, null, Math.PI / 2);        
     }
 }
+
 
 export default userControl
