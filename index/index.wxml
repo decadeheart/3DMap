@@ -132,7 +132,7 @@
 
         <view class="navigating-btnBox">
             <button id="navigating-btn-start" size="mini" hover-class="btn-hover">开始导航</button>
-            <button id="navigating-btn-simu" size="mini" hover-class="btn-hover">模拟导航</button>
+            <button id="navigating-btn-simu" size="mini" hover-class="btn-hover" bindtap="simNavigate">模拟导航</button>
         </view>
     </view>
 
