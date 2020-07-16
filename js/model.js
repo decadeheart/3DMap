@@ -1,6 +1,7 @@
 import { registerGLTFLoader } from "../util/gltf-loader"; //加载模型
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
+import userControl from "./user"; //用户贴图
 
 //全局变量，供各个函数调用
 var canvas,THREE;
@@ -37,7 +38,7 @@ export function renderModel(canvasDom,Three) {
         camera.up.x = 0;
         camera.up.y = 0;
         camera.up.z = 1;
-        camera.zoom=3;
+        camera.zoom=2;
         camera.updateProjectionMatrix ();
         
         //设置灯光，当前为白色环境光
@@ -78,6 +79,36 @@ export function renderModel(canvasDom,Three) {
                 console.error(e);
             }
         );
+
+        loader.load('https://www.cleverguided.com/iLaN/3D-jxqzf/data/arrow.gltf', function (obj) {
+
+            let arrow = obj.scene.children[0];
+            //console.log(arrow)
+        });
+
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load('../style/me.png', function (texture) {
+            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
+            let material = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: texture,
+                transparent: true,
+                opacity: 1,
+                depthTest:false
+            });
+            app.me = new THREE.Mesh(usergeometry, material);
+            let me = app.me
+
+            userControl.isInitUser = true;
+            userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+            //me.position.set(-5, 10, 0)
+            me.name = 'user';
+            me.floor = app.map.curFloor;
+            userControl.changeRotation(null, null, Math.PI / 2);
+            scene.add(me);
+        });
+
+
         
 
         //创建渲染器

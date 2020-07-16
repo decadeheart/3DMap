@@ -1,6 +1,21 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
 var app = getApp();
 
+/**
+ * @description 勾股定理计算距离
+ * @date 2020-07-16
+ * @param {*} nowLi 当前角度
+ * @param {*} nowLi2 目标角度
+ * @returns
+ */
+function dis3(nowLi, nowLi2) {
+    //勾股定理
+    let a = nowLi.x - nowLi2.x;
+    let b = nowLi.y - nowLi2.y;
+    let c = nowLi.z - nowLi2.z;
+    return Math.sqrt(a * a + b * b + c * c);
+}
+
 const userControl = {
     isInitUser: false,
     userToCamera: 0,
@@ -24,6 +39,7 @@ const userControl = {
         me.scale.set(scale, scale, me.scale.z);
     },
     changeRotation: function (x, y, z, mode) {
+        let me = app.me
         if (userControl.isInitUser) {
             x = (x === null) ? me.rotation.x : x;
             y = (y === null) ? me.rotation.y : y;
