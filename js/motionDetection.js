@@ -1,3 +1,5 @@
+import userControl from "./user";
+
 //存放三轴数据
 let oriValues = [];
 //当前传感器的值
@@ -11,7 +13,6 @@ function accChange(that) {
         oriValues[1] = res.y;
         oriValues[2] = res.z;
         gravityNew = Math.sqrt(oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]);
-        //console.log(gravityNew);
         detectorNewStep(gravityNew);
         that.setData({
             step: app.map.stepCount,
@@ -62,7 +63,13 @@ function detectorNewStep(values) {
                 timeOfLastStep = timeOfNow;
                 //applicationCache.userControl.moveDetect();
                 app.map.stepCount += 1;
+<<<<<<< HEAD
                 // console.log(app.map.stepCount);
+=======
+                //console.log(app.map.stepCount);
+                userControl.moveDetect()
+                //app.map.stepCount += 1;
+>>>>>>> a24187e4bcfe9b4e3513cd5d72790dca212ea151
             }
 
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= InitialValue)) {
@@ -124,16 +131,6 @@ function detectorPeak(newValue, oldValue) {
     }
 }
 
-
-/*
- * 阈值的计算
- * 1.通过波峰波谷的差值计算阈值
- * 2.记录4个值，存入tempValue[]数组中
- * 3.在将数组传入函数averageValue中计算阈值
- * */
-function peakValleyThread(value) {
-
-}
 
 
 

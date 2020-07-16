@@ -1,6 +1,8 @@
-import { registerGLTFLoader } from "../util/gltf-loader"; //加载模型
+import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
+import { loadModel, loadGLTF } from "./loadModel"; //加载模型
+import userControl from "./user"; //用户贴图
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -10,8 +12,8 @@ var app = getApp();
 /**
  * @description 初始化模型并渲染到canvas中
  * @export void 导出到index.js以供调用
- * @param {*} canvas 要渲染到的canvas的位置
- * @param {*} THREE threejs引擎，用于创建场景、相机等3D元素
+ * @param {*} canvasDom 要渲染到的canvas的位置
+ * @param {*} Three threejs引擎，用于创建场景、相机等3D元素
  */
 export function renderModel(canvasDom, Three) {
     THREE = Three;
@@ -27,15 +29,15 @@ export function renderModel(canvasDom, Three) {
         scene = new THREE.Scene();
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
-        scene.rotation.z -= (Math.PI / 2);
+        scene.rotation.z -= Math.PI / 2;
         //设置场景相机位置及注视点
-        camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.5, 10000);
+        camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0, -400, 400);
-        // camera.rotation.x+=Math.PI /2;
-        // camera.rotation.z+=Math.PI/2;
-        camera.up.set(0,0,1)
-        camera.zoom = 3;
+
+        camera.position.set(0, 0, 1000);
+        //调整相机主轴及放大倍数
+        camera.up.set(-1, 0, 0);
+        camera.zoom = 2.5;
         camera.updateProjectionMatrix();
 
         //设置灯光，当前为白色环境光
@@ -46,36 +48,31 @@ export function renderModel(canvasDom, Three) {
         light.position.set(0, 0, 1);
         scene.add(light);
 
-        // light = new THREE.PointLight(0x00FF00, 1, 400, 1);
-        // light.position.set(0, 0, 25);
-        // scene.add(light);
+        //辅助坐标轴
+        // var axesHelper = new THREE.AxisHelper( 5000 );
+        // axesHelper.material.linewidth=500;
+        // scene.add( axesHelper );
 
-        // 辅助坐标轴
-        var axesHelper = new THREE.AxesHelper( 5000 );
-        axesHelper.material.linewidth=500;
-        scene.add( axesHelper );
+        //加载模型
+        loadModel(scene);
+        //loadGLTF(scene);
 
-        // 加载模型
-        var loader = new THREE.GLTFLoader(); //根据模型类型选择相应加载器
-        loader.load(
-            "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf_1_1.glb",
-            function (gltf) {
-                model = gltf.scene;
-                //微调位置
-                // model.rotation.x = Math.PI /4;
-                // model.rotation.y = Math.PI/4;
-                // model.rotation.z = -Math.PI/2;
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load("../style/me.png", function (texture) {
+            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
+            let material = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: texture,
+                transparent: true,
+                opacity: 1,
+                depthTest: false,
+            });
+            app.me = new THREE.Mesh(usergeometry, material);
+            userControl.initUser();
+            scene.add(app.me);
+        });
 
-                // model.position.x += -60;
-                model.position.x += -50;
-                scene.add(model);
-            },
-            undefined,
-            function (e) {
-                console.error(e);
-            }
-        );
-
+        // scene.rotation.z = Math.PI / 2;
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -96,9 +93,10 @@ export function renderModel(canvasDom, Three) {
     function animate() {
         canvas.requestAnimationFrame(animate);
         renderer.render(scene, camera);
-        TWEEN.update();
+        //TWEEN.update();
     }
 }
+
 /**
  * @description 2D-3D视角切换
  * @export
@@ -110,27 +108,24 @@ export function cameraExchange() {
     // initTween();
     // animate();
     // console.log(controls,controls.maxPolarAngle)
-    console.log("当前：",camera)
-    let camZ=camera.position.z;
-    let camX=camera.position.x>0?Math.abs(camZ):-Math.abs(camZ);
-    let camY=camera.position.y>0?Math.abs(camZ):-Math.abs(camZ);;
+    console.log("当前：", camera);
+    let camZ = camera.position.z;
+    let camX = camera.position.x > 0 ? Math.abs(camZ) : -Math.abs(camZ);
+    let camY = camera.position.y > 0 ? Math.abs(camZ) : -Math.abs(camZ);
 
-    if(controls.maxPolarAngle == 0){
-        console.log("2D->3D")
-        controls.setMaxPolarAngle(Math.PI/2)
-        camera.lookAt(0,0,0);
+    if (controls.maxPolarAngle == 0) {
+        console.log("2D->3D");
+        controls.setMaxPolarAngle(Math.PI / 2);
+        camera.lookAt(0, 0, 0);
         camera.position.set(camX, camY, camZ);
 
         // console.log(camera.position)
-    }
-    else{
-        console.log("3D->2D")
-        console.log(camera.position)
-        camera.lookAt(0,0,0);
-        controls.setMaxPolarAngle(0)
+    } else {
+        console.log("3D->2D");
+        console.log(camera.position);
+        camera.lookAt(0, 0, 0);
+        controls.setMaxPolarAngle(0);
         camera.position.set(0, 0, camZ);
-        
-        
     }
     controls.update();
     // animate();
@@ -141,6 +136,7 @@ export function cameraExchange() {
     function initTween() {
         new TWEEN.Tween(camera.position).to({ x: 0, y: 0, z: 400 }, 1200).repeat(0).start();
     }
+    //controls.update();
     /**
      * @description 渲染循环
      */
@@ -318,7 +314,7 @@ export function loadTargetText() {
                 sprite = makeSprite(item.name, null);
             }
             sprite.level = item.level;
-            sprite.position.set(item.x, item.y, item.z + 15);
+            sprite.position.set(item.x, item.y, item.z + 5);
             //微调位置
             sprite.position.x += -50;
             // sprite.position.y += -20;
@@ -330,5 +326,139 @@ export function loadTargetText() {
     spriteGroup.name = "text";
     scene.add(spriteGroup);
     //spriteControl.targetSprites.push(spriteGroup);
-    // console.log(spriteGroup);
+    //console.log(spriteGroup);
+}
+
+function dis3(nowLi, nowLi2) {
+    //勾股定理
+    let a = nowLi.x - nowLi2.x;
+    let b = nowLi.y - nowLi2.y;
+    let c = nowLi.z - nowLi2.z;
+    return Math.sqrt(a * a + b * b + c * c);
+}
+
+function getNearPOIName(obj) {
+    // console.log(obj)
+    let k = 0;
+    let list = app.POItarget;
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].floor === obj.floor) {
+            if (dis3(list[i], obj) < dis3(list[k], obj)) {
+                k = i;
+            }
+        }
+    }
+    return list[k].name;
+}
+
+function showSprite(sprite, point) {
+    sprite.visible = true;
+    //sprite.position.set(point.x, point.y, point.z + 5);
+    sprite.position.set(0, 0, 15);
+    sprite.floor = point.floor;
+    scene.add(sprite);
+    console.log("精灵");
+}
+
+/**
+ * @description 复制一个对象到另一个对象
+ * @date 2020-07-14
+ * @param {*} oldObj
+ * @returns
+ */
+function cloneObj(oldObj) {
+    if (typeof oldObj != "object") return oldObj;
+    if (oldObj == null) return oldObj;
+    var newObj = new Object();
+    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
+    return newObj;
+}
+
+/**
+ * @description 扩展对象
+ * @date 2020-07-14
+ */
+function extendObj() {
+    var args = arguments;
+    if (args.length < 2) return;
+    var temp = cloneObj(args[0]); //调用复制对象方法
+    for (var n = 1; n < args.length; n++) {
+        for (var i in args[n]) {
+            temp[i] = args[n][i];
+        }
+    }
+    return temp;
+}
+
+export function selectObj(index) {
+    console.log(index);
+    let raycaster = new THREE.Raycaster();
+    let mouse = new THREE.Vector2();
+    let map = app.map;
+
+    //纹理贴图
+    var texture = new THREE.TextureLoader().load("../style/cur.png");
+    //创建精灵
+    let spriteMaterial = new THREE.SpriteMaterial({ map: texture, depthTest: true });
+    let curSprite = new THREE.Sprite(spriteMaterial);
+    curSprite.scale.set(0.5 * 20, 0.5 * 20, 0.5 * 20);
+    //这句为了防止warning
+    curSprite.material.map.minFilter = THREE.LinearFilter;
+    curSprite.position.set(0, 0, 15);
+    //scene.add(curSprite);
+
+    // scene.children.forEach(function (obj) {
+    //     console.log(obj.name)
+    //     if (!!obj.name && (obj.name.split('_')[1] == 'Floor' || obj.name.split('_')[1] == 'ground')) {
+    //         // let floorOfObj = parseInt(obj.name.split('_')[0]);
+    //         if (obj.type == "Group") {
+    //             obj.children.forEach(function (child) {
+    //                 child.floor = parseInt(obj.name.split('_')[0]);
+    //                 map.groundMeshes.push(child);
+    //             })
+    //         } else {
+    //             map.groundMeshes.push(child);
+    //         }
+    //     }
+    //     if (!!obj.name) {
+    //         // let floorOfObj = parseInt(obj.name.split('_')[0]);
+    //         obj.floor = parseInt(obj.name.split('_')[0]);
+    //     }
+    // });
+
+    console.log(map.groundMeshes);
+    mouse.x = (index.x / canvas.width) * 2 - 1;
+    mouse.y = -(index.y / canvas.height) * 2 + 1;
+    // update the picking ray with the camera and mouse position
+    raycaster.setFromCamera(mouse, camera);
+    // calculate objects intersecting the picking ray
+    // let grounds=[];
+    // map.groundMeshes.forEach(function (obj) {
+    //         grounds.push(obj.obj);
+    // })
+    var selectedPoint = {};
+    let intersects = raycaster.intersectObjects(map.groundMeshes);
+    console.log("射线：", intersects);
+    if (intersects.length > 0) {
+        console.log("触点", intersects[0].point);
+        let point = intersects[0].point;
+        let obj = intersects[0].object;
+        selectedPoint.floor = obj.floor;
+
+        selectedPoint = extendObj(selectedPoint, point);
+        console.log(selectedPoint);
+        selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
+        console.log(app.spriteControl.curSprite);
+        showSprite(app.spriteControl.curSprite, selectedPoint);
+        // if (me != null) {
+
+        //     $.extend(true, selectedPoint, point);
+        //     selectedPoint.floor = obj.floor;
+
+        //     selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
+
+        //     showSprite(spriteControl.curSprite, selectedPoint);
+
+        // }
+    }
 }
