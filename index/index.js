@@ -169,6 +169,8 @@ Page({
             ...e,
             type: "touchstart",
         });
+        console.log("tap");
+        main.selectObj(e.touches[0]);
     },
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
@@ -180,9 +182,8 @@ Page({
         app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchend",
-            
         });
-
+        console.log("tapEnd");
     },
     onPullDownRefresh: function () {
         wx.stopPullDownRefresh();

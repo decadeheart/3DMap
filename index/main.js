@@ -33,7 +33,7 @@ main.initData = function () {
             app.canvas = canvas;
             app.THREE = THREE;            
             MODEL.renderModel(canvas,THREE);
-            MODEL.loadTargetText();
+            //MODEL.loadTargetText();
         });
     
     // 处理数据
@@ -87,6 +87,9 @@ main.initData = function () {
 };
 main.cameraExchange = function () {
     MODEL.cameraExchange();
+};
+main.selectObj = function (index) {
+    MODEL.selectObj(index);
 };
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
