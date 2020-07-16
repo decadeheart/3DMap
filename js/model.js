@@ -44,6 +44,14 @@ export function renderModel(canvasDom,Three) {
         var light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
 
+        light = new THREE.DirectionalLight(0xffffff, 0.5);
+        light.position.set(0, 0, 1);
+        scene.add(light);
+
+        // light = new THREE.PointLight(0x00FF00, 1, 400, 1);
+        // light.position.set(0, 0, 25);
+        // scene.add(light);
+
         //辅助坐标轴
         // var axesHelper = new THREE.AxisHelper( 5000 );
         // axesHelper.material.linewidth=500;
@@ -85,6 +93,7 @@ export function renderModel(canvasDom,Three) {
         const { MapControls } = registerOrbit(THREE);
         controls = new MapControls(camera, renderer.domElement);
         controls.update();
+
     }
     /**
      * @description 渲染循环
@@ -103,12 +112,13 @@ export function renderModel(canvasDom,Three) {
 export function cameraExchange() {
 
     // let THREE = app.THREE;
-
     // let canvas = app.canvas;
     
     initTween();
     animate();
-
+    console.log(controls)
+    //保持2D视图，不可三维旋转
+    controls.maxPolarAngle=0;
     /**
      * @description 视角移动动画
      */
@@ -168,7 +178,7 @@ function getByteLen(val) {
  */
 function makeSprite(message, imageURL) {
     //为全局变量改名
-    let THREE = app.THREE;
+    // let THREE = app.THREE;
     let map_conf = app.map_conf;
 
     //字体类型、大小、颜色

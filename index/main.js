@@ -6,7 +6,6 @@ import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import accChange from "../js/motionDetection";
 
-
 var app = getApp();
 var nodeList;
 
