@@ -11,7 +11,6 @@ var app = getApp();
  * @date 2020-07-13
  */
 function beaconUpdate() { 
-    console.log(123)
     wx.onBeaconUpdate((res) => {
         let data = [];
 
@@ -45,12 +44,10 @@ function beaconUpdate() {
         setTimeout(function () {
             wx.stopBeaconDiscovery({
               success: function () {
-                console.log("停止扫描设备！");
-                console.log(result)
                 wx.showToast({
-                  title: '停止扫描设备！定位结果',
+                  title: '停止扫描设备！',
                   icon:'success',
-                  duration:1500
+                  duration:500
                 })
               }
             });
@@ -144,11 +141,5 @@ function getMaxPossiblePoint() {
     return temp[0];
 }
 
-function closeBlueScan() {
 
-}
-
-// module.exports = {
-//     beaconUpdate: beaconUpdate
-// }
 export default beaconUpdate;

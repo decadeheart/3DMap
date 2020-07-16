@@ -6,7 +6,7 @@ App({
     beaconCoordinate: [],
     me: [],
     arrow: [],
-    scaleInvariableGroup:[],
+    scaleInvariableGroup: [],
     POItarget: [],
     map_conf: {
         map_id: "jxqzf",
@@ -95,6 +95,23 @@ App({
         groundMeshes: [],
         compassRotation: 0,
         FloorChangeCheckTime: 5000,
+    },
+    systemControl: {
+        state: 'normal',
+        realMode: true,
+        navPriorityCode: 1,//1电梯 -1楼梯
+        touching: false,
+        isStimulation: function () {
+            return systemControl.state === "navigating" && !systemControl.realMode
+        }
+    },
+
+    TweenControl: {
+        preLocationTween: null,
+        autoMoveTween: [],
+        cameraTween: null
+
+
 
     },
     systemControl: {

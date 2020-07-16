@@ -163,6 +163,10 @@ Page({
             },
         });
     },
+    simNavigate(e) {
+        console.log(e);
+
+    },
 
     touchStart(e) {
         app.canvas.dispatchTouchEvent({

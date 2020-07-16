@@ -1,3 +1,5 @@
+import userControl from "./user";
+
 //存放三轴数据
 let oriValues = [];
 //当前传感器的值
@@ -11,7 +13,6 @@ function accChange(that) {
         oriValues[1] = res.y;
         oriValues[2] = res.z;
         gravityNew = Math.sqrt(oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]);
-        //console.log(gravityNew);
         detectorNewStep(gravityNew);
         that.setData({
             step: app.map.stepCount,
@@ -50,12 +51,8 @@ function detectorNewStep(values) {
     } else {
         if(detectorPeak(values, gravityOld)) {
             timeOfNow = Date.now();
-             //console.log(peakOfWave);
-             //console.log(valleyOfWave);
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= ThreadValue)) {
                 timeOfThisPeak = timeOfNow;
-                //console.log(timeOfNow)
-                //console.log(timeOfLastPeak)
                 /*
                  * 更新界面的处理，不涉及到算法
                  * 一般在通知更新界面之前，增加下面处理，为了处理无效运动：
@@ -67,6 +64,8 @@ function detectorNewStep(values) {
                 //applicationCache.userControl.moveDetect();
                 app.map.stepCount += 1;
                 //console.log(app.map.stepCount);
+                userControl.moveDetect()
+                //app.map.stepCount += 1;
             }
 
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= InitialValue)) {
@@ -128,16 +127,6 @@ function detectorPeak(newValue, oldValue) {
     }
 }
 
-
-/*
- * 阈值的计算
- * 1.通过波峰波谷的差值计算阈值
- * 2.记录4个值，存入tempValue[]数组中
- * 3.在将数组传入函数averageValue中计算阈值
- * */
-function peakValleyThread(value) {
-
-}
 
 
 

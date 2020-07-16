@@ -2,6 +2,7 @@ import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入�
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { loadModel, loadGLTF } from "./loadModel" //加载模型
+import userControl from "./user"; //用户贴图
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -57,6 +58,24 @@ export function renderModel(canvasDom, Three) {
         //加载模型
         loadModel(scene);
         //loadGLTF(scene);
+
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load('../style/me.png', function (texture) {
+            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
+            let material = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: texture,
+                transparent: true,
+                opacity: 1,
+                depthTest:false
+            });
+            app.me = new THREE.Mesh(usergeometry, material);
+            userControl.initUser();
+            scene.add(app.me);
+        });
+
+
+        
 
         // scene.rotation.z = Math.PI / 2;
         //创建渲染器
@@ -282,7 +301,7 @@ export function loadTargetText() {
                 sprite = makeSprite(item.name, null);
             }
             sprite.level = item.level;
-            sprite.position.set(item.x, item.y, item.z + 15);
+            sprite.position.set(item.x, item.y, item.z + 5);
             //微调位置
             sprite.position.x += -50;
             // sprite.position.y += -20;
