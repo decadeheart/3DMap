@@ -3,7 +3,7 @@ import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 
 //全局变量，供各个函数调用
-var canvas,THREE;
+var canvas, THREE;
 var camera, scene, renderer, model, controls;
 var app = getApp();
 
@@ -13,8 +13,8 @@ var app = getApp();
  * @param {*} canvas 要渲染到的canvas的位置
  * @param {*} THREE threejs引擎，用于创建场景、相机等3D元素
  */
-export function renderModel(canvasDom,Three) {
-    THREE = Three ;
+export function renderModel(canvasDom, Three) {
+    THREE = Three;
     canvas = canvasDom;
     registerGLTFLoader(THREE);
     init();
@@ -27,19 +27,17 @@ export function renderModel(canvasDom,Three) {
         scene = new THREE.Scene();
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
-        scene.rotation.z=Math.PI /2*3;
+        scene.rotation.z -= (Math.PI / 2);
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.5, 10000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0,-400, 400);
+        camera.position.set(0, -400, 400);
         // camera.rotation.x+=Math.PI /2;
         // camera.rotation.z+=Math.PI/2;
-        camera.up.x = 0;
-        camera.up.y = 0;
-        camera.up.z = 1;
-        camera.zoom=3;
-        camera.updateProjectionMatrix ();
-        
+        camera.up.set(0,0,1)
+        camera.zoom = 3;
+        camera.updateProjectionMatrix();
+
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
@@ -52,13 +50,12 @@ export function renderModel(canvasDom,Three) {
         // light.position.set(0, 0, 25);
         // scene.add(light);
 
-        //辅助坐标轴
-        // var axesHelper = new THREE.AxisHelper( 5000 );
-        // axesHelper.material.linewidth=500;
-        // scene.add( axesHelper );
-        
+        // 辅助坐标轴
+        var axesHelper = new THREE.AxesHelper( 5000 );
+        axesHelper.material.linewidth=500;
+        scene.add( axesHelper );
 
-        //加载模型
+        // 加载模型
         var loader = new THREE.GLTFLoader(); //根据模型类型选择相应加载器
         loader.load(
             "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf_1_1.glb",
@@ -78,7 +75,6 @@ export function renderModel(canvasDom,Three) {
                 console.error(e);
             }
         );
-        
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -93,7 +89,6 @@ export function renderModel(canvasDom,Three) {
         const { MapControls } = registerOrbit(THREE);
         controls = new MapControls(camera, renderer.domElement);
         controls.update();
-
     }
     /**
      * @description 渲染循环
@@ -110,31 +105,53 @@ export function renderModel(canvasDom,Three) {
  * @param {*} canvas 被渲染的canvas位置
  */
 export function cameraExchange() {
-
     // let THREE = app.THREE;
     // let canvas = app.canvas;
-    
-    initTween();
-    animate();
-    console.log(controls)
-    //保持2D视图，不可三维旋转
-    controls.maxPolarAngle=0;
+    // initTween();
+    // animate();
+    // console.log(controls,controls.maxPolarAngle)
+    console.log("当前：",camera)
+    let camZ=camera.position.z;
+    let camX=camera.position.x>0?Math.abs(camZ):-Math.abs(camZ);
+    let camY=camera.position.y>0?Math.abs(camZ):-Math.abs(camZ);;
+
+    if(controls.maxPolarAngle == 0){
+        console.log("2D->3D")
+        controls.setMaxPolarAngle(Math.PI/2)
+        camera.lookAt(0,0,0);
+        camera.position.set(camX, camY, camZ);
+
+        // console.log(camera.position)
+    }
+    else{
+        console.log("3D->2D")
+        console.log(camera.position)
+        camera.lookAt(0,0,0);
+        controls.setMaxPolarAngle(0)
+        camera.position.set(0, 0, camZ);
+        
+        
+    }
+    controls.update();
+    // animate();
+
     /**
      * @description 视角移动动画
      */
     function initTween() {
         new TWEEN.Tween(camera.position).to({ x: 0, y: 0, z: 400 }, 1200).repeat(0).start();
-        
     }
     /**
      * @description 渲染循环
      */
     function animate() {
+        // camera.position.set(0, 0, 400);
         canvas.requestAnimationFrame(animate);
         renderer.render(scene, camera);
-        camera.lookAt(new THREE.Vector3(0, 0, 0)); //保持注视位置不变
-        scene.rotation.z=Math.PI /2*3;
-        TWEEN.update(); //更新动画，配合initTween使用
+
+        // camera.lookAt(new THREE.Vector3(0, 0, 0)); //保持注视位置不变
+        // scene.rotation.z = (Math.PI / 2) * 3;
+        // TWEEN.update(); //更新动画，配合initTween使用
     }
 }
 /**
@@ -313,5 +330,5 @@ export function loadTargetText() {
     spriteGroup.name = "text";
     scene.add(spriteGroup);
     //spriteControl.targetSprites.push(spriteGroup);
-    console.log(spriteGroup);
+    // console.log(spriteGroup);
 }

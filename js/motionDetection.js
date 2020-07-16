@@ -50,12 +50,8 @@ function detectorNewStep(values) {
     } else {
         if(detectorPeak(values, gravityOld)) {
             timeOfNow = Date.now();
-             console.log(peakOfWave);
-             console.log(valleyOfWave);
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= ThreadValue)) {
                 timeOfThisPeak = timeOfNow;
-                console.log(timeOfNow)
-                console.log(timeOfLastPeak)
                 /*
                  * 更新界面的处理，不涉及到算法
                  * 一般在通知更新界面之前，增加下面处理，为了处理无效运动：
@@ -66,7 +62,7 @@ function detectorNewStep(values) {
                 timeOfLastStep = timeOfNow;
                 //applicationCache.userControl.moveDetect();
                 app.map.stepCount += 1;
-                console.log(app.map.stepCount);
+                // console.log(app.map.stepCount);
             }
 
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= InitialValue)) {

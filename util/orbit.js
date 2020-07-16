@@ -1169,6 +1169,9 @@ const registerOrbit = (THREE) => {
 
 	MapControls.prototype = Object.create(EventDispatcher.prototype);
 	MapControls.prototype.constructor = MapControls;
+	MapControls.prototype.setMaxPolarAngle=function(val){
+		this.maxPolarAngle=val;
+	}
 
 	return {
 		OrbitControls,

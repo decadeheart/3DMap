@@ -45,8 +45,8 @@ function beaconUpdate() {
         setTimeout(function () {
             wx.stopBeaconDiscovery({
               success: function () {
-                console.log("停止扫描设备！");
-                console.log(result)
+                // console.log("停止扫描设备！");
+                // console.log(result)
                 wx.showToast({
                   title: '停止扫描设备！定位结果',
                   icon:'success',
