@@ -178,6 +178,8 @@ Page({
 
         app.map.FloorChangeCheckTime = 1000;
 
+        main.naviagteInit();
+
     },
     touchTap(e){
         console.log("tap");

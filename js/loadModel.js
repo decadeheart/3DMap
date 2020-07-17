@@ -92,6 +92,7 @@ export function loadModel(scene) {
         spriteControl.endSprite.name = "endSprite";
         scaleInvariableGroup.push(spriteControl.endSprite);
         spriteControl.endSprite.center = new THREE.Vector2(0.5, 0.5);
+
         // initNavPoint();
     });
     textureLoader.load(map_conf.src_dir + 'image/start.png', function (texture) {
@@ -101,7 +102,7 @@ export function loadModel(scene) {
         spriteControl.startSprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
         spriteControl.startSprite.name = "startSprite";
         scaleInvariableGroup.push(spriteControl.startSprite);
-        spriteControl.startSprite.center = new THREE.Vector2(0.5, 0.5);
+        spriteControl.startSprite.center = new THREE.Vector2(0.5, 0.5); 
         // initNavPoint();
     });
     textureLoader.load(map_conf.src_dir + 'image/cur.png', function (texture) {

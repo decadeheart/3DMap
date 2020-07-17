@@ -1,4 +1,5 @@
-
+import * as MODEL from "../js/model";
+var app = getApp();
 /**
  * @description 导航算法
  * @date 2020-07-10
@@ -275,6 +276,11 @@ function naviagte(nodeList) {
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
     navigation(nodeList);
     console.log("结果: ", resultParent);
+    let sprite = app.spriteControl;
+    MODEL.showSprite(sprite.startSprite, startNode, "start");
+    MODEL.showSprite(sprite.endSprite, endNode, "end");
+    
 }
+
 
 export default naviagte;
