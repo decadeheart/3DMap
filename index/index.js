@@ -69,7 +69,6 @@ Page({
      * @param {*} e
      */
     blueToothTap(e) {
-        // console.log(e.detail);
         this.setData({
             showBlue: true,
         });
@@ -165,6 +164,10 @@ Page({
     },
     simNavigate(e) {
         console.log(e);
+        app.systemControl.state = "navigating";
+        app.systemControl.realMode = false;
+
+        app.map.FloorChangeCheckTime = 1000;
 
     },
 
