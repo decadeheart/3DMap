@@ -106,7 +106,7 @@ Page({
      */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
-        main.displayFloor(floor);
+        main.onlyDisplayFloor(floor);
         console.log(floor);
     },
 
@@ -175,9 +175,7 @@ Page({
         console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
-
         app.map.FloorChangeCheckTime = 1000;
-
         main.naviagteInit();
 
     },

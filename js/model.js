@@ -47,9 +47,9 @@ export function renderModel(canvasDom, Three) {
         scene.add(light);
 
         //辅助坐标轴
-        var axesHelper = new THREE.AxesHelper( 5000 );
-        axesHelper.material.linewidth=500;
-        scene.add( axesHelper );
+        // var axesHelper = new THREE.AxesHelper( 5000 );
+        // axesHelper.material.linewidth=500;
+        // scene.add( axesHelper );
 
         //加载模型
         loadModel(scene);
@@ -293,7 +293,7 @@ function makeSprite(message, imageURL) {
     return sprite;
 }
 /**
- * @description 加载所有精灵并显示在scene中
+ * @description 加载所有地点名称及图标精灵并显示在scene中
  * @export
  */
 export function loadTargetText() {
@@ -327,35 +327,17 @@ export function loadTargetText() {
     //spriteControl.targetSprites.push(spriteGroup);
     //console.log(spriteGroup);
 }
-
-function dis3(nowLi, nowLi2) {
-    //勾股定理
-    let a = nowLi.x - nowLi2.x;
-    let b = nowLi.y - nowLi2.y;
-    let c = nowLi.z - nowLi2.z;
-    return Math.sqrt(a * a + b * b + c * c);
-}
-
-function getNearPOIName(obj) {
-    // console.log(obj)
-    let k = 0;
-    let list = app.POItarget;
-    for (let i = 0; i < list.length; i++) {
-        if (list[i].floor === obj.floor) {
-            if (dis3(list[i], obj) < dis3(list[k], obj)) {
-                k = i;
-            }
-        }
-    }
-    return list[k].name;
-}
-
-export function showSprite(sprite, point, type) {
+/**
+ * @description 显示精灵
+ * @export
+ * @param {*} point 位置
+ * @param {*} type 类型
+ */
+export function showSprite(point, type) {
     let spriteControl = app.spriteControl;
-    let map = app.map;
     let map_conf = app.map_conf
     let textureLoader = new THREE.TextureLoader();
-    textureLoader.load(map_conf.src_dir + "image/"+ type + ".png", function (texture) {
+    textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
         let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
         spriteControl.sprite = new THREE.Sprite(material);
         spriteControl.sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
@@ -364,99 +346,38 @@ export function showSprite(sprite, point, type) {
         app.scaleInvariableGroup.push(spriteControl.sprite);
         spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
         spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
+        console.log(spriteControl.sprite.position);
         spriteControl.sprite.floor = point.floor;
         scene.add(spriteControl.sprite);
-        console.log("精灵",spriteControl.sprite);
+        console.log("精灵", spriteControl.sprite);
     });
-
 }
-
 /**
- * @description 复制一个对象到另一个对象
- * @date 2020-07-14
- * @param {*} oldObj
- * @returns
+ * @description 根据屏幕坐标在场景中显示当前位置的图片精灵
+ * @export
+ * @param {*} index 屏幕坐标
  */
-function cloneObj(oldObj) {
-    if (typeof oldObj != "object") return oldObj;
-    if (oldObj == null) return oldObj;
-    var newObj = new Object();
-    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
-    return newObj;
-}
-
-/**
- * @description 扩展对象
- * @date 2020-07-14
- */
-function extendObj() {
-    var args = arguments;
-    if (args.length < 2) return;
-    var temp = cloneObj(args[0]); //调用复制对象方法
-    for (var n = 1; n < args.length; n++) {
-        for (var i in args[n]) {
-            temp[i] = args[n][i];
-        }
-    }
-    return temp;
-}
-
 export function selectObj(index) {
     console.log("屏幕坐标", index);
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     let map = app.map;
-    let me = app.me;
-    console.log(scene);
-    console.log(map.groundMeshes);
-    mouse.x = (index.clientX / canvas.width) * 2 - 1;
-    mouse.y = -(index.clientY / canvas.height) * 2 + 1;
-    console.log(mouse);
-    // //新建一个三维单位向量 假设z方向就是0.5
-    // //根据照相机，把这个向量转换到视点坐标系
-    // var vector = new THREE.Vector3(mouse.x, mouse.y,0.5).unproject(camera);
-
-    // //在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
-    // var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-
-    // //射线和模型求交，选中一系列直线
-    // var intersects = raycaster.intersectObjects(map.groundMeshes);
-    // console.log('imtersrcts=' + intersects)
-
-    // if (intersects.length > 0) {
-    //     //选中第一个射线相交的物体
-    //     //SELECTED = intersects[0].object;
-    //     var intersected = intersects[0].object;
-    //     console.log(intersects[0].object)
-    // }
-
-
-    // update the picking ray with the camera and mouse position
+    index.pageX += canvas.width / 2;
+    index.pageY += canvas.height / 2;
+    mouse.x = (index.pageX / canvas.width) * 2 - 1;
+    mouse.y = -(index.pageY / canvas.height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    // calculate objects intersecting the picking ray
-    // let grounds=[];
-    // map.groundMeshes.forEach(function (obj) {
-    //         grounds.push(obj.obj);
-    // })
-    console.log(raycaster);
-    var selectedPoint = {};
-    let intersects = raycaster.intersectObjects(scene.children);
-    console.log("射线：", intersects);
+    let intersects = raycaster.intersectObjects(map.groundMeshes);
     if (intersects.length > 0) {
-        console.log("触点", intersects[0].point);
         let point = intersects[0].point;
-        let obj = intersects[0].object;
-        selectedPoint.floor = obj.floor;
-        if (me != null) {
-            selectedPoint = extendObj(selectedPoint, point);
-            console.log("世界坐标", selectedPoint);
-            selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-            console.log(app.spriteControl.curSprite);
-            showSprite(app.spriteControl.curSprite, selectedPoint, 'cur');
-        }
+        showSprite(point, 'cur');
     }
 }
-export function onlyDisplayAllFloor() {
+/**
+ * @description 显示所有楼层
+ * @export
+ */
+export function displayAllFloor() {
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
             setVisible(obj);
@@ -476,6 +397,11 @@ export function onlyDisplayAllFloor() {
         }
     }
 }
+/**
+ * @description 显示指定楼层
+ * @export
+ * @param {*} floor 楼层
+ */
 export function onlyDisplayFloor(floor) {
     // if (pathControl.pathGroup !== null) {
     //     // console.log(pathControl.pathGroup.children)
@@ -490,7 +416,6 @@ export function onlyDisplayFloor(floor) {
             setVisible(obj);
         }
     });
-
     function setVisible(obj) {
         parseInt(obj.floor) === floor ? obj.visible = true : obj.visible = false;
         obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
@@ -503,10 +428,9 @@ export function onlyDisplayFloor(floor) {
             })
         }
     }
-
     map.curFloor = floor;
     // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    console.log(scene)
+    // console.log(scene)
 }
