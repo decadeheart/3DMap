@@ -351,13 +351,25 @@ function getNearPOIName(obj) {
     return list[k].name;
 }
 
-function showSprite(sprite, point) {
-    sprite.visible = true;
-    //sprite.position.set(point.x, point.y, point.z + 5);
-    sprite.position.set(0, 0, 15);
-    sprite.floor = point.floor;
-    scene.add(sprite);
-    console.log("精灵");
+export function showSprite(sprite, point, type) {
+    let spriteControl = app.spriteControl;
+    let map = app.map;
+    let map_conf = app.map_conf
+    let textureLoader = new THREE.TextureLoader();
+    textureLoader.load(map_conf.src_dir + "image/"+ type + ".png", function (texture) {
+        let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+        spriteControl.sprite = new THREE.Sprite(material);
+        spriteControl.sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
+        spriteControl.sprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
+        spriteControl.sprite.name = type + "Sprite";
+        app.scaleInvariableGroup.push(spriteControl.sprite);
+        spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
+        spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
+        spriteControl.sprite.floor = point.floor;
+        scene.add(spriteControl.sprite);
+        console.log("精灵",spriteControl.sprite);
+    });
+
 }
 
 /**
@@ -419,7 +431,7 @@ export function selectObj(index) {
             console.log("世界坐标", selectedPoint);
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
             console.log(app.spriteControl.curSprite);
-            showSprite(app.spriteControl.curSprite, selectedPoint);
+            showSprite(app.spriteControl.curSprite, selectedPoint, 'cur');
         }
     }
 }

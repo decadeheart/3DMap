@@ -33,6 +33,8 @@ main.initData = function () {
             app.canvas = canvas;
             app.THREE = THREE;            
             MODEL.renderModel(canvas,THREE);
+
+            console.log(app);
             //MODEL.loadTargetText();
         });
     
@@ -45,6 +47,8 @@ main.initData = function () {
 
         let target = data.target;
         app.beaconCoordinate = data.beaconCoordinate;
+
+        app.nodeList = nodeList;
 
         for (let build in target) {
             for (let floor in target[build]) {
@@ -63,9 +67,6 @@ main.initData = function () {
         app.beaconCoordinate.forEach(function (node) {
             node.z = (node.floor - 1) * app.map_conf.layerHeight;
         });
-
-        // console.log(nodeList);
-        naviagte(nodeList);
     }),
         (err) => {
             console.log(err);
@@ -128,6 +129,10 @@ main.startBeaconDiscovery = function () {
 
 main.stepChange = function (that) {
     accChange(that);
+}
+
+main.naviagteInit = function () {
+    naviagte(app.nodeList);
 }
 
 export default main;
