@@ -47,9 +47,9 @@ export function renderModel(canvasDom, Three) {
         scene.add(light);
 
         //辅助坐标轴
-        // var axesHelper = new THREE.AxisHelper( 5000 );
-        // axesHelper.material.linewidth=500;
-        // scene.add( axesHelper );
+        var axesHelper = new THREE.AxesHelper( 5000 );
+        axesHelper.material.linewidth=500;
+        scene.add( axesHelper );
 
         //加载模型
         loadModel(scene);
@@ -395,9 +395,30 @@ export function selectObj(index) {
     let mouse = new THREE.Vector2();
     let map = app.map;
     let me = app.me;
+    console.log(scene);
     console.log(map.groundMeshes);
-    mouse.x = (index.x / canvas.width) * 2 - 1;
-    mouse.y = -(index.y / canvas.height) * 2 + 1;
+    mouse.x = (index.clientX / canvas.width) * 2 - 1;
+    mouse.y = -(index.clientY / canvas.height) * 2 + 1;
+    console.log(mouse);
+    // //新建一个三维单位向量 假设z方向就是0.5
+    // //根据照相机，把这个向量转换到视点坐标系
+    // var vector = new THREE.Vector3(mouse.x, mouse.y,0.5).unproject(camera);
+
+    // //在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
+    // var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+    // //射线和模型求交，选中一系列直线
+    // var intersects = raycaster.intersectObjects(map.groundMeshes);
+    // console.log('imtersrcts=' + intersects)
+
+    // if (intersects.length > 0) {
+    //     //选中第一个射线相交的物体
+    //     //SELECTED = intersects[0].object;
+    //     var intersected = intersects[0].object;
+    //     console.log(intersects[0].object)
+    // }
+
+
     // update the picking ray with the camera and mouse position
     raycaster.setFromCamera(mouse, camera);
     // calculate objects intersecting the picking ray
@@ -405,8 +426,9 @@ export function selectObj(index) {
     // map.groundMeshes.forEach(function (obj) {
     //         grounds.push(obj.obj);
     // })
+    console.log(raycaster);
     var selectedPoint = {};
-    let intersects = raycaster.intersectObjects(map.groundMeshes);
+    let intersects = raycaster.intersectObjects(scene.children);
     console.log("射线：", intersects);
     if (intersects.length > 0) {
         console.log("触点", intersects[0].point);

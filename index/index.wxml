@@ -6,7 +6,7 @@
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd"
-        bindlongtap=""
+        bindtap="touchTap"
     ></canvas>
     <!-- 文字精灵容器 -->
     <canvas
