@@ -61,11 +61,9 @@ function detectorNewStep(values) {
                  * 3.连续记录了9步用户还在运动，之前的数据才有效
                  * */
                 timeOfLastStep = timeOfNow;
-                //applicationCache.userControl.moveDetect();
-                app.map.stepCount += 1;
-                //console.log(app.map.stepCount);
+
                 userControl.moveDetect()
-                //app.map.stepCount += 1;
+
             }
 
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= InitialValue)) {
