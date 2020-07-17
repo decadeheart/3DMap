@@ -3,8 +3,6 @@ var app = getApp();
 let me = app.me;
 let map = app.map;
 let arrow = app.arrow;
-let scaleInvariableGroup = app.scaleInvariableGroup;
-let spriteControl = app.spriteControl;
 let map_conf = app.map_conf;
 let building_conf = app.building_conf;
 
@@ -84,37 +82,7 @@ export function loadModel(scene) {
         me = new THREE.Mesh(usergeometry, material);
         // initUser();
     });
-    textureLoader.load(map_conf.src_dir + 'image/end.png', function (texture) {
-        let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-        spriteControl.endSprite = new THREE.Sprite(material);
-        spriteControl.endSprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
-        spriteControl.endSprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
-        spriteControl.endSprite.name = "endSprite";
-        scaleInvariableGroup.push(spriteControl.endSprite);
-        spriteControl.endSprite.center = new THREE.Vector2(0.5, 0.5);
 
-        // initNavPoint();
-    });
-    textureLoader.load(map_conf.src_dir + 'image/start.png', function (texture) {
-        let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-        spriteControl.startSprite = new THREE.Sprite(material);
-        spriteControl.startSprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
-        spriteControl.startSprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
-        spriteControl.startSprite.name = "startSprite";
-        scaleInvariableGroup.push(spriteControl.startSprite);
-        spriteControl.startSprite.center = new THREE.Vector2(0.5, 0.5); 
-        // initNavPoint();
-    });
-    textureLoader.load(map_conf.src_dir + 'image/cur.png', function (texture) {
-        let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-        spriteControl.curSprite = new THREE.Sprite(material);
-        spriteControl.curSprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
-        spriteControl.curSprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
-        spriteControl.curSprite.name = "curSprite";
-        scaleInvariableGroup.push(spriteControl.curSprite);
-        spriteControl.curSprite.center = new THREE.Vector2(0.5, 0.5);
-        // initNavPoint();
-    });
     // loadTargetText();
 }
 

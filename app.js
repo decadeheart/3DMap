@@ -151,5 +151,18 @@ App({
                 });
             });
         }
+    },
+    pathControl : {
+        PathTweengroup: [],//no use now
+        textures: [],
+        texture:null,
+        pathGroup: null,
+        changeScale: function (scale) {
+            if (this.pathGroup !== null) {
+                this.pathGroup.children.forEach(function (tube) {
+                    tube.scale.set(scale, scale, 1);
+                });
+            }
+        }
     }
 });

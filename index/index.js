@@ -178,7 +178,7 @@ Page({
 
         app.map.FloorChangeCheckTime = 1000;
 
-        main.naviagteInit();
+        main.navigateInit();
 
     },
 

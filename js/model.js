@@ -418,7 +418,7 @@ export function selectObj(index) {
     //         grounds.push(obj.obj);
     // })
     var selectedPoint = {};
-    let intersects = raycaster.intersectObjects(map.groundMeshes);
+    let intersects = raycaster.intersectObjects(scene.children);
     console.log("射线：", intersects);
     if (intersects.length > 0) {
         console.log("触点", intersects[0].point);
@@ -487,4 +487,69 @@ export function onlyDisplayFloor(floor) {
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     console.log(scene)
+}
+
+export function initPath () {
+    let pathControl = app.pathControl;
+    let textureLoader = new THREE.TextureLoader();
+    pathControl.texture = textureLoader.load("../style/word.png");
+    pathControl.texture.mapping = THREE.UVMapping;
+    pathControl.texture.wrapS = THREE.RepeatWrapping;
+    pathControl.texture.wrapT = THREE.RepeatWrapping;
+    console.log(pathControl)    
+}
+
+export function  createPathTube(path) {
+    let pointlist = [];
+    let floorlist = [];
+    let map_conf = app.map_conf;
+    let pathControl = app.pathControl;
+    //scene.remove(arrowList);
+    scene.remove(pathControl.pathGroup);
+
+    pathControl.pathGroup = new THREE.Group();
+    if(path.length < 2 ){
+        retrun;
+    }
+
+
+    pointlist.push([new THREE.Vector3(path[0].x, path[0].y, path[0].z + map_conf.lineHeight)]);
+
+    floorlist.push(path[0].floor);
+    for(let i = 1; i < path.length; i++) {
+        if(path[i].floor != path[i-1].floor) {
+            pointlist.push([new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map_conf.lineHeight), new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)]);
+            floorlist.push(path[i-1].floor);
+
+            let line = [];
+            line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+            pointlist.push(line);
+            floorlist.push(path[i].floor);
+        } else {
+            pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+        }
+    }
+
+    pointlist.forEach(function (line , i) {
+        if(line.length > 1) {
+            //绘制曲线
+            let curve = new THREE.CatmullRomCurve3(line, false, "camullrom", 0.01);
+            //绘制管道
+            let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);  
+            let tex = pathControl.texture.clone();      
+            pathControl.textures.push(tex);   
+            let material = new THREE.MeshBasicMaterial({map: tex});
+            material.map.repeat.x = curve.getLength() * 0.2;
+            material.map.needsUpdate = true;
+            let tube = new THREE.Mesh(tubegeo, material);
+            tube.floor = floorlist[i];
+            pathControl.pathGroup.add(tube);            
+                   
+        }
+    })
+
+    pathControl.pathGroup.name = 'path';
+    console.log("路线",pathControl.pathGroup)
+    scene.add(pathControl.pathGroup)
+
 }

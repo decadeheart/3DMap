@@ -258,13 +258,13 @@ function navigation(nodeList) {
     resultParent.push(endLi);
 
 }
-//function naviagte(start, end, nodeList)
+//function navigate(start, end, nodeList)
 /**
  * @description 点击后开始导航
  * @date 2020-07-13
  * @param {*} nodeList
  */
-function naviagte(nodeList) {
+function navigate(nodeList) {
 
 
     // let startNode = findnearest2(start, nodeList);
@@ -279,8 +279,13 @@ function naviagte(nodeList) {
     let sprite = app.spriteControl;
     MODEL.showSprite(sprite.startSprite, startNode, "start");
     MODEL.showSprite(sprite.endSprite, endNode, "end");
+    //scene.remove(spriteControl.curSprite)
+    MODEL.initPath();
+    MODEL.createPathTube(resultParent);
+
+
     
 }
 
 
-export default naviagte;
+export default navigate;
