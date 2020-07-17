@@ -84,6 +84,7 @@ main.initData = function () {
         },
     });
 };
+
 main.cameraExchange = function () {
     MODEL.cameraExchange();
 };
@@ -94,7 +95,7 @@ main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
 };
 main.selectObj = function (index) {
-    MODEL.selectObj(index);
+    return MODEL.selectObj(index);
 };
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {

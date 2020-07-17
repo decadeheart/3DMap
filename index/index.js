@@ -98,7 +98,7 @@ Page({
     allFloor(e) {
         let floor = e.currentTarget.dataset.floor;
         main.displayAllFloor();
-        
+
     },
     /**
      * @description 页面点击楼层图片，切换楼层
@@ -179,9 +179,20 @@ Page({
         main.naviagteInit();
 
     },
-    touchTap(e){
+    setStartPoint(){
+        console.log("起点设置完成！")
+    },
+    setEndPoint(){
+        console.log("终点设置完成！")
+    },
+    touchTap(e) {
         console.log("tap");
-        main.selectObj(e.touches[0]);
+        this.setData({
+            navFlag: 1,
+            infoFlag: 1,
+            currentPointName: main.selectObj(e.touches[0])
+        });
+        
     },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({

@@ -346,31 +346,95 @@ export function showSprite(point, type) {
         app.scaleInvariableGroup.push(spriteControl.sprite);
         spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
         spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
-        console.log(spriteControl.sprite.position);
+        //console.log(spriteControl.sprite.position);
         spriteControl.sprite.floor = point.floor;
         scene.add(spriteControl.sprite);
-        console.log("精灵", spriteControl.sprite);
+        //console.log("精灵", spriteControl.sprite);
     });
 }
+
+function dis3(nowLi, nowLi2) {
+    //勾股定理
+    let a = nowLi.x - nowLi2.x;
+    let b = nowLi.y - nowLi2.y;
+    let c = nowLi.z - nowLi2.z;
+    return Math.sqrt(a * a + b * b + c * c);
+}
+
+function getNearPOIName(obj) {
+    // console.log(obj)
+    let k = 0;
+    let list = app.POItarget;
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].floor === obj.floor) {
+            if (dis3(list[i], obj) < dis3(list[k], obj)) {
+                k = i;
+            }
+        }
+    }
+    return list[k].name;
+}
+/**
+ * @description 复制一个对象到另一个对象
+ * @date 2020-07-14
+ * @param {*} oldObj
+ * @returns
+ */
+function cloneObj(oldObj) {
+    if (typeof (oldObj) != 'object') return oldObj;
+    if (oldObj == null) return oldObj;
+    var newObj = new Object();
+    for (var i in oldObj)
+        newObj[i] = cloneObj(oldObj[i]);
+    return newObj;
+}
+
+/**
+ * @description 扩展对象
+ * @date 2020-07-14
+ */
+function extendObj() {
+    var args = arguments;
+    if (args.length < 2) return;
+    var temp = cloneObj(args[0]); //调用复制对象方法
+    for (var n = 1; n < args.length; n++) {
+        for (var i in args[n]) {
+            temp[i] = args[n][i];
+        }
+    }
+    return temp;
+}
+
 /**
  * @description 根据屏幕坐标在场景中显示当前位置的图片精灵
  * @export
  * @param {*} index 屏幕坐标
  */
 export function selectObj(index) {
-    console.log("屏幕坐标", index);
+
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     let map = app.map;
-    index.pageX += canvas.width / 2;
-    index.pageY += canvas.height / 2;
-    mouse.x = (index.pageX / canvas.width) * 2 - 1;
-    mouse.y = -(index.pageY / canvas.height) * 2 + 1;
+    let me = app.me;
+
+    mouse.x = (index.pageX / canvas._width) * 2 - 1;
+    mouse.y = -(index.pageY / canvas._height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
+    let selectedPoint = {};
     let intersects = raycaster.intersectObjects(map.groundMeshes);
     if (intersects.length > 0) {
         let point = intersects[0].point;
-        showSprite(point, 'cur');
+        let obj = intersects[0].object;
+        if (me != null) {
+
+            selectedPoint = extendObj(selectedPoint, point);
+            selectedPoint.floor = obj.floor;
+
+            selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
+
+            showSprite(point, 'cur');
+            return selectedPoint.nearTAGname;
+        }
     }
 }
 /**

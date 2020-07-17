@@ -99,6 +99,7 @@
                     icon="location"
                     size="{{ 20 }} "
                     color="rgb(133, 212, 166)"
+                    bindtap="setStartPoint"
                 ></mp-icon
                 >设为起点
             </view>
@@ -108,6 +109,7 @@
                     icon="location"
                     size="{{ 20 }} "
                     color="rgb(220, 95, 90)"
+                    bindtap="setEndPoint"
                 ></mp-icon
                 >设为终点
             </view>
