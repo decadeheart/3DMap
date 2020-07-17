@@ -283,8 +283,7 @@ function navigate(nodeList) {
 
     MODEL.showSprite(startNode, "start");
     MODEL.showSprite(endNode, "end");
-    MODEL.initPath();
-    MODEL.createPathTube(resultParent);
+    MODEL.initPath(resultParent);
     
 }
 
