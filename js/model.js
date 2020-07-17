@@ -1,7 +1,7 @@
 import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
-import { loadModel, loadGLTF } from "./loadModel"; //加载模型
+import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 
 //全局变量，供各个函数调用
@@ -29,11 +29,9 @@ export function renderModel(canvasDom, Three) {
         scene = new THREE.Scene();
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
-        scene.rotation.z -= Math.PI / 2;
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(-1, 0, 0);
@@ -55,7 +53,8 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
-        //loadGLTF(scene);
+        //加载文字和图片
+        //loadTargetText(scene);
 
         let textureLoader = new THREE.TextureLoader();
         textureLoader.load("../style/me.png", function (texture) {
@@ -150,6 +149,7 @@ export function cameraExchange() {
         // TWEEN.update(); //更新动画，配合initTween使用
     }
 }
+
 /**
  * @description 计算一个数字转为二进制后同位数最大值+1（如：5=>101的同位最大值为111，加一后为1000）
  * @param {*} x 数字
@@ -314,7 +314,7 @@ export function loadTargetText() {
                 sprite = makeSprite(item.name, null);
             }
             sprite.level = item.level;
-            sprite.position.set(item.x, item.y, item.z + 5);
+            sprite.position.set(item.x + 50, item.y, item.z + 5);
             //微调位置
             sprite.position.x += -50;
             // sprite.position.y += -20;
@@ -391,41 +391,11 @@ function extendObj() {
 }
 
 export function selectObj(index) {
-    console.log(index);
+    console.log("屏幕坐标", index);
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     let map = app.map;
-
-    //纹理贴图
-    var texture = new THREE.TextureLoader().load("../style/cur.png");
-    //创建精灵
-    let spriteMaterial = new THREE.SpriteMaterial({ map: texture, depthTest: true });
-    let curSprite = new THREE.Sprite(spriteMaterial);
-    curSprite.scale.set(0.5 * 20, 0.5 * 20, 0.5 * 20);
-    //这句为了防止warning
-    curSprite.material.map.minFilter = THREE.LinearFilter;
-    curSprite.position.set(0, 0, 15);
-    //scene.add(curSprite);
-
-    // scene.children.forEach(function (obj) {
-    //     console.log(obj.name)
-    //     if (!!obj.name && (obj.name.split('_')[1] == 'Floor' || obj.name.split('_')[1] == 'ground')) {
-    //         // let floorOfObj = parseInt(obj.name.split('_')[0]);
-    //         if (obj.type == "Group") {
-    //             obj.children.forEach(function (child) {
-    //                 child.floor = parseInt(obj.name.split('_')[0]);
-    //                 map.groundMeshes.push(child);
-    //             })
-    //         } else {
-    //             map.groundMeshes.push(child);
-    //         }
-    //     }
-    //     if (!!obj.name) {
-    //         // let floorOfObj = parseInt(obj.name.split('_')[0]);
-    //         obj.floor = parseInt(obj.name.split('_')[0]);
-    //     }
-    // });
-
+    let me = app.me;
     console.log(map.groundMeshes);
     mouse.x = (index.x / canvas.width) * 2 - 1;
     mouse.y = -(index.y / canvas.height) * 2 + 1;
@@ -444,21 +414,12 @@ export function selectObj(index) {
         let point = intersects[0].point;
         let obj = intersects[0].object;
         selectedPoint.floor = obj.floor;
-
-        selectedPoint = extendObj(selectedPoint, point);
-        console.log(selectedPoint);
-        selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-        console.log(app.spriteControl.curSprite);
-        showSprite(app.spriteControl.curSprite, selectedPoint);
-        // if (me != null) {
-
-        //     $.extend(true, selectedPoint, point);
-        //     selectedPoint.floor = obj.floor;
-
-        //     selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-
-        //     showSprite(spriteControl.curSprite, selectedPoint);
-
-        // }
+        if (me != null) {
+            selectedPoint = extendObj(selectedPoint, point);
+            console.log("世界坐标", selectedPoint);
+            selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
+            console.log(app.spriteControl.curSprite);
+            showSprite(app.spriteControl.curSprite, selectedPoint);
+        }
     }
 }

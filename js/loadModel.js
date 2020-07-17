@@ -12,6 +12,7 @@ export function loadModel(scene) {
 
     let THREE = app.THREE;
     let loader = new THREE.GLTFLoader();
+    // loader.load('../style/jxqzf.gltf', function (glb) { //后期可以考虑使用gltf格式文件代替glb文件
     loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '.glb', function (glb) {
         //添加地面到场景里
         let ground = glb.scene;
@@ -24,11 +25,12 @@ export function loadModel(scene) {
             //initStep2();
             map.bool_isMapModelReady = true;
         })() : null;
-        
+
 
     });
     building_conf.forEach(function (building) {
         for (let i = 1; i <= building.layer_nums; i++) {
+        // for (let i = 1; i <= 1; i++) {
             loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '_' + building.building_id + '_' + i + '.glb', function (glb) {
                 //添加建筑物到场景里
                 let building = glb.scene;
@@ -44,7 +46,6 @@ export function loadModel(scene) {
             })
         }
     });
-
     function setVisible(obj, visible) {
         console.log(obj.name);
         obj.visible = visible;
@@ -69,6 +70,7 @@ export function loadModel(scene) {
 
         arrow = obj.scene.children[0];
     });
+
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load(map_conf.src_dir + 'image/me.png', function (texture) {
         let usergeometry = new THREE.PlaneGeometry(15, 15, 32);
@@ -80,7 +82,7 @@ export function loadModel(scene) {
             depthTest: false
         });
         me = new THREE.Mesh(usergeometry, material);
-        //initUser();
+        // initUser();
     });
     textureLoader.load(map_conf.src_dir + 'image/end.png', function (texture) {
         let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
@@ -110,91 +112,9 @@ export function loadModel(scene) {
         spriteControl.curSprite.name = "curSprite";
         scaleInvariableGroup.push(spriteControl.curSprite);
         spriteControl.curSprite.center = new THREE.Vector2(0.5, 0.5);
-        console.log(spriteControl.curSprite)
         // initNavPoint();
     });
     // loadTargetText();
-}
-
-export function loadGLTF(scene) {
-
-    let THREE = app.THREE;
-    let loader = new THREE.GLTFLoader();
-
-    loader.load(map_conf.src_dir + 'data/jxqzf.glb', function (gltf) {
-        // loader.load('../style/jxqzf.gltf', function (gltf) {
-        console.log("gltf.scene", gltf.scene);
-        scene.add(gltf.scene);
-        scene.children.forEach(function (obj) {
-            if (!!obj.name && (obj.name.split('_')[1] == 'Floor' || obj.name.split('_')[1] == 'ground')) {
-                // let floorOfObj = parseInt(obj.name.split('_')[0]);
-                if (obj.type == "Group") {
-                    obj.children.forEach(function (child) {
-                        child.floor = parseInt(obj.name.split('_')[0]);
-                        map.groundMeshes.push(child);
-                    })
-                } else {
-                    map.groundMeshes.push(child);
-                }
-            }
-            if (!!obj.name) {
-                // let floorOfObj = parseInt(obj.name.split('_')[0]);
-                obj.floor = parseInt(obj.name.split('_')[0]);
-            }
-        });
-        console.log(map.groundMeshes);
-        loader.load(map_conf.src_dir + 'data/user.gltf', function (obj) {
-
-            me = obj.scene.children[0];
-            me.material.depthTest = true;
-            me.position.x = 50;
-            me.position.y = 50;
-            // arrow=obj.scene.children[0].clone();
-            scaleInvariableGroup.push(me);
-            //setTimeout("initUser()", 1000);
-        });
-        loader.load(map_conf.src_dir + 'data/arrow.gltf', function (obj) {
-
-            arrow = obj.scene.children[0];
-        });
-        let textureLoader = new THREE.TextureLoader();
-        textureLoader.load(map_conf.src_dir + 'image/end.png', function (texture) {
-            let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-            spriteControl.endSprite = new THREE.Sprite(material);
-            spriteControl.endSprite.scale.set(0.5 * 20, 0.5 * 20, 0.5 * 20);
-            scaleInvariableGroup.push(spriteControl.endSprite);
-            spriteControl.endSprite.center = new THREE.Vector2(0.5, 0.5);
-            // initNavPoint();
-        });
-        textureLoader.load(map_conf.src_dir + 'image/start.png', function (texture) {
-            let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-            spriteControl.startSprite = new THREE.Sprite(material);
-            spriteControl.startSprite.scale.set(0.5 * 20, 0.5 * 20, 0.5 * 20);
-            scaleInvariableGroup.push(spriteControl.startSprite);
-            spriteControl.startSprite.center = new THREE.Vector2(0.5, 0.5);
-            // initNavPoint();
-        });
-        textureLoader.load(map_conf.src_dir + 'image/cur.png', function (texture) {
-            let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-            spriteControl.curSprite = new THREE.Sprite(material);
-            spriteControl.curSprite.scale.set(0.5 * 20, 0.5 * 20, 0.5 * 20);
-            scaleInvariableGroup.push(spriteControl.curSprite);
-
-            // spriteControl.curSprite. = 90;
-
-            console.log(spriteControl.curSprite)
-            // initNavPoint();
-        });
-        // initLight();
-        // loadTargetText();
-
-        // console.log("scene", scene);
-        // initStep2();
-        // displayAllFloors();
-        // displayFloor(4);
-
-    });
-
 }
 
 
