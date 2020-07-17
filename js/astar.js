@@ -277,8 +277,8 @@ function naviagte(nodeList) {
     navigation(nodeList);
     console.log("结果: ", resultParent);
     let sprite = app.spriteControl;
-    MODEL.showSprite(sprite.startSprite, startNode, "start");
-    MODEL.showSprite(sprite.endSprite, endNode, "end");
+    MODEL.showSprite(startNode, "start");
+    MODEL.showSprite(endNode, "end");
     
 }
 
