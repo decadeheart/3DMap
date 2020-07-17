@@ -6,7 +6,7 @@ import userControl from "./user"; //用户贴图
 
 //全局变量，供各个函数调用
 var canvas, THREE;
-var camera, scene, renderer, model, controls;
+var camera, scene, renderer, controls;
 var app = getApp();
 
 /**
@@ -71,7 +71,6 @@ export function renderModel(canvasDom, Three) {
             scene.add(app.me);
         });
 
-        // scene.rotation.z = Math.PI / 2;
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -434,4 +433,58 @@ export function selectObj(index) {
             showSprite(app.spriteControl.curSprite, selectedPoint, 'cur');
         }
     }
+}
+export function onlyDisplayAllFloor() {
+    scene.children.forEach(function (obj, i) {
+        if (!!obj.name) {
+            setVisible(obj);
+        }
+    });
+
+    function setVisible(obj) {
+        obj.visible = true;
+        obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
+        if (obj.name.indexOf("outside") !== -1) {
+            obj.visible = true;
+            return;
+        } else {
+            obj.children.forEach(function (child) {
+                setVisible(child);
+            })
+        }
+    }
+}
+export function onlyDisplayFloor(floor) {
+    // if (pathControl.pathGroup !== null) {
+    //     // console.log(pathControl.pathGroup.children)
+    // }
+    let map = app.map;
+    if (typeof floor !== 'number') {
+        floor = parseInt(floor);
+    }
+    // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+    scene.children.forEach(function (obj, i) {
+        if (!!obj.name) {
+            setVisible(obj);
+        }
+    });
+
+    function setVisible(obj) {
+        parseInt(obj.floor) === floor ? obj.visible = true : obj.visible = false;
+        obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
+        if (obj.name.indexOf("outside") !== -1) {
+            obj.visible = true;
+            return;
+        } else {
+            obj.children.forEach(function (child) {
+                setVisible(child);
+            })
+        }
+    }
+
+    map.curFloor = floor;
+    // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+    // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
+    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+    console.log(scene)
 }

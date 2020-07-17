@@ -30,7 +30,7 @@ Page({
     },
 
     onLoad: function () {
-        
+
         //初始化图片url
         this.setData({
             dimensionImgUrl: [
@@ -91,13 +91,22 @@ Page({
             dimension: index,
         });
     },
-
+    /**
+        * @description 显示所有楼层
+        * @param {*} e wxml的参数通过e获取
+        */
+    allFloor(e) {
+        let floor = e.currentTarget.dataset.floor;
+        main.displayAllFloor();
+        
+    },
     /**
      * @description 页面点击楼层图片，切换楼层
      * @param {*} e wxml的参数通过e获取
      */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
+        main.displayFloor(floor);
         console.log(floor);
     },
 

@@ -119,37 +119,3 @@ export function loadModel(scene) {
 }
 
 
-function onlyDisplayFloor(floor) {
-    if (pathControl.pathGroup !== null) {
-        // console.log(pathControl.pathGroup.children)
-    }
-
-    if (typeof floor !== 'number') {
-        floor = parseInt(floor);
-    }
-    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-    scene.children.forEach(function (obj, i) {
-        if (!!obj.name) {
-            setVisible(obj);
-        }
-    });
-
-    function setVisible(obj) {
-        parseInt(obj.floor) === floor ? obj.visible = true : obj.visible = false;
-        obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
-        if (obj.name.indexOf("outside") !== -1) {
-            obj.visible = true;
-            return;
-        } else {
-            obj.children.forEach(function (child) {
-                setVisible(child);
-            })
-        }
-    }
-
-    map.curFloor = floor;
-    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-    camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
-    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    console.log(scene)
-}
