@@ -88,6 +88,12 @@ main.initData = function () {
 main.cameraExchange = function () {
     MODEL.cameraExchange();
 };
+main.displayAllFloor = function () {
+    MODEL.onlyDisplayAllFloor();
+};
+main.displayFloor = function (floor) {
+    MODEL.onlyDisplayFloor(floor);
+};
 main.selectObj = function (index) {
     MODEL.selectObj(index);
 };
