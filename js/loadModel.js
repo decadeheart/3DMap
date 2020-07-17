@@ -1,11 +1,13 @@
 var app = getApp();
 
-let me = app.me;
 let map = app.map;
-let arrow = app.arrow;
 let map_conf = app.map_conf;
 let building_conf = app.building_conf;
-
+/**
+ * @description 加载模型
+ * @export
+ * @param {*} scene 模型放置的场景
+ */
 export function loadModel(scene) {
 
     let THREE = app.THREE;
@@ -23,8 +25,6 @@ export function loadModel(scene) {
             //initStep2();
             map.bool_isMapModelReady = true;
         })() : null;
-
-
     });
     building_conf.forEach(function (building) {
         for (let i = 1; i <= building.layer_nums; i++) {
@@ -44,13 +44,6 @@ export function loadModel(scene) {
             })
         }
     });
-    function setVisible(obj, visible) {
-        console.log(obj.name);
-        obj.visible = visible;
-        obj.children.forEach(function (child) {
-            setVisible(child, visible);
-        })
-    }
 
     function setFloor(obj, f) {
         obj.floor = f;
@@ -63,26 +56,6 @@ export function loadModel(scene) {
             setFloor(child, f);
         })
     }
-
-    loader.load(map_conf.src_dir + 'data/arrow.gltf', function (obj) {
-
-        arrow = obj.scene.children[0];
-    });
-
-    let textureLoader = new THREE.TextureLoader();
-    textureLoader.load(map_conf.src_dir + 'image/me.png', function (texture) {
-        let usergeometry = new THREE.PlaneGeometry(15, 15, 32);
-        let material = new THREE.MeshBasicMaterial({
-            side: THREE.DoubleSide,
-            map: texture,
-            transparent: true,
-            opacity: 1,
-            depthTest: false
-        });
-        me = new THREE.Mesh(usergeometry, material);
-        // initUser();
-    });
-
     // loadTargetText();
 }
 

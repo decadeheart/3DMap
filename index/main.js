@@ -33,8 +33,6 @@ main.initData = function () {
             app.canvas = canvas;
             app.THREE = THREE;            
             MODEL.renderModel(canvas,THREE);
-            
-            console.log(app);
             //MODEL.loadTargetText();
         });
     
@@ -91,9 +89,9 @@ main.cameraExchange = function () {
     MODEL.cameraExchange();
 };
 main.displayAllFloor = function () {
-    MODEL.onlyDisplayAllFloor();
+    MODEL.displayAllFloor();
 };
-main.displayFloor = function (floor) {
+main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
 };
 main.selectObj = function (index) {

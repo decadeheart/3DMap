@@ -106,7 +106,7 @@ Page({
      */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
-        main.displayFloor(floor);
+        main.onlyDisplayFloor(floor);
         console.log(floor);
     },
 
@@ -175,20 +175,20 @@ Page({
         console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
-
         app.map.FloorChangeCheckTime = 1000;
 
         main.navigateInit();
 
     },
-
+    touchTap(e){
+        console.log("tap");
+        main.selectObj(e.touches[0]);
+    },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchstart",
         });
-        console.log("tap");
-        main.selectObj(e.touches[0]);
     },
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
@@ -201,7 +201,6 @@ Page({
             ...e,
             type: "touchend",
         });
-        console.log("tapEnd");
     },
     onPullDownRefresh: function () {
         wx.stopPullDownRefresh();

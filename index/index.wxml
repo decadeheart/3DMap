@@ -6,13 +6,12 @@
         bindtouchstart="touchStart"
         bindtouchmove="touchMove"
         bindtouchend="touchEnd"
-        bindlongtap=""
+        bindtap="touchTap"
     ></canvas>
     <!-- 文字精灵容器 -->
     <canvas
         type="2d"
         id="font"
-        canvas-id="test"
     ></canvas>
     <!-- 图片精灵容器 -->
     <canvas
