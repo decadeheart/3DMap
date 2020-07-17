@@ -176,7 +176,8 @@ Page({
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;
-        main.naviagteInit();
+
+        main.navigateInit();
 
     },
     setStartPoint(){

@@ -1,6 +1,6 @@
 import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
-import naviagte from "../js/astar";
+import navigate from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
@@ -83,6 +83,7 @@ main.initData = function () {
             }
         },
     });
+    
 };
 
 main.cameraExchange = function () {
@@ -136,8 +137,8 @@ main.stepChange = function (that) {
     accChange(that);
 }
 
-main.naviagteInit = function () {
-    naviagte(app.nodeList);
+main.navigateInit = function () {
+    navigate(app.nodeList);
 }
 
 export default main;
