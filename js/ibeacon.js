@@ -1,23 +1,23 @@
 var blueConfig = {
-    "blueConfig":[],
-    "maxBufferLength":5,
-    "minValidRssi":-90,
-    "beaconInfo": []
-}
+    blueConfig: [],
+    maxBufferLength: 5,
+    minValidRssi: -90,
+    beaconInfo: [],
+};
 var app = getApp();
 
 /**
  * @description 监听ibeacon更新状态
  * @date 2020-07-13
  */
-function beaconUpdate() { 
+function beaconUpdate() {
     wx.onBeaconUpdate((res) => {
         let data = [];
 
-        for (let i=0; i < res.beacons.length; i++){
-            if(res.beacons[i].rssi !== "0") {
+        for (let i = 0; i < res.beacons.length; i++) {
+            if (res.beacons[i].rssi !== "0") {
                 let temp = matchRecord(res.beacons[i]);
-                if(temp != null && data.length < 6) {
+                if (temp != null && data.length < 6) {
                     data.push(temp);
                 }
             }
@@ -29,31 +29,31 @@ function beaconUpdate() {
         }
 
         //根据信号强度来排序
-        blueConfig.beaconInfo.push(data.sort(function (num1, num2){
-            return parseFloat(num2.rssi) - parseFloat(num1.rssi)
-        }))
+        blueConfig.beaconInfo.push(
+            data.sort(function (num1, num2) {
+                return parseFloat(num2.rssi) - parseFloat(num1.rssi);
+            })
+        );
 
         let result = getMaxPossiblePoint();
 
-        if(parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
+        if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
             return;
         }
 
         app.localization.getBlue(result.x, result.y, result.z, result.floor);
-        // 超时停止扫描  
+        // 超时停止扫描
         setTimeout(function () {
             wx.stopBeaconDiscovery({
-              success: function () {
-                // console.log("停止扫描设备！");
-                // console.log(result)
-                wx.showToast({
-                  title: '停止扫描设备！',
-                  icon:'success',
-                  duration:500
-                })
-              }
+                success: function () {},
+                //     wx.showToast({
+                //       title: '停止扫描设备！',
+                //       icon:'success',
+                //       duration:500
+                //     })
+                //   }
             });
-          }, 1 * 1500); 
+        }, 1 * 1500);
     });
 }
 /**
@@ -63,10 +63,13 @@ function beaconUpdate() {
  * @returns
  */
 function matchRecord(obj) {
-    for(let i=0; i<app.beaconCoordinate.length; i++){
-        if(obj.major == app.beaconCoordinate[i].major && obj.minor == app.beaconCoordinate[i].minor) {
+    for (let i = 0; i < app.beaconCoordinate.length; i++) {
+        if (
+            obj.major == app.beaconCoordinate[i].major &&
+            obj.minor == app.beaconCoordinate[i].minor
+        ) {
             //rssi表示设备的信号强度
-            let beaCor = {rssi: obj.rssi};
+            let beaCor = { rssi: obj.rssi };
             let ret = extendObj(beaCor, app.beaconCoordinate[i]);
             return ret;
         }
@@ -81,11 +84,10 @@ function matchRecord(obj) {
  * @returns
  */
 function cloneObj(oldObj) {
-    if(typeof(oldObj)!='object') return oldObj;
-    if(oldObj == null) return oldObj;
+    if (typeof oldObj != "object") return oldObj;
+    if (oldObj == null) return oldObj;
     var newObj = new Object();
-    for(var i in oldObj)
-        newObj[i] = cloneObj(oldObj[i]);
+    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
     return newObj;
 }
 
@@ -95,9 +97,9 @@ function cloneObj(oldObj) {
  */
 function extendObj() {
     var args = arguments;
-    if(args.length < 2) return;
+    if (args.length < 2) return;
     var temp = cloneObj(args[0]); //调用复制对象方法
-    for (var n=1; n < args.length; n++) {
+    for (var n = 1; n < args.length; n++) {
         for (var i in args[n]) {
             temp[i] = args[n][i];
         }
@@ -111,37 +113,38 @@ function extendObj() {
  * @returns
  */
 function getMaxPossiblePoint() {
-
     let temp = [];
     //提取字符串
     let buffer = blueConfig.beaconInfo.slice(0);
 
-    for(let k = 0;k < buffer.length; k++) {
-
+    for (let k = 0; k < buffer.length; k++) {
         let list = buffer[k];
         for (let j = 0; j < list.length; j++) {
             let i = 0;
-            for(i; i < temp.length; i++) {
+            for (i; i < temp.length; i++) {
                 if (temp[i].major === list[j].major && temp[i].minor === list[j].minor) {
-                    temp[i].count = temp[i].count + blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j*2);
+                    temp[i].count =
+                        temp[i].count +
+                        blueConfig.maxBufferLength * k +
+                        (blueConfig.maxBufferLength - j * 2);
                     break;
                 }
             }
 
             if (i === temp.length) {
-                list[j].count = blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j*2)
+                list[j].count =
+                    blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
 
                 temp.push(list[j]);
             }
         }
     }
 
-    temp.sort(function (mem1, mem2){
+    temp.sort(function (mem1, mem2) {
         return mem2.count - mem1.count;
     });
 
     return temp[0];
 }
-
 
 export default beaconUpdate;

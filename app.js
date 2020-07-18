@@ -69,7 +69,6 @@ App({
             }
         },
         getBlue: function (x, y, z, floor) {
-
             this.lastBluePosition = { x: x, y: y, z: z, floor: floor };
             if (this.BluetoothOpen === 1) {
                 this.setModel("BLUE");
@@ -79,7 +78,6 @@ App({
                 //     TWEEN.remove(TweenControl.preLocationTween);
                 //     TweenControl.preLocationTween = userControl.changePosition(x, y, z, "animation");
                 // }
-
             }
         },
     },
@@ -105,14 +103,10 @@ App({
             return systemControl.state === "navigating" && !systemControl.realMode
         }
     },
-
     TweenControl: {
         preLocationTween: null,
         autoMoveTween: [],
         cameraTween: null
-
-
-
     },
     systemControl: {
         state: 'normal',
@@ -154,9 +148,21 @@ App({
                     } else if (sprite.floor === map.curFloor) {
                         sprite.visible = true;
                     }
-
                 });
             });
+        }
+    },
+    pathControl : {
+        PathTweengroup: [],//no use now
+        textures: [],
+        texture:null,
+        pathGroup: null,
+        changeScale: function (scale) {
+            if (this.pathGroup !== null) {
+                this.pathGroup.children.forEach(function (tube) {
+                    tube.scale.set(scale, scale, 1);
+                });
+            }
         }
     }
 });

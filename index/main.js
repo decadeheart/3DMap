@@ -1,6 +1,6 @@
 import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
-import naviagte from "../js/astar";
+import navigate from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
@@ -46,6 +46,8 @@ main.initData = function () {
         let target = data.target;
         app.beaconCoordinate = data.beaconCoordinate;
 
+        app.nodeList = nodeList;
+
         for (let build in target) {
             for (let floor in target[build]) {
                 target[build][floor].forEach(function (item) {
@@ -63,9 +65,6 @@ main.initData = function () {
         app.beaconCoordinate.forEach(function (node) {
             node.z = (node.floor - 1) * app.map_conf.layerHeight;
         });
-
-        // console.log(nodeList);
-        naviagte(nodeList);
     }),
         (err) => {
             console.log(err);
@@ -84,12 +83,20 @@ main.initData = function () {
             }
         },
     });
+    
 };
+
 main.cameraExchange = function () {
     MODEL.cameraExchange();
 };
+main.displayAllFloor = function () {
+    MODEL.displayAllFloor();
+};
+main.onlyDisplayFloor = function (floor) {
+    MODEL.onlyDisplayFloor(floor);
+};
 main.selectObj = function (index) {
-    MODEL.selectObj(index);
+    return MODEL.selectObj(index);
 };
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
@@ -128,6 +135,10 @@ main.startBeaconDiscovery = function () {
 
 main.stepChange = function (that) {
     accChange(that);
+}
+
+main.navigateInit = function () {
+    navigate(app.nodeList);
 }
 
 export default main;

@@ -1,4 +1,5 @@
-
+import * as MODEL from "../js/model";
+var app = getApp();
 /**
  * @description 导航算法
  * @date 2020-07-10
@@ -257,13 +258,13 @@ function navigation(nodeList) {
     resultParent.push(endLi);
 
 }
-//function naviagte(start, end, nodeList)
+//function navigate(start, end, nodeList)
 /**
  * @description 点击后开始导航
  * @date 2020-07-13
  * @param {*} nodeList
  */
-function naviagte(nodeList) {
+function navigate(nodeList) {
 
 
     // let startNode = findnearest2(start, nodeList);
@@ -275,6 +276,16 @@ function naviagte(nodeList) {
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
     navigation(nodeList);
     console.log("结果: ", resultParent);
+    let sprite = app.spriteControl;
+    //scene.remove(spriteControl.curSprite)
+
+
+
+    MODEL.showSprite(startNode, "start");
+    MODEL.showSprite(endNode, "end");
+    MODEL.initPath(resultParent);
+    
 }
 
-export default naviagte;
+
+export default navigate;

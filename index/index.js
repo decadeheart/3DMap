@@ -28,8 +28,8 @@ Page({
             },
         ],
         //模态框是否显示
-        modalFlag:true,
-        searchTitle:app.map_conf.map_name
+        modalFlag: true,
+        searchTitle: app.map_conf.map_name,
     },
 
     onLoad: function () {
@@ -70,7 +70,6 @@ Page({
      * @param {*} e
      */
     blueToothTap(e) {
-        // console.log(e.detail);
         this.setData({
             showBlue: true,
         });
@@ -93,13 +92,21 @@ Page({
             dimension: index,
         });
     },
-
+    /**
+     * @description 显示所有楼层
+     * @param {*} e wxml的参数通过e获取
+     */
+    allFloor(e) {
+        let floor = e.currentTarget.dataset.floor;
+        main.displayAllFloor();
+    },
     /**
      * @description 页面点击楼层图片，切换楼层
      * @param {*} e wxml的参数通过e获取
      */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
+        main.onlyDisplayFloor(floor);
         console.log(floor);
     },
 
@@ -145,22 +152,38 @@ Page({
      * @description 点击搜索栏，页面跳转
      */
     switchModal() {
-        var status=this.data.modalFlag==true?false:true;
+        var status = this.data.modalFlag == true ? false : true;
         this.setData({
-            modalFlag:status
-        })
+            modalFlag: status,
+        });
     },
     simNavigate(e) {
         console.log(e);
-    },
+        app.systemControl.state = "navigating";
+        app.systemControl.realMode = false;
+        app.map.FloorChangeCheckTime = 1000;
 
+        main.navigateInit();
+    },
+    setStartPoint() {
+        console.log("起点设置完成！");
+    },
+    setEndPoint() {
+        console.log("终点设置完成！");
+    },
+    touchTap(e) {
+        console.log("tap");
+        this.setData({
+            navFlag: 1,
+            infoFlag: 1,
+            currentPointName: main.selectObj(e.touches[0]),
+        });
+    },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchstart",
         });
-        console.log("tap");
-        main.selectObj(e.touches[0]);
     },
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
@@ -173,7 +196,6 @@ Page({
             ...e,
             type: "touchend",
         });
-        console.log("tapEnd");
     },
     onPullDownRefresh: function () {
         wx.stopPullDownRefresh();

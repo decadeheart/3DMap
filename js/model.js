@@ -1,12 +1,12 @@
 import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
-import { loadModel, loadGLTF } from "./loadModel"; //加载模型
+import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 
 //全局变量，供各个函数调用
 var canvas, THREE;
-var camera, scene, renderer, model, controls;
+var camera, scene, renderer, controls;
 var app = getApp();
 
 /**
@@ -29,11 +29,9 @@ export function renderModel(canvasDom, Three) {
         scene = new THREE.Scene();
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
-        scene.rotation.z -= Math.PI / 2;
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
@@ -49,13 +47,14 @@ export function renderModel(canvasDom, Three) {
         scene.add(light);
 
         //辅助坐标轴
-        // var axesHelper = new THREE.AxisHelper( 5000 );
+        // var axesHelper = new THREE.AxesHelper( 5000 );
         // axesHelper.material.linewidth=500;
         // scene.add( axesHelper );
 
         //加载模型
         loadModel(scene);
-        //loadGLTF(scene);
+        //加载文字和图片
+        //loadTargetText(scene);
 
         let textureLoader = new THREE.TextureLoader();
         textureLoader.load("../style/me.png", function (texture) {
@@ -72,7 +71,6 @@ export function renderModel(canvasDom, Three) {
             scene.add(app.me);
         });
 
-        // scene.rotation.z = Math.PI / 2;
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -150,6 +148,7 @@ export function cameraExchange() {
         // TWEEN.update(); //更新动画，配合initTween使用
     }
 }
+
 /**
  * @description 计算一个数字转为二进制后同位数最大值+1（如：5=>101的同位最大值为111，加一后为1000）
  * @param {*} x 数字
@@ -294,7 +293,7 @@ function makeSprite(message, imageURL) {
     return sprite;
 }
 /**
- * @description 加载所有精灵并显示在scene中
+ * @description 加载所有地点名称及图标精灵并显示在scene中
  * @export
  */
 export function loadTargetText() {
@@ -314,7 +313,7 @@ export function loadTargetText() {
                 sprite = makeSprite(item.name, null);
             }
             sprite.level = item.level;
-            sprite.position.set(item.x, item.y, item.z + 5);
+            sprite.position.set(item.x + 50, item.y, item.z + 5);
             //微调位置
             sprite.position.x += -50;
             // sprite.position.y += -20;
@@ -327,6 +326,31 @@ export function loadTargetText() {
     scene.add(spriteGroup);
     //spriteControl.targetSprites.push(spriteGroup);
     //console.log(spriteGroup);
+}
+/**
+ * @description 显示精灵
+ * @export
+ * @param {*} point 位置
+ * @param {*} type 类型
+ */
+export function showSprite(point, type) {
+    let spriteControl = app.spriteControl;
+    let map_conf = app.map_conf
+    let textureLoader = new THREE.TextureLoader();
+    textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+        let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+        spriteControl.sprite = new THREE.Sprite(material);
+        spriteControl.sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
+        spriteControl.sprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
+        spriteControl.sprite.name = type + "Sprite";
+        app.scaleInvariableGroup.push(spriteControl.sprite);
+        spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
+        spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
+        //console.log(spriteControl.sprite.position);
+        spriteControl.sprite.floor = point.floor;
+        scene.add(spriteControl.sprite);
+        //console.log("精灵", spriteControl.sprite);
+    });
 }
 
 function dis3(nowLi, nowLi2) {
@@ -350,16 +374,6 @@ function getNearPOIName(obj) {
     }
     return list[k].name;
 }
-
-function showSprite(sprite, point) {
-    sprite.visible = true;
-    //sprite.position.set(point.x, point.y, point.z + 5);
-    sprite.position.set(0, 0, 15);
-    sprite.floor = point.floor;
-    scene.add(sprite);
-    console.log("精灵");
-}
-
 /**
  * @description 复制一个对象到另一个对象
  * @date 2020-07-14
@@ -367,10 +381,11 @@ function showSprite(sprite, point) {
  * @returns
  */
 function cloneObj(oldObj) {
-    if (typeof oldObj != "object") return oldObj;
+    if (typeof (oldObj) != 'object') return oldObj;
     if (oldObj == null) return oldObj;
     var newObj = new Object();
-    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
+    for (var i in oldObj)
+        newObj[i] = cloneObj(oldObj[i]);
     return newObj;
 }
 
@@ -390,75 +405,156 @@ function extendObj() {
     return temp;
 }
 
+/**
+ * @description 根据屏幕坐标在场景中显示当前位置的图片精灵
+ * @export
+ * @param {*} index 屏幕坐标
+ */
 export function selectObj(index) {
-    console.log(index);
+
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     let map = app.map;
+    let me = app.me;
 
-    //纹理贴图
-    var texture = new THREE.TextureLoader().load("../style/cur.png");
-    //创建精灵
-    let spriteMaterial = new THREE.SpriteMaterial({ map: texture, depthTest: true });
-    let curSprite = new THREE.Sprite(spriteMaterial);
-    curSprite.scale.set(0.5 * 20, 0.5 * 20, 0.5 * 20);
-    //这句为了防止warning
-    curSprite.material.map.minFilter = THREE.LinearFilter;
-    curSprite.position.set(0, 0, 15);
-    //scene.add(curSprite);
-
-    // scene.children.forEach(function (obj) {
-    //     console.log(obj.name)
-    //     if (!!obj.name && (obj.name.split('_')[1] == 'Floor' || obj.name.split('_')[1] == 'ground')) {
-    //         // let floorOfObj = parseInt(obj.name.split('_')[0]);
-    //         if (obj.type == "Group") {
-    //             obj.children.forEach(function (child) {
-    //                 child.floor = parseInt(obj.name.split('_')[0]);
-    //                 map.groundMeshes.push(child);
-    //             })
-    //         } else {
-    //             map.groundMeshes.push(child);
-    //         }
-    //     }
-    //     if (!!obj.name) {
-    //         // let floorOfObj = parseInt(obj.name.split('_')[0]);
-    //         obj.floor = parseInt(obj.name.split('_')[0]);
-    //     }
-    // });
-
-    console.log(map.groundMeshes);
-    mouse.x = (index.x / canvas.width) * 2 - 1;
-    mouse.y = -(index.y / canvas.height) * 2 + 1;
-    // update the picking ray with the camera and mouse position
+    mouse.x = (index.pageX / canvas._width) * 2 - 1;
+    mouse.y = -(index.pageY / canvas._height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    // calculate objects intersecting the picking ray
-    // let grounds=[];
-    // map.groundMeshes.forEach(function (obj) {
-    //         grounds.push(obj.obj);
-    // })
-    var selectedPoint = {};
+    let selectedPoint = {};
     let intersects = raycaster.intersectObjects(map.groundMeshes);
-    console.log("射线：", intersects);
     if (intersects.length > 0) {
-        console.log("触点", intersects[0].point);
         let point = intersects[0].point;
         let obj = intersects[0].object;
-        selectedPoint.floor = obj.floor;
+        if (me != null) {
 
-        selectedPoint = extendObj(selectedPoint, point);
-        console.log(selectedPoint);
-        selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-        console.log(app.spriteControl.curSprite);
-        showSprite(app.spriteControl.curSprite, selectedPoint);
-        // if (me != null) {
+            selectedPoint = extendObj(selectedPoint, point);
+            selectedPoint.floor = obj.floor;
 
-        //     $.extend(true, selectedPoint, point);
-        //     selectedPoint.floor = obj.floor;
+            selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
 
-        //     selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-
-        //     showSprite(spriteControl.curSprite, selectedPoint);
-
-        // }
+            showSprite(point, 'cur');
+            return selectedPoint.nearTAGname;
+        }
     }
+}
+/**
+ * @description 显示所有楼层
+ * @export
+ */
+export function displayAllFloor() {
+    scene.children.forEach(function (obj, i) {
+        if (!!obj.name) {
+            setVisible(obj);
+        }
+    });
+
+    function setVisible(obj) {
+        obj.visible = true;
+        obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
+        if (obj.name.indexOf("outside") !== -1) {
+            obj.visible = true;
+            return;
+        } else {
+            obj.children.forEach(function (child) {
+                setVisible(child);
+            })
+        }
+    }
+}
+/**
+ * @description 显示指定楼层
+ * @export
+ * @param {*} floor 楼层
+ */
+export function onlyDisplayFloor(floor) {
+    // if (pathControl.pathGroup !== null) {
+    //     // console.log(pathControl.pathGroup.children)
+    // }
+    let map = app.map;
+    if (typeof floor !== 'number') {
+        floor = parseInt(floor);
+    }
+    // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+    scene.children.forEach(function (obj, i) {
+        if (!!obj.name) {
+            setVisible(obj);
+        }
+    });
+    function setVisible(obj) {
+        parseInt(obj.floor) === floor ? obj.visible = true : obj.visible = false;
+        obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
+        if (obj.name.indexOf("outside") !== -1) {
+            obj.visible = true;
+            return;
+        } else {
+            obj.children.forEach(function (child) {
+                setVisible(child);
+            })
+        }
+    }
+    map.curFloor = floor;
+    // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+    // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
+    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+    console.log(scene)
+}
+
+export function initPath (path) {
+    let pathControl = app.pathControl;
+    let textureLoader = new THREE.TextureLoader();
+    pathControl.texture = textureLoader.load("../style/word.png");
+    pathControl.texture.mapping = THREE.UVMapping;
+    console.log("mapping",THREE.UVMapping)
+    pathControl.texture.wrapS = THREE.RepeatWrapping;
+    pathControl.texture.wrapT = THREE.RepeatWrapping;
+    console.log(pathControl);
+    createPathTube(path);    
+}
+
+function createPathTube(path) {
+    let pointlist = [];
+    let floorlist = [];
+    let map_conf = app.map_conf;
+    let pathControl = app.pathControl;
+    //scene.remove(arrowList);
+    scene.remove(pathControl.pathGroup);
+
+    pathControl.pathGroup = new THREE.Group();
+
+    if (path.length < 2) {
+        return;
+    }
+    pointlist.push([new THREE.Vector3(path[0].x, path[0].y, path[0].z + map_conf.lineHeight)]);
+    floorlist.push(path[0].floor);
+    for (let i = 1; i < path.length; i++) {
+        if (path[i].floor !== path[i - 1].floor) {
+            pointlist.push([new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map_conf.lineHeight), new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)]);
+            floorlist.push(path[i - 1].floor);
+            let line = [];
+            line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+            pointlist.push(line);
+            floorlist.push(path[i].floor);
+        } else {
+            pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+        }
+    }
+    pointlist.forEach(function (line, i) {
+        if (line.length > 1) {
+            console.log(line.length);
+            let curve = new THREE.CatmullRomCurve3(line, false, "catmullrom", 0.01);
+            let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
+            let tex = pathControl.texture.clone();
+            pathControl.textures.push(tex);
+            let material = new THREE.MeshBasicMaterial({map: tex});
+            material.map.repeat.x = curve.getLength() * 0.2;
+            material.map.needsUpdate = true;
+            let tube = new THREE.Mesh(tubegeo, material);
+            tube.floor = floorlist[i];
+            pathControl.pathGroup.add(tube);
+        }
+    })
+
+    pathControl.pathGroup.name = 'path';
+    scene.add(pathControl.pathGroup);
+
 }
