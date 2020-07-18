@@ -27,10 +27,12 @@ Page({
                 value: 1,
             },
         ],
+        //模态框是否显示
+        modalFlag:true,
+        searchTitle:app.map_conf.map_name
     },
 
     onLoad: function () {
-        
         //初始化图片url
         this.setData({
             dimensionImgUrl: [
@@ -58,7 +60,6 @@ Page({
             });
         });
 
-
         /** 步数监测 */
         main.stepChange(that);
     },
@@ -75,7 +76,7 @@ Page({
         });
         var that = this;
         main.startBeaconDiscovery().then((res) => {
-            console.log(res, this);
+            // console.log(res, this);
             that.setData({
                 showBlue: res.showBlueStatus,
             });
@@ -143,29 +144,14 @@ Page({
     /**
      * @description 点击搜索栏，页面跳转
      */
-    goSearch() {
-        wx.navigateTo({
-            url: "../search/search",
-            events: {
-                // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-                acceptDataFromOpenedPage: function (data) {
-                    console.log(data);
-                },
-                someEvent: function (data) {
-                    console.log(data);
-                },
-            },
-            success: function (res) {
-                // 通过eventChannel向被打开页面传送数据
-                res.eventChannel.emit("acceptDataFromOpenerPage", {
-                    data: "test",
-                });
-            },
-        });
+    switchModal() {
+        var status=this.data.modalFlag==true?false:true;
+        this.setData({
+            modalFlag:status
+        })
     },
     simNavigate(e) {
         console.log(e);
-
     },
 
     touchStart(e) {

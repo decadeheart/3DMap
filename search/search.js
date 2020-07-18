@@ -1,11 +1,13 @@
 // search/search.js
+var app=getApp();
 Page({
 
 	/**
 	 * 页面的初始数据
 	 */
 	data: {
-		buildingName:"华中科技大学"
+		buildingName:app.map_conf.map_name,
+		
 	},
 
 	/**

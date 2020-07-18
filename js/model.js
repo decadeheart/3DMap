@@ -36,7 +36,7 @@ export function renderModel(canvasDom, Three) {
 
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
-        camera.up.set(-1, 0, 0);
+        camera.up.set(0, 0, 1);
         camera.zoom = 2.5;
         camera.updateProjectionMatrix();
 
@@ -117,7 +117,7 @@ export function cameraExchange() {
         console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.lookAt(0, 0, 0);
-        camera.position.set(camX, camY, camZ);
+        // camera.position.set(camX, camY, camZ);
 
         // console.log(camera.position)
     } else {
@@ -125,7 +125,7 @@ export function cameraExchange() {
         console.log(camera.position);
         camera.lookAt(0, 0, 0);
         controls.setMaxPolarAngle(0);
-        camera.position.set(0, 0, camZ);
+        // camera.position.set(0, 0, camZ);
     }
     controls.update();
     // animate();

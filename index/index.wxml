@@ -1,161 +1,129 @@
 <view class="container">
-    <!-- 地图容器 -->
-    <canvas
-        type="webgl"
-        id="map"
-        bindtouchstart="touchStart"
-        bindtouchmove="touchMove"
-        bindtouchend="touchEnd"
-        bindlongtap=""
-    ></canvas>
-    <!-- 文字精灵容器 -->
-    <canvas
-        type="2d"
-        id="font"
-        canvas-id="test"
-    ></canvas>
-    <!-- 图片精灵容器 -->
-    <canvas
-        type="2d"
-        id="img"
-    ></canvas>
+	<!-- 地图容器 -->
+	<canvas type="webgl" id="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindlongtap=""></canvas>
+	<!-- 文字精灵容器 -->
+	<canvas type="2d" id="font" canvas-id="test"></canvas>
+	<!-- 图片精灵容器 -->
+	<canvas type="2d" id="img"></canvas>
 
-    <!-- 正上方搜索框 16%-->
-    <view wx:if="{{ navFlag == 1 }}" class="search" bindtap="goSearch">
-        <mp-icon type="field" icon="search" color="#ccc"></mp-icon>
-        <text>搜索目的位置</text>
-    </view>
+	<!-- 正上方搜索框 16%-->
+	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="switchModal">
+		<mp-icon type="field" icon="search" color="#ccc"></mp-icon>
+		<text>搜索目的位置</text>
+	</view>
 
-    <!-- 起点 终点 容器 16%-->
-    <view wx:elif="{{ navFlag == 2 }}" class="navigator">
-        <view class="navigator-back" bindtap="switchNavFlag" data-flag="1">
-            <mp-icon type="field" icon="back" size="{{ 15 }}" color="#999"></mp-icon>
+	<!-- 起点 终点 容器 16%-->
+	<view wx:elif="{{ navFlag == 2 }}" class="navigator">
+		<view class="navigator-back" bindtap="switchNavFlag" data-flag="1">
+			<mp-icon type="field" icon="back" size="{{ 15 }}" color="#999"></mp-icon>
+		</view>
+
+		<view class="point-container">
+			<view class="point-box">
+				<view class="startPoint">
+					<view class="roundIcon green"></view>
+					<text>{{ startPointName }}</text>
+				</view>
+
+				<view class="endPoint">
+					<view class="roundIcon red"></view>
+					<text>{{ endPointName }}</text>
+				</view>
+			</view>
+			<view class="switch" bindtap="switchPoint">
+				<mp-icon type="field" icon="transfer2" size="{{ 30 }}" color="#ccc"></mp-icon>
+			</view>
+		</view>
+	</view>
+
+	<!-- 导航提示 16%-->
+	<view wx:elif="{{ navFlag == 3 }}" class="navigating-info">
+		<text class="nav-text">{{ navInformation }}</text>
+	</view>
+
+	<!-- 右侧楼层容器 -->
+	<view class="floor-container">
+		<view class="floor-space"></view>
+
+		<image src="{{ dimensionImgUrl[dimension - 2] }}" class="floor-item" bindtap="changeDimension" mode="aspectFit"></image>
+
+		<image src="{{ allFloorImgUrl }}" class="floor-item"></image>
+
+		<block wx:key="index" wx:for="{{ floorImgUrl }}">
+			<image src="{{ item }}" class="floor-item" bindtap="selectFloor" data-floor="{{ index }}"></image>
+		</block>
+		<view class="floor-space"></view>
+	</view>
+
+	<!-- 左上角指南针 10%-->
+	<view class="compass" bindtap="test">走了 {{step}} 步</view>
+
+	<!-- 左下角定位 9% -->
+	<view class="myLocation" bindtap="getMyLocation">
+		<mp-icon type="field" icon="discover" size="{{ 30 }} " color="rgb(72,131,246)"></mp-icon>
+	</view>
+
+	<!-- 选择的地点提示信息 设置起点终点 20% -->
+	<view wx:if="{{ infoFlag == 1 }}" class="point-info">
+		<view class="currentPoint">
+			<text>{{ currentPointName }} </text>
+			<!-- <button id="navigating-btn-go" size="mini" hover-class="btn-hover">到这去</button> -->
+		</view>
+		<view class="settingBox">
+			<view>
+				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)"></mp-icon>设为起点
+			</view>
+			<view>
+				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)"></mp-icon>设为终点
+			</view>
+			<view>
+				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)"></mp-icon>到这去
+			</view>
+		</view>
+	</view>
+
+	<!-- 开始导航、模拟导航 -->
+	<view wx:elif="{{ infoFlag == 2 }}" class="navigating-simu">
+		<view class="detail-info">
+			<text> {{ currentPointName }} </text>
+			<text> {{ distanceInfo }}</text>
+		</view>
+
+		<view class="navigating-btnBox">
+			<button id="navigating-btn-start" size="mini" hover-class="btn-hover">开始导航</button>
+			<button id="navigating-btn-simu" size="mini" hover-class="btn-hover" bindtap="simNavigate">模拟导航</button>
+		</view>
+	</view>
+
+	<!-- 结束导航 -->
+	<view wx:elif="{{ infoFlag == 3 }}" class="navigating-end">
+		<view class="detail-info">
+			<text> {{ currentPointName }} </text>
+			<text> {{ distanceInfo }}</text>
+		</view>
+		<button size="mini" hover-class="btn-hover">结束导航</button>
+	</view>
+
+	<!-- 蓝牙反馈-->
+	<mp-halfScreenDialog bindbuttontap="blueToothTap" show="{{ showBlue }}" maskClosable="{{ false }}" title="蓝牙连接" desc="当前蓝牙未打开，请打开蓝牙" tips="打开蓝牙后，请再点击确认" buttons="{{ buttons }}"></mp-halfScreenDialog>
+
+	<image class="logo" src="{{ logoUrl }}"></image>
+
+	<!-- 模态框 -->
+	<view wx:if="{{modalFlag}}" class="modal" bindtap="switchModal">
+	</view>
+
+	<view wx:if="{{modalFlag}}" class="search-container ">
+		<view class="search-header">
+			<text>{{searchTitle}}欢迎您!</text>
+			<mp-icon type="field" icon="close" color="#ccc" bindtap="switchModal"></mp-icon>
+		</view>
+		<mp-searchbar id="search-bar" ></mp-searchbar>
+        <view class="seach-body" catchtouchmove="test()">
+            <scroll-view>
+                <view>1</view>
+                <view>2</view>
+            </scroll-view>
         </view>
-
-        <view class="point-container">
-            <view class="point-box">
-                <view class="startPoint">
-                    <view class="roundIcon green"></view>
-                    <text>{{ startPointName }}</text>
-                </view>
-
-                <view class="endPoint">
-                    <view class="roundIcon red"></view>
-                    <text>{{ endPointName }}</text>
-                </view>
-            </view>
-            <view class="switch" bindtap="switchPoint">
-                <mp-icon type="field" icon="transfer2" size="{{ 30 }}" color="#ccc"></mp-icon>
-            </view>
-        </view>
-    </view>
-
-    <!-- 导航提示 16%-->
-    <view wx:elif="{{ navFlag == 3 }}" class="navigating-info">
-        <text class="nav-text">{{ navInformation }}</text>
-    </view>
-
-    <!-- 右侧楼层容器 -->
-    <view class="floor-container">
-        <view class="floor-space"></view>
-
-        <image
-            src="{{ dimensionImgUrl[dimension - 2] }}"
-            class="floor-item"
-            bindtap="changeDimension"
-            mode="aspectFit"
-        ></image>
-
-        <image src="{{ allFloorImgUrl }}" class="floor-item"></image>
-
-        <block wx:key="index" wx:for="{{ floorImgUrl }}">
-            <image
-                src="{{ item }}"
-                class="floor-item"
-                bindtap="selectFloor"
-                data-floor="{{ index }}"
-            ></image>
-        </block>
-        <view class="floor-space"></view>
-    </view>
-
-    <!-- 左上角指南针 10%-->
-    <view class="compass" bindtap="test">走了 {{step}} 步</view>
-
-    <!-- 左下角定位 9% -->
-    <view class="myLocation" bindtap="getMyLocation">
-        <mp-icon type="field" icon="discover" size="{{ 30 }} " color="rgb(72,131,246)"></mp-icon>
-    </view>
-
-    <!-- 选择的地点提示信息 设置起点终点 20% -->
-    <view wx:if="{{ infoFlag == 1 }}" class="point-info">
-        <view class="currentPoint">
-            <text>{{ currentPointName }} </text>
-            <!-- <button id="navigating-btn-go" size="mini" hover-class="btn-hover">到这去</button> -->
-        </view>
-        <view class="settingBox">
-            <view>
-                <mp-icon
-                    type="field"
-                    icon="location"
-                    size="{{ 20 }} "
-                    color="rgb(133, 212, 166)"
-                ></mp-icon
-                >设为起点
-            </view>
-            <view>
-                <mp-icon
-                    type="field"
-                    icon="location"
-                    size="{{ 20 }} "
-                    color="rgb(220, 95, 90)"
-                ></mp-icon
-                >设为终点
-            </view>
-            <view>
-                <mp-icon
-                    type="field"
-                    icon="star"
-                    size="{{ 20 }} "
-                    color="rgb(72, 131, 246)"
-                ></mp-icon
-                >到这去
-            </view>
-        </view>
-    </view>
-
-    <!-- 开始导航、模拟导航 -->
-    <view wx:elif="{{ infoFlag == 2 }}" class="navigating-simu">
-        <view class="detail-info">
-            <text> {{ currentPointName }} </text>
-            <text> {{ distanceInfo }}</text>
-        </view>
-
-        <view class="navigating-btnBox">
-            <button id="navigating-btn-start" size="mini" hover-class="btn-hover">开始导航</button>
-            <button id="navigating-btn-simu" size="mini" hover-class="btn-hover" bindtap="simNavigate">模拟导航</button>
-        </view>
-    </view>
-
-    <!-- 结束导航 -->
-    <view wx:elif="{{ infoFlag == 3 }}" class="navigating-end">
-        <view class="detail-info">
-            <text> {{ currentPointName }} </text>
-            <text> {{ distanceInfo }}</text>
-        </view>
-        <button size="mini" hover-class="btn-hover">结束导航</button>
-    </view>
-
-    <!-- 蓝牙反馈-->
-    <mp-halfScreenDialog
-        bindbuttontap="blueToothTap"
-        show="{{ showBlue }}"
-        maskClosable="{{ false }}"
-        title="蓝牙连接"
-        desc="当前蓝牙未打开，请打开蓝牙"
-        tips="打开蓝牙后，请再点击确认"
-        buttons="{{ buttons }}"
-    ></mp-halfScreenDialog>
-
-    <image class="logo" src="{{ logoUrl }}"></image>
+	</view>
 </view>

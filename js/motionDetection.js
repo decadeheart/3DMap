@@ -63,13 +63,9 @@ function detectorNewStep(values) {
                 timeOfLastStep = timeOfNow;
                 //applicationCache.userControl.moveDetect();
                 app.map.stepCount += 1;
-<<<<<<< HEAD
-                // console.log(app.map.stepCount);
-=======
                 //console.log(app.map.stepCount);
                 userControl.moveDetect()
                 //app.map.stepCount += 1;
->>>>>>> a24187e4bcfe9b4e3513cd5d72790dca212ea151
             }
 
             if(timeOfNow - timeOfLastPeak >= TimeInterval && (peakOfWave - valleyOfWave >= InitialValue)) {
