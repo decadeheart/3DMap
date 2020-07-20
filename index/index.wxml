@@ -71,13 +71,13 @@
 		</view>
 		<view class="settingBox">
 			<view>
-				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)"></mp-icon>设为起点
+				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)" bindtap="setStart"></mp-icon>设为起点
 			</view>
 			<view>
-				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)"></mp-icon>设为终点
+				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)" bindtap="setEnd"></mp-icon>设为终点
 			</view>
 			<view>
-				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)"></mp-icon>到这去
+				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)" bindtap="goThere"></mp-icon>到这去
 			</view>
 		</view>
 	</view>

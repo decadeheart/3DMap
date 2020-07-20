@@ -8,7 +8,7 @@ import userControl from "./user"; //用户贴图
 var canvas, THREE;
 var camera, scene, renderer, controls;
 var app = getApp();
-
+var selectedPoint = {};
 /**
  * @description 初始化模型并渲染到canvas中
  * @export void 导出到index.js以供调用
@@ -420,7 +420,7 @@ export function selectObj(index) {
     mouse.x = (index.pageX / canvas._width) * 2 - 1;
     mouse.y = -(index.pageY / canvas._height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    let selectedPoint = {};
+
     let intersects = raycaster.intersectObjects(map.groundMeshes);
     if (intersects.length > 0) {
         let point = intersects[0].point;
@@ -564,4 +564,11 @@ export function createPathTube(path) {
     pathControl.pathGroup.name = 'path';
     scene.add(pathControl.pathGroup);
 
+}
+
+export function setStartClick() {
+    spriteControl = app.spriteControl;
+    console.log(spriteControl.curSprit)
+    scene.remove(spriteControl.curSprite);
+    showSprite(selectedPoint, 'start');
 }

@@ -143,4 +143,7 @@ main.navigateInit = function () {
     navigate(app.nodeList);
 }
 
+main.startClick = function () {
+    MODEL.setStartClick();
+}
 export default main;

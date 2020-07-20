@@ -157,8 +157,12 @@ Page({
             modalFlag: status,
         });
     },
+    /**
+     * @description 模拟导航
+     * @date 2020-07-20
+     * @param {*} e
+     */
     simNavigate(e) {
-        console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;
@@ -199,5 +203,16 @@ Page({
     },
     onPullDownRefresh: function () {
         wx.stopPullDownRefresh();
+    },
+
+    /** click导航专区 */
+    setStart(e) {
+        main.startClick();
+    },
+    setEnd(e) {
+
+    },
+    goThere(e) {
+
     },
 });
