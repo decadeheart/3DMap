@@ -85,7 +85,7 @@
 	<!-- 开始导航、模拟导航 -->
 	<view wx:elif="{{ infoFlag == 2 }}" class="navigating-simu">
 		<view class="detail-info">
-			<text> {{ currentPointName }} </text>
+			<text> 从{{ startPointName }} 到 {{endPointName}}</text>
 			<text> {{ distanceInfo }}</text>
 		</view>
 

@@ -140,7 +140,7 @@ main.stepChange = function (that) {
 }
 
 main.navigateInit = function () {
-    navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
+    return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
 }
 
 main.startClick = function () {

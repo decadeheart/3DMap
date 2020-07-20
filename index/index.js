@@ -166,23 +166,21 @@ Page({
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;
 
-        main.navigateInit();
+        let dis = main.navigateInit();
+        this.setData({
+            distanceInfo: dis
+        });        
     },
-    setStartPoint() {
-        main.startClick();
-    },
-    setEndPoint() {
-        main.endClick();
-    },
+
     touchTap(e) {
         console.log("tap");
-        var curName = main.selectObj(e.touches[0]);
-        if(!!!curName) curName="室外";
-        console.log(curName);
+        app.curName = main.selectObj(e.touches[0]);
+        if(!!!app.curName) app.curName="室外";
+        console.log(app.curName);
         this.setData({
             navFlag: 1,
             infoFlag: 1,
-            currentPointName: curName,
+            currentPointName: app.curName,
         });
     },
     touchStart(e) {
@@ -208,4 +206,51 @@ Page({
     },
 
 
+    /**
+     * 导航点击专区
+     */
+
+    /**
+     * @description 设置起点
+     * @date 2020-07-20
+     */
+    setStartPoint() {
+    
+        main.startClick();
+        if(!! app.spriteControl.endSprite) {
+            this.setData({
+                navFlag: 2,
+                infoFlag: 2
+            });
+            let dis = main.navigateInit();
+            this.setData({
+                distanceInfo: dis
+            });                  
+        }
+        this.setData({
+            startPointName :app.curName
+        });
+    },
+
+    /**
+     * @description 设置终点
+     * @date 2020-07-20
+     */
+    setEndPoint() {
+        main.endClick();
+        if(!! app.spriteControl.startSprite) {
+            this.setData({
+                navFlag: 2,
+                infoFlag: 2
+            });    
+            let dis = main.navigateInit();
+            this.setData({
+                distanceInfo: dis
+            }); 
+        }
+        this.setData({
+            endPointName :app.curName
+        });
+
+    },
 });

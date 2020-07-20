@@ -343,6 +343,9 @@ export function showSprite(sprite, point, type) {
         }else if(type == 'end') {
             routeClass.endPoint = point;
         }
+        if(!! app.pathControl.pathGroup) {
+            scene.remove(app.pathControl.pathGroup);
+        }
     }else {
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
