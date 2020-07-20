@@ -3,6 +3,7 @@
     height: 100%;
     width: 100%;
     box-sizing: border-box;
+    z-index: 10;
 }
 
 /* <!-- 地图容器 --> */
@@ -28,6 +29,7 @@
     margin: 0 auto;
     border: 2rpx solid gainsboro;
     background-color: #fff;
+    color: #aaa;
     border-radius: 10rpx;
     z-index: 10;
 }
@@ -277,7 +279,7 @@
     display: inline-block;
     height: 60%;
     width: 80%;
-    font-size: x-large;
+    font-size: 45rpx;
     text-align: center;
 }
 
@@ -287,7 +289,7 @@
     width: 80%;
     border-top: 2rpx solid #ccc;
     text-align: center;
-    font-size: small;
+    font-size: 25rpx;
     color: #555;
 }
 
@@ -333,4 +335,49 @@
     width: 80rpx;
     height: 80rpx;
     z-index: 1;
+}
+
+/* 模态框 */
+.modal{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(124, 124, 127, 0.6);
+    /* border-radius: 10rpx; */
+    z-index: 20;
+}
+.search-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 4%;
+    width: 92%;
+    height: 80%;
+    background-color: #fff;
+    border-radius: 10rpx;
+    z-index: 21;
+}
+.search-header{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80rpx;
+}
+.search-header text:first-child{
+    display: inline-block;
+    font-size: 40rpx;
+    /* height: 100%; */
+}
+.search-header mp-icon{
+    position: absolute;
+    right: 3%;
+}
+#search-bar .weui-search-bar{
+    background-color: #fff;
+}
+#search-bar .weui-search-bar .weui-search-bar__form{
+    border: 3rpx solid #eee;
 }

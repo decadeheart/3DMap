@@ -34,7 +34,7 @@ export function renderModel(canvasDom, Three) {
         camera.lookAt(new THREE.Vector3(0, 0, 0));
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
-        camera.up.set(-1, 0, 0);
+        camera.up.set(0, 0, 1);
         camera.zoom = 2.5;
         camera.updateProjectionMatrix();
 
@@ -115,7 +115,7 @@ export function cameraExchange() {
         console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.lookAt(0, 0, 0);
-        camera.position.set(camX, camY, camZ);
+        // camera.position.set(camX, camY, camZ);
 
         // console.log(camera.position)
     } else {
@@ -123,7 +123,7 @@ export function cameraExchange() {
         console.log(camera.position);
         camera.lookAt(0, 0, 0);
         controls.setMaxPolarAngle(0);
-        camera.position.set(0, 0, camZ);
+        // camera.position.set(0, 0, camZ);
     }
     controls.update();
     // animate();
@@ -499,17 +499,19 @@ export function onlyDisplayFloor(floor) {
     console.log(scene)
 }
 
-export function initPath () {
+export function initPath (path) {
     let pathControl = app.pathControl;
     let textureLoader = new THREE.TextureLoader();
     pathControl.texture = textureLoader.load("../style/word.png");
     pathControl.texture.mapping = THREE.UVMapping;
+    console.log("mapping",THREE.UVMapping)
     pathControl.texture.wrapS = THREE.RepeatWrapping;
     pathControl.texture.wrapT = THREE.RepeatWrapping;
-    console.log(pathControl)    
+    console.log(pathControl);
+    createPathTube(path);    
 }
 
-export function  createPathTube(path) {
+function createPathTube(path) {
     let pointlist = [];
     let floorlist = [];
     let map_conf = app.map_conf;
@@ -518,19 +520,16 @@ export function  createPathTube(path) {
     scene.remove(pathControl.pathGroup);
 
     pathControl.pathGroup = new THREE.Group();
-    if(path.length < 2 ){
-        retrun;
+
+    if (path.length < 2) {
+        return;
     }
-
-
     pointlist.push([new THREE.Vector3(path[0].x, path[0].y, path[0].z + map_conf.lineHeight)]);
-
     floorlist.push(path[0].floor);
-    for(let i = 1; i < path.length; i++) {
-        if(path[i].floor != path[i-1].floor) {
+    for (let i = 1; i < path.length; i++) {
+        if (path[i].floor !== path[i - 1].floor) {
             pointlist.push([new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map_conf.lineHeight), new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)]);
-            floorlist.push(path[i-1].floor);
-
+            floorlist.push(path[i - 1].floor);
             let line = [];
             line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
             pointlist.push(line);
@@ -539,27 +538,23 @@ export function  createPathTube(path) {
             pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
         }
     }
-
-    pointlist.forEach(function (line , i) {
-        if(line.length > 1) {
-            //绘制曲线
-            let curve = new THREE.CatmullRomCurve3(line, false, "camullrom", 0.01);
-            //绘制管道
-            let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);  
-            let tex = pathControl.texture.clone();      
-            pathControl.textures.push(tex);   
+    pointlist.forEach(function (line, i) {
+        if (line.length > 1) {
+            console.log(line.length);
+            let curve = new THREE.CatmullRomCurve3(line, false, "catmullrom", 0.01);
+            let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
+            let tex = pathControl.texture.clone();
+            pathControl.textures.push(tex);
             let material = new THREE.MeshBasicMaterial({map: tex});
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
             let tube = new THREE.Mesh(tubegeo, material);
             tube.floor = floorlist[i];
-            pathControl.pathGroup.add(tube);            
-                   
+            pathControl.pathGroup.add(tube);
         }
     })
 
     pathControl.pathGroup.name = 'path';
-    console.log("路线",pathControl.pathGroup)
-    scene.add(pathControl.pathGroup)
+    scene.add(pathControl.pathGroup);
 
 }
