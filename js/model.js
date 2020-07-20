@@ -34,7 +34,7 @@ export function renderModel(canvasDom, Three) {
         camera.lookAt(new THREE.Vector3(0, 0, 0));
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
-        camera.up.set(0, 0, 1);
+        camera.up.set(-1, 0, 0);
         camera.zoom = 2.5;
         camera.updateProjectionMatrix();
 
@@ -335,7 +335,8 @@ export function loadTargetText() {
  */
 export function showSprite(point, type) {
     let spriteControl = app.spriteControl;
-    let map_conf = app.map_conf
+    if (!!spriteControl.sprite) scene.remove(spriteControl.sprite);
+    let map_conf = app.map_conf;
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
         let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
@@ -426,13 +427,10 @@ export function selectObj(index) {
         let point = intersects[0].point;
         let obj = intersects[0].object;
         if (me != null) {
-
             selectedPoint = extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
-
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-
-            showSprite(point, 'cur');
+            showSprite(selectedPoint, 'cur');
             return selectedPoint.nearTAGname;
         }
     }

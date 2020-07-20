@@ -28,7 +28,7 @@ Page({
             },
         ],
         //模态框是否显示
-        modalFlag: true,
+        modalFlag: false,
         searchTitle: app.map_conf.map_name,
     },
 
@@ -97,7 +97,6 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     allFloor(e) {
-        let floor = e.currentTarget.dataset.floor;
         main.displayAllFloor();
     },
     /**
@@ -177,10 +176,13 @@ Page({
     },
     touchTap(e) {
         console.log("tap");
+        var curName = main.selectObj(e.touches[0]);
+        if(!!!curName) curName="室外";
+        console.log(curName);
         this.setData({
             navFlag: 1,
             infoFlag: 1,
-            currentPointName: main.selectObj(e.touches[0]),
+            currentPointName: curName,
         });
     },
     touchStart(e) {
