@@ -164,5 +164,11 @@ App({
                 });
             }
         }
+    },
+    routeClass : {
+        startPoint: {},
+        endPoint: {},
+        distance: 0,
+        time: 0
     }
 });

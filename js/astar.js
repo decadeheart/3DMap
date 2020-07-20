@@ -61,6 +61,7 @@ function setBeginAndEndNode(begin, end, nodeList) {
  * @returns
  */
 function CalculateNodeDis(node1, node2) {
+    //勾股定理
     let a = node1.x - node2.x;
     let b = node1.y - node2.y;
     let c = node1.z - node2.z;
@@ -82,9 +83,8 @@ function findnearest2(vector3, nodeList) {
     }
 
     nodeList.sort(function (a, b) {
-        return CalculateNodeDis(a, vector3) - (b, vector3);
+        return CalculateNodeDis(a, vector3) - CalculateNodeDis(b, vector3);
     });
-
     let nearnode = nodeList[0];
     return nearnode;
 }
@@ -264,25 +264,18 @@ function navigation(nodeList) {
  * @date 2020-07-13
  * @param {*} nodeList
  */
-function navigate(nodeList) {
+function navigate(nodeList, start, end) {
 
+    let startNode = findnearest2(start, nodeList);
+    let endNode = findnearest2(end, nodeList);
 
-    // let startNode = findnearest2(start, nodeList);
-    // let endNode = findnearest2(end, nodeList);
-
-    let startNode = nodeList[0];
-    let endNode = nodeList[10];
+    //let startNode = nodeList[0];
+    //let endNode = nodeList[10];
 
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
     navigation(nodeList);
     console.log("结果: ", resultParent);
-    let sprite = app.spriteControl;
-    //scene.remove(spriteControl.curSprite)
 
-
-
-    MODEL.showSprite(startNode, "start");
-    MODEL.showSprite(endNode, "end");
     MODEL.createPathTube(resultParent);
     
 }

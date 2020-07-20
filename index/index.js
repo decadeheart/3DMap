@@ -169,10 +169,10 @@ Page({
         main.navigateInit();
     },
     setStartPoint() {
-        console.log("起点设置完成！");
+        main.startClick();
     },
     setEndPoint() {
-        console.log("终点设置完成！");
+        main.endClick();
     },
     touchTap(e) {
         console.log("tap");
@@ -207,14 +207,5 @@ Page({
         wx.stopPullDownRefresh();
     },
 
-    /** click导航专区 */
-    setStart(e) {
-        main.startClick();
-    },
-    setEnd(e) {
 
-    },
-    goThere(e) {
-
-    },
 });

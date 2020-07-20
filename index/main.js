@@ -140,10 +140,14 @@ main.stepChange = function (that) {
 }
 
 main.navigateInit = function () {
-    navigate(app.nodeList);
+    navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
 }
 
 main.startClick = function () {
     MODEL.setStartClick();
+}
+
+main.endClick = function () {
+    MODEL.setEndClick();
 }
 export default main;

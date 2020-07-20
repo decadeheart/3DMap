@@ -333,26 +333,50 @@ export function loadTargetText() {
  * @param {*} point 位置
  * @param {*} type 类型
  */
-export function showSprite(point, type) {
-    let spriteControl = app.spriteControl;
-    if (!!spriteControl.sprite) scene.remove(spriteControl.sprite);
-    let map_conf = app.map_conf;
-    let textureLoader = new THREE.TextureLoader();
-    textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
-        let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-        spriteControl.sprite = new THREE.Sprite(material);
-        spriteControl.sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
-        spriteControl.sprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
-        spriteControl.sprite.name = type + "Sprite";
-        app.scaleInvariableGroup.push(spriteControl.sprite);
-        spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
-        spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
-        //console.log(spriteControl.sprite.position);
-        spriteControl.sprite.floor = point.floor;
-        scene.add(spriteControl.sprite);
-        //console.log("精灵", spriteControl.sprite);
-    });
+export function showSprite(sprite, point, type) {
+    let routeClass = app.routeClass;
+    if (sprite != null) {
+        sprite.position.set(point.x, point.y, point.z + 5);
+        if(type == 'start') {
+            routeClass.startPoint = point;
+
+        }else if(type == 'end') {
+            routeClass.endPoint = point;
+        }
+    }else {
+        let map_conf = app.map_conf;
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+            let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+            sprite = new THREE.Sprite(material);
+            sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
+            sprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
+            sprite.name = type + "Sprite";
+            app.scaleInvariableGroup.push(sprite);
+            sprite.center = new THREE.Vector2(0.5, 0.5);
+            sprite.position.set(point.x, point.y, point.z + 5);
+            sprite.floor = point.floor;
+            scene.add(sprite);
+            if(type == 'cur') {
+                app.spriteControl.curSprite = sprite;
+        
+            }else if(type == 'start') {
+                app.spriteControl.startSprite = sprite;
+                routeClass.startPoint = point;
+
+            }else if(type == 'end') {
+                app.spriteControl.endSprite = sprite;
+                routeClass.endPoint = point;
+            }
+            //console.log(sprite);
+
+        });
+    }
+
+
+
 }
+
 
 function dis3(nowLi, nowLi2) {
     //勾股定理
@@ -373,6 +397,7 @@ function getNearPOIName(obj) {
             }
         }
     }
+    console.log(list[k]);
     return list[k].name;
 }
 /**
@@ -430,7 +455,7 @@ export function selectObj(index) {
             selectedPoint = extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-            showSprite(selectedPoint, 'cur');
+            showSprite(app.spriteControl.curSprite, selectedPoint, 'cur');
             return selectedPoint.nearTAGname;
         }
     }
@@ -565,8 +590,13 @@ export function createPathTube(path) {
 }
 
 export function setStartClick() {
-    spriteControl = app.spriteControl;
-    console.log(spriteControl.curSprit)
-    scene.remove(spriteControl.curSprite);
-    showSprite(selectedPoint, 'start');
+    scene.remove(app.spriteControl.curSprite);
+    app.spriteControl.curSprite = null;
+    showSprite(app.spriteControl.startSprite,selectedPoint, 'start');
+}
+
+export function setEndClick() {
+    scene.remove(app.spriteControl.curSprite);
+    app.spriteControl.curSprite = null;
+    showSprite(app.spriteControl.endSprite,selectedPoint, 'end');
 }
