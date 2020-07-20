@@ -97,7 +97,6 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     allFloor(e) {
-        let floor = e.currentTarget.dataset.floor;
         main.displayAllFloor();
     },
     /**
@@ -143,8 +142,7 @@ Page({
     test() {
         this.setData({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
-            infoFlag:
-                this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
+            infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
         // console.log(this.data.navFlag, this.data.infoFlag);
     },
@@ -154,48 +152,52 @@ Page({
      */
     switchSearch() {
         wx.navigateTo({
-            url: '../search/search',
+            url: "../search/search",
             events: {
-              // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-              acceptDataFromOpenedPage: function(data) {
-                console.log(data)
-              },
-              someEvent: function(data) {
-                console.log(data)
-              }
+                // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+                acceptDataFromOpenedPage: function (data) {
+                    console.log(data);
+                },
+                someEvent: function (data) {
+                    console.log(data);
+                },
             },
-            success: function(res) {
-              // 通过eventChannel向被打开页面传送数据
-              res.eventChannel.emit('acceptDataFromOpenerPage', { data: 'test' })
-            }
-          })
+            success: function (res) {
+                // 通过eventChannel向被打开页面传送数据
+                res.eventChannel.emit("acceptDataFromOpenerPage", { data: "test" });
+            },
+        });
         // var status = this.data.modalFlag == true ? false : true;
         // this.setData({
         //     modalFlag: status,
         // });
-
-
     },
+    /**
+     * @description 模拟导航
+     * @date 2020-07-20
+     * @param {*} e
+     */
     simNavigate(e) {
         // console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;
 
-        main.navigateInit();
+        let dis = main.navigateInit();
+        this.setData({
+            distanceInfo: dis,
+        });
     },
-    setStartPoint() {
-        console.log("起点设置完成！");
-    },
-    setEndPoint() {
-        console.log("终点设置完成！");
-    },
+
     touchTap(e) {
         console.log("tap");
+        app.curName = main.selectObj(e.touches[0]);
+        if (!!!app.curName) app.curName = "室外";
+        console.log(app.curName);
         this.setData({
             navFlag: 1,
             infoFlag: 1,
-            currentPointName: main.selectObj(e.touches[0]),
+            currentPointName: app.curName,
         });
     },
     touchStart(e) {
@@ -218,5 +220,51 @@ Page({
     },
     onPullDownRefresh: function () {
         wx.stopPullDownRefresh();
+    },
+
+    /**
+     * 导航点击专区
+     */
+
+    /**
+     * @description 设置起点
+     * @date 2020-07-20
+     */
+    setStartPoint() {
+        main.startClick();
+        if (!!app.spriteControl.endSprite) {
+            this.setData({
+                navFlag: 2,
+                infoFlag: 2,
+            });
+            let dis = main.navigateInit();
+            this.setData({
+                distanceInfo: dis,
+            });
+        }
+        this.setData({
+            startPointName: app.curName,
+        });
+    },
+
+    /**
+     * @description 设置终点
+     * @date 2020-07-20
+     */
+    setEndPoint() {
+        main.endClick();
+        if (!!app.spriteControl.startSprite) {
+            this.setData({
+                navFlag: 2,
+                infoFlag: 2,
+            });
+            let dis = main.navigateInit();
+            this.setData({
+                distanceInfo: dis,
+            });
+        }
+        this.setData({
+            endPointName: app.curName,
+        });
     },
 });

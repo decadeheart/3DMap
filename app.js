@@ -8,6 +8,7 @@ App({
     arrow: [],
     scaleInvariableGroup: [],
     POItarget: [],
+    curName: '',
     map_conf: {
         map_id: "jxqzf",
         map_name: "江夏区政府",
@@ -164,5 +165,11 @@ App({
                 });
             }
         }
+    },
+    routeClass : {
+        startPoint: {},
+        endPoint: {},
+        distance: 0,
+        time: 0
     }
 });

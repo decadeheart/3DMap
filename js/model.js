@@ -9,7 +9,7 @@ import * as ca from "./camera"; //用户贴图
 var canvas, THREE;
 var camera, scene, renderer, controls;
 var app = getApp();
-
+var selectedPoint = {};
 /**
  * @description 初始化模型并渲染到canvas中
  * @export void 导出到index.js以供调用
@@ -34,7 +34,7 @@ export function renderModel(canvasDom, Three) {
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0, -500, 1000 );
+        camera.position.set(0, -500, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
         camera.zoom = 2.5;
@@ -49,12 +49,13 @@ export function renderModel(canvasDom, Three) {
         scene.add(light);
 
         //辅助坐标轴
-        var axesHelper = new THREE.AxesHelper( 5000 );
-        axesHelper.material.linewidth=500;
-        scene.add( axesHelper );
+        var axesHelper = new THREE.AxesHelper(5000);
+        axesHelper.material.linewidth = 500;
+        scene.add(axesHelper);
 
         //加载模型
         loadModel(scene);
+        // scene.rotation.z += -Math.PI/2;
         //加载文字和图片
         //loadTargetText(scene);
 
@@ -103,22 +104,21 @@ export function renderModel(canvasDom, Three) {
  * @param {*} canvas 被渲染的canvas位置
  */
 export function cameraExchange(index) {
-    console.log(camera.position,camera.rotation)
-    
+    console.log(camera.position, camera.rotation);
+
     if (controls.maxPolarAngle == 0) {
         console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.lookAt(0, 0, 0);
         // camera.po;
-        
     } else {
         console.log("3D->2D");
         camera.lookAt(camera.position.x, camera.position.y, 0);
-        caCoord.x=camera.position.x;
-        caCoord.y=camera.position.y;
-        caCoord.z=camera.position.z;
+        caCoord.x = camera.position.x;
+        caCoord.y = camera.position.y;
+        caCoord.z = camera.position.z;
         controls.setMaxPolarAngle(0);
-        
+
         // camera.position.set(0, 0, cameraRelativeZ);
     }
     controls.update();
@@ -286,7 +286,7 @@ export function loadTargetText() {
     let sprite;
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
-        if (item.floor == 1) {
+        if (item.floor < 3) {
             //暂时只显示第一层
             if (item.img) {
                 sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
@@ -314,35 +314,48 @@ export function loadTargetText() {
  * @param {*} point 位置
  * @param {*} type 类型
  */
-export function showSprite(point, type) {
-    let spriteControl = app.spriteControl;
-    let map_conf = app.map_conf;
-    let textureLoader = new THREE.TextureLoader();
-    textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
-        let material = new THREE.SpriteMaterial({
-            map: texture,
-            depthTest: false,
+export function showSprite(sprite, point, type) {
+    let routeClass = app.routeClass;
+    if (sprite != null) {
+        sprite.position.set(point.x, point.y, point.z + 5);
+        if (type == "start") {
+            routeClass.startPoint = point;
+        } else if (type == "end") {
+            routeClass.endPoint = point;
+        }
+        if (!!app.pathControl.pathGroup) {
+            scene.remove(app.pathControl.pathGroup);
+        }
+    } else {
+        let map_conf = app.map_conf;
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+            let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+            sprite = new THREE.Sprite(material);
+            sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
+            sprite.initScale = {
+                x: map_conf.noTargetSpriteScale,
+                y: map_conf.noTargetSpriteScale,
+                z: 1,
+            };
+            sprite.name = type + "Sprite";
+            app.scaleInvariableGroup.push(sprite);
+            sprite.center = new THREE.Vector2(0.5, 0.5);
+            sprite.position.set(point.x, point.y, point.z + 5);
+            sprite.floor = point.floor;
+            scene.add(sprite);
+            if (type == "cur") {
+                app.spriteControl.curSprite = sprite;
+            } else if (type == "start") {
+                app.spriteControl.startSprite = sprite;
+                routeClass.startPoint = point;
+            } else if (type == "end") {
+                app.spriteControl.endSprite = sprite;
+                routeClass.endPoint = point;
+            }
+            //console.log(sprite);
         });
-        spriteControl.sprite = new THREE.Sprite(material);
-        spriteControl.sprite.scale.set(
-            map_conf.noTargetSpriteScale,
-            map_conf.noTargetSpriteScale,
-            1
-        );
-        spriteControl.sprite.initScale = {
-            x: map_conf.noTargetSpriteScale,
-            y: map_conf.noTargetSpriteScale,
-            z: 1,
-        };
-        spriteControl.sprite.name = type + "Sprite";
-        app.scaleInvariableGroup.push(spriteControl.sprite);
-        spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
-        spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
-        //console.log(spriteControl.sprite.position);
-        spriteControl.sprite.floor = point.floor;
-        scene.add(spriteControl.sprite);
-        //console.log("精灵", spriteControl.sprite);
-    });
+    }
 }
 
 function dis3(nowLi, nowLi2) {
@@ -364,6 +377,7 @@ function getNearPOIName(obj) {
             }
         }
     }
+    console.log(list[k]);
     return list[k].name;
 }
 /**
@@ -410,7 +424,7 @@ export function selectObj(index) {
     mouse.x = (index.pageX / canvas._width) * 2 - 1;
     mouse.y = -(index.pageY / canvas._height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    let selectedPoint = {};
+
     let intersects = raycaster.intersectObjects(map.groundMeshes);
     if (intersects.length > 0) {
         let point = intersects[0].point;
@@ -418,10 +432,8 @@ export function selectObj(index) {
         if (me != null) {
             selectedPoint = extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
-
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-
-            showSprite(point, "cur");
+            showSprite(app.spriteControl.curSprite, selectedPoint, "cur");
             return selectedPoint.nearTAGname;
         }
     }
@@ -488,20 +500,26 @@ export function onlyDisplayFloor(floor) {
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     console.log(scene);
 }
-
-export function initPath(path) {
+/**
+ * @description 初始化贴图模型
+ * @date 2020-07-20
+ * @export
+ */
+export function initPath() {
     let pathControl = app.pathControl;
-    let textureLoader = new THREE.TextureLoader();
-    pathControl.texture = textureLoader.load("../style/word.png");
+    pathControl.texture = new THREE.TextureLoader().load("../style/arrow.png");
     pathControl.texture.mapping = THREE.UVMapping;
-    console.log("mapping", THREE.UVMapping);
     pathControl.texture.wrapS = THREE.RepeatWrapping;
     pathControl.texture.wrapT = THREE.RepeatWrapping;
-    console.log(pathControl);
-    createPathTube(path);
 }
-
-function createPathTube(path) {
+/**
+ * @description 制造管状路径，和初始化一定是异步执行的，否则会报undefined
+ * @date 2020-07-20
+ * @export
+ * @param {*} path 所有该路径上的nodelist
+ * @returns
+ */
+export function createPathTube(path) {
     let pointlist = [];
     let floorlist = [];
     let map_conf = app.map_conf;
@@ -544,9 +562,8 @@ function createPathTube(path) {
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
-            let material = new THREE.MeshBasicMaterial({
-                map: tex,
-            });
+            console.log("tex", tex);
+            let material = new THREE.MeshBasicMaterial({ map: tex });
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
             let tube = new THREE.Mesh(tubegeo, material);
@@ -557,4 +574,16 @@ function createPathTube(path) {
 
     pathControl.pathGroup.name = "path";
     scene.add(pathControl.pathGroup);
+}
+
+export function setStartClick() {
+    scene.remove(app.spriteControl.curSprite);
+    app.spriteControl.curSprite = null;
+    showSprite(app.spriteControl.startSprite, selectedPoint, "start");
+}
+
+export function setEndClick() {
+    scene.remove(app.spriteControl.curSprite);
+    app.spriteControl.curSprite = null;
+    showSprite(app.spriteControl.endSprite, selectedPoint, "end");
 }

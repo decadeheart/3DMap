@@ -11,6 +11,7 @@ var nodeList;
 
 var main = {};
 main.initData = function () {
+
     //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
     wx.createSelectorQuery()
         .select("#font")
@@ -33,7 +34,8 @@ main.initData = function () {
             app.canvas = canvas;
             app.THREE = THREE;            
             MODEL.renderModel(canvas,THREE);
-            // MODEL.loadTargetText();
+            MODEL.initPath();
+            //MODEL.loadTargetText();
         });
     
     // 处理数据
@@ -97,6 +99,12 @@ main.onlyDisplayFloor = function (floor) {
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
 };
+main.setStartPoint = function () {
+    MODEL.showSprite(app.spriteControl.sprite.position,"start");
+};
+main.setEndPoint = function () {
+    MODEL.showSprite(app.spriteControl.sprite.position,"end");
+};
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
     return new Promise((resolve, reject) => {
@@ -137,7 +145,14 @@ main.stepChange = function (that) {
 }
 
 main.navigateInit = function () {
-    navigate(app.nodeList);
+    return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
 }
 
+main.startClick = function () {
+    MODEL.setStartClick();
+}
+
+main.endClick = function () {
+    MODEL.setEndClick();
+}
 export default main;

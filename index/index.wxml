@@ -1,7 +1,6 @@
 <view class="container">
 	<!-- 地图容器 -->
-	<canvas type="webgl" id="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindlongtap=""></canvas>
-
+	<canvas type="webgl" id="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap"></canvas>
 	<!-- 文字精灵容器 -->
 	<canvas type="2d" id="font" canvas-id="test"></canvas>
 	<!-- 图片精灵容器 -->
@@ -48,7 +47,7 @@
 
 		<image src="{{ dimensionImgUrl[dimension - 2] }}" class="floor-item" bindtap="changeDimension" mode="aspectFit"></image>
 
-		<image src="{{ allFloorImgUrl }}" class="floor-item"></image>
+		<image src="{{ allFloorImgUrl }}" class="floor-item" bindtap="allFloor"></image>
 
 		<block wx:key="index" wx:for="{{ floorImgUrl }}">
 			<image src="{{ item }}" class="floor-item" bindtap="selectFloor" data-floor="{{ index }}"></image>
@@ -71,14 +70,14 @@
 			<!-- <button id="navigating-btn-go" size="mini" hover-class="btn-hover">到这去</button> -->
 		</view>
 		<view class="settingBox">
-			<view>
+			<view  bindtap="setStartPoint">
 				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)"></mp-icon>设为起点
 			</view>
-			<view>
-				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)"></mp-icon>设为终点
+			<view bindtap="setEndPoint">
+				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)" ></mp-icon>设为终点
 			</view>
-			<view>
-				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)"></mp-icon>到这去
+			<view bindtap="goThere">
+				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)" ></mp-icon>到这去
 			</view>
 		</view>
 	</view>
@@ -86,7 +85,7 @@
 	<!-- 开始导航、模拟导航 -->
 	<view wx:elif="{{ infoFlag == 2 }}" class="navigating-simu">
 		<view class="detail-info">
-			<text> {{ currentPointName }} </text>
+			<text> 从{{ startPointName }} 到 {{endPointName}}</text>
 			<text> {{ distanceInfo }}</text>
 		</view>
 
