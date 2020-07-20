@@ -335,7 +335,7 @@ export function loadTargetText() {
  */
 export function showSprite(point, type) {
     let spriteControl = app.spriteControl;
-    let map_conf = app.map_conf
+    let map_conf = app.map_conf;
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
         let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
