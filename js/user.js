@@ -36,12 +36,23 @@ const userControl = {
             map.preStep = map.stepCount;
         }
     },
+    /**
+     * 改变缩放背书
+     * @param {*} scale  倍数
+     */
     changeScale: function (scale) {
         if (this.isInitUser === false || map.bool_isMapModelReady === false) {
             return;
         }
         me.scale.set(scale, scale, me.scale.z);
     },
+    /**
+     * 用户改变旋转方向
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} z 
+     * @param {*} mode 
+     */
     changeRotation: function (x, y, z, mode) {
         let me = app.me
         if (userControl.isInitUser) {
@@ -64,6 +75,14 @@ const userControl = {
 
         }
     },
+    /**
+     * 改变用户位置
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} z 
+     * @param {*} mode 
+     * @param {*} Group 
+     */
     changePosition: function (x, y, z, mode, Group) {
         let me = app.me
        
@@ -92,6 +111,9 @@ const userControl = {
         }
 
     },
+    /**
+     * 初始化用户
+     */
     initUser :function () {
         let me = app.me
         userControl.isInitUser = true;
