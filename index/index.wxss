@@ -279,8 +279,9 @@
     display: inline-block;
     height: 60%;
     width: 80%;
-    font-size: 45rpx;
+    font-size: 27rpx;
     text-align: center;
+    font-weight: bold;
 }
 
 .detail-info text:nth-child(2) {

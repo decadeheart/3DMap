@@ -70,14 +70,14 @@
 			<!-- <button id="navigating-btn-go" size="mini" hover-class="btn-hover">到这去</button> -->
 		</view>
 		<view class="settingBox">
-			<view bindtap="setStartPoint">
-				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)" ></mp-icon>设为起点
+			<view  bindtap="setStartPoint">
+				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)"></mp-icon>设为起点
 			</view>
 			<view bindtap="setEndPoint">
 				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)" ></mp-icon>设为终点
 			</view>
-			<view>
-				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)"></mp-icon>到这去
+			<view bindtap="goThere">
+				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)" ></mp-icon>到这去
 			</view>
 		</view>
 	</view>
@@ -85,7 +85,7 @@
 	<!-- 开始导航、模拟导航 -->
 	<view wx:elif="{{ infoFlag == 2 }}" class="navigating-simu">
 		<view class="detail-info">
-			<text> {{ currentPointName }} </text>
+			<text> 从{{ startPointName }} 到 {{endPointName}}</text>
 			<text> {{ distanceInfo }}</text>
 		</view>
 

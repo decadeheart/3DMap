@@ -8,7 +8,7 @@ import userControl from "./user"; //用户贴图
 var canvas, THREE;
 var camera, scene, renderer, controls;
 var app = getApp();
-
+var selectedPoint = {};
 /**
  * @description 初始化模型并渲染到canvas中
  * @export void 导出到index.js以供调用
@@ -53,7 +53,7 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
-        scene.rotation.z += -Math.PI/2;
+        // scene.rotation.z += -Math.PI/2;
         //加载文字和图片
         //loadTargetText(scene);
 
@@ -334,29 +334,53 @@ export function loadTargetText() {
  * @param {*} point 位置
  * @param {*} type 类型
  */
-export function showSprite(point, type) {
-    let spriteControl = app.spriteControl;
-    if (type == "cur") {
-        scene.remove(spriteControl.sprite);
+export function showSprite(sprite, point, type) {
+    let routeClass = app.routeClass;
+    if (sprite != null) {
+        sprite.position.set(point.x, point.y, point.z + 5);
+        if(type == 'start') {
+            routeClass.startPoint = point;
+
+        }else if(type == 'end') {
+            routeClass.endPoint = point;
+        }
+        if(!! app.pathControl.pathGroup) {
+            scene.remove(app.pathControl.pathGroup);
+        }
+    }else {
+        let map_conf = app.map_conf;
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+            let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+            sprite = new THREE.Sprite(material);
+            sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
+            sprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
+            sprite.name = type + "Sprite";
+            app.scaleInvariableGroup.push(sprite);
+            sprite.center = new THREE.Vector2(0.5, 0.5);
+            sprite.position.set(point.x, point.y, point.z + 5);
+            sprite.floor = point.floor;
+            scene.add(sprite);
+            if(type == 'cur') {
+                app.spriteControl.curSprite = sprite;
+        
+            }else if(type == 'start') {
+                app.spriteControl.startSprite = sprite;
+                routeClass.startPoint = point;
+
+            }else if(type == 'end') {
+                app.spriteControl.endSprite = sprite;
+                routeClass.endPoint = point;
+            }
+            //console.log(sprite);
+
+        });
     }
-    if (type == "start") {
-        scene.remove(spriteControl.sprite);
-    }
-    let map_conf = app.map_conf;
-    let textureLoader = new THREE.TextureLoader();
-    textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
-        let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-        spriteControl.sprite = new THREE.Sprite(material);
-        spriteControl.sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
-        spriteControl.sprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
-        spriteControl.sprite.name = type + "Sprite";
-        app.scaleInvariableGroup.push(spriteControl.sprite);
-        spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
-        spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
-        spriteControl.sprite.floor = point.floor;
-        scene.add(spriteControl.sprite);
-    });
+
+
+
 }
+
 
 function dis3(nowLi, nowLi2) {
     //勾股定理
@@ -377,6 +401,7 @@ function getNearPOIName(obj) {
             }
         }
     }
+    console.log(list[k]);
     return list[k].name;
 }
 /**
@@ -425,7 +450,7 @@ export function selectObj(index) {
     mouse.x = (index.pageX / canvas._width) * 2 - 1;
     mouse.y = -(index.pageY / canvas._height) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
-    let selectedPoint = {};
+
     let intersects = raycaster.intersectObjects(map.groundMeshes);
     if (intersects.length > 0) {
         let point = intersects[0].point;
@@ -434,7 +459,7 @@ export function selectObj(index) {
             selectedPoint = extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-            showSprite(selectedPoint, 'cur');
+            showSprite(app.spriteControl.curSprite, selectedPoint, 'cur');
             return selectedPoint.nearTAGname;
         }
     }
@@ -566,4 +591,16 @@ export function createPathTube(path) {
     pathControl.pathGroup.name = 'path';
     scene.add(pathControl.pathGroup);
 
+}
+
+export function setStartClick() {
+    scene.remove(app.spriteControl.curSprite);
+    app.spriteControl.curSprite = null;
+    showSprite(app.spriteControl.startSprite,selectedPoint, 'start');
+}
+
+export function setEndClick() {
+    scene.remove(app.spriteControl.curSprite);
+    app.spriteControl.curSprite = null;
+    showSprite(app.spriteControl.endSprite,selectedPoint, 'end');
 }
