@@ -11,6 +11,7 @@ var nodeList;
 
 var main = {};
 main.initData = function () {
+
     //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
     wx.createSelectorQuery()
         .select("#font")
@@ -33,6 +34,7 @@ main.initData = function () {
             app.canvas = canvas;
             app.THREE = THREE;            
             MODEL.renderModel(canvas,THREE);
+            MODEL.initPath();
             // MODEL.loadTargetText();
         });
     

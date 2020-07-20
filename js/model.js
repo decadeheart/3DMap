@@ -498,20 +498,26 @@ export function onlyDisplayFloor(floor) {
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     console.log(scene)
 }
-
-export function initPath (path) {
+/**
+ * @description 初始化贴图模型
+ * @date 2020-07-20
+ * @export
+ */
+export function initPath () {
     let pathControl = app.pathControl;
-    let textureLoader = new THREE.TextureLoader();
-    pathControl.texture = textureLoader.load("../style/word.png");
+    pathControl.texture = new THREE.TextureLoader().load('../style/arrow.png');
     pathControl.texture.mapping = THREE.UVMapping;
-    console.log("mapping",THREE.UVMapping)
     pathControl.texture.wrapS = THREE.RepeatWrapping;
     pathControl.texture.wrapT = THREE.RepeatWrapping;
-    console.log(pathControl);
-    createPathTube(path);    
 }
-
-function createPathTube(path) {
+/**
+ * @description 制造管状路径，和初始化一定是异步执行的，否则会报undefined
+ * @date 2020-07-20
+ * @export
+ * @param {*} path 所有该路径上的nodelist
+ * @returns
+ */
+export function createPathTube(path) {
     let pointlist = [];
     let floorlist = [];
     let map_conf = app.map_conf;
@@ -545,6 +551,7 @@ function createPathTube(path) {
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
+            console.log("tex",tex)
             let material = new THREE.MeshBasicMaterial({map: tex});
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
