@@ -1,7 +1,7 @@
 import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
 import navigate from "../js/astar";
-import initData from "../js/data";
+import {initData} from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import accChange from "../js/motionDetection";
@@ -38,9 +38,8 @@ main.initData = function () {
     
     // 处理数据
     initData.then((res) => {
-        // console.log(res);
         let data = res.data;
-
+        // console.log(data);
         nodeList = data.nodeList;
 
         let target = data.target;
@@ -86,8 +85,8 @@ main.initData = function () {
     
 };
 
-main.cameraExchange = function () {
-    MODEL.cameraExchange();
+main.cameraExchange = function (index) {
+    MODEL.cameraExchange(index);
 };
 main.displayAllFloor = function () {
     MODEL.displayAllFloor();

@@ -6,5 +6,5 @@
     },
     "disableScroll": true,
     "backgroundTextStyle": "dark",
-    "enablePullDownRefresh": true
+    "enablePullDownRefresh": false
 }

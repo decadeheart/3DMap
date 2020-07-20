@@ -1,4 +1,16 @@
-<view class="container">
-	<text>{{buildingName}}欢迎您！</text>
-	<mp-searchbar></mp-searchbar>	
+<page-meta>
+  <navigation-bar title="{{buildingName+'欢迎您'}}" />
+</page-meta>
+
+<view class="search-container ">
+<view class="search-header">
+	<mp-icon type="field" icon="close" color="#ccc" bindtap="switchModal"></mp-icon>
+</view>
+<mp-searchbar id="search-bar" ></mp-searchbar>
+<view class="seach-body" >
+	<scroll-view>
+		<view>1</view>
+		<view>2</view>
+	</scroll-view>
+</view>
 </view>

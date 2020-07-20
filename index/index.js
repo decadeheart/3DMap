@@ -28,7 +28,7 @@ Page({
             },
         ],
         //模态框是否显示
-        modalFlag: true,
+        // modalFlag: true,
         searchTitle: app.map_conf.map_name,
     },
 
@@ -87,7 +87,7 @@ Page({
      */
     changeDimension() {
         let index = this.data.dimension == 2 ? 3 : 2;
-        main.cameraExchange();
+        main.cameraExchange(index);
         this.setData({
             dimension: index,
         });
@@ -143,7 +143,8 @@ Page({
     test() {
         this.setData({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
-            infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
+            infoFlag:
+                this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
         // console.log(this.data.navFlag, this.data.infoFlag);
     },
@@ -151,14 +152,32 @@ Page({
     /**
      * @description 点击搜索栏，页面跳转
      */
-    switchModal() {
-        var status = this.data.modalFlag == true ? false : true;
-        this.setData({
-            modalFlag: status,
-        });
+    switchSearch() {
+        wx.navigateTo({
+            url: '../search/search',
+            events: {
+              // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+              acceptDataFromOpenedPage: function(data) {
+                console.log(data)
+              },
+              someEvent: function(data) {
+                console.log(data)
+              }
+            },
+            success: function(res) {
+              // 通过eventChannel向被打开页面传送数据
+              res.eventChannel.emit('acceptDataFromOpenerPage', { data: 'test' })
+            }
+          })
+        // var status = this.data.modalFlag == true ? false : true;
+        // this.setData({
+        //     modalFlag: status,
+        // });
+
+
     },
     simNavigate(e) {
-        console.log(e);
+        // console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;

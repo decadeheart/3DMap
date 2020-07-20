@@ -33,7 +33,7 @@ export function loadModel(scene) {
                 //添加建筑物到场景里
                 let building = glb.scene;
                 scene.add(building);
-                //设置物体参数
+                // 设置物体参数
                 building.name = building.building_id + '_' + i + "_" + building.name;
                 setFloor(building, i);
                 map.int_loadedLayerNums += 1;
