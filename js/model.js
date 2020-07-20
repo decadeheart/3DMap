@@ -34,7 +34,7 @@ export function renderModel(canvasDom, Three) {
         camera.lookAt(new THREE.Vector3(0, 0, 0));
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
-        camera.up.set(0, 0, 1);
+        camera.up.set(-1, 0, 0);
         camera.zoom = 2.5;
         camera.updateProjectionMatrix();
 
@@ -335,6 +335,7 @@ export function loadTargetText() {
  */
 export function showSprite(point, type) {
     let spriteControl = app.spriteControl;
+    if (!!spriteControl.sprite) scene.remove(spriteControl.sprite);
     let map_conf = app.map_conf;
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
@@ -426,13 +427,10 @@ export function selectObj(index) {
         let point = intersects[0].point;
         let obj = intersects[0].object;
         if (me != null) {
-
             selectedPoint = extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
-
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-
-            showSprite(point, 'cur');
+            showSprite(selectedPoint, 'cur');
             return selectedPoint.nearTAGname;
         }
     }
@@ -499,16 +497,16 @@ export function onlyDisplayFloor(floor) {
     console.log(scene)
 }
 
-export function initPath (path) {
+export function initPath(path) {
     let pathControl = app.pathControl;
     let textureLoader = new THREE.TextureLoader();
     pathControl.texture = textureLoader.load("../style/word.png");
     pathControl.texture.mapping = THREE.UVMapping;
-    console.log("mapping",THREE.UVMapping)
+    console.log("mapping", THREE.UVMapping)
     pathControl.texture.wrapS = THREE.RepeatWrapping;
     pathControl.texture.wrapT = THREE.RepeatWrapping;
     console.log(pathControl);
-    createPathTube(path);    
+    createPathTube(path);
 }
 
 function createPathTube(path) {
@@ -545,7 +543,7 @@ function createPathTube(path) {
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
-            let material = new THREE.MeshBasicMaterial({map: tex});
+            let material = new THREE.MeshBasicMaterial({ map: tex });
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
             let tube = new THREE.Mesh(tubegeo, material);
