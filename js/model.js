@@ -34,7 +34,7 @@ export function renderModel(canvasDom, Three) {
         camera.lookAt(new THREE.Vector3(0, 0, 0));
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
-        camera.up.set(-1, 0, 0);
+        camera.up.set(0, 0, 1);
         camera.zoom = 2.5;
         camera.updateProjectionMatrix();
 
@@ -53,6 +53,7 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
+        scene.rotation.z += -Math.PI/2;
         //加载文字和图片
         //loadTargetText(scene);
 
@@ -305,7 +306,7 @@ export function loadTargetText() {
     let sprite;
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
-        if (item.floor == 1) {
+        if (item.floor < 3) {
             //暂时只显示第一层
             if (item.img) {
                 sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
@@ -335,7 +336,12 @@ export function loadTargetText() {
  */
 export function showSprite(point, type) {
     let spriteControl = app.spriteControl;
-    if (!!spriteControl.sprite) scene.remove(spriteControl.sprite);
+    if (type == "cur") {
+        scene.remove(spriteControl.sprite);
+    }
+    if (type == "start") {
+        scene.remove(spriteControl.sprite);
+    }
     let map_conf = app.map_conf;
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
@@ -347,10 +353,8 @@ export function showSprite(point, type) {
         app.scaleInvariableGroup.push(spriteControl.sprite);
         spriteControl.sprite.center = new THREE.Vector2(0.5, 0.5);
         spriteControl.sprite.position.set(point.x, point.y, point.z + 5);
-        //console.log(spriteControl.sprite.position);
         spriteControl.sprite.floor = point.floor;
         scene.add(spriteControl.sprite);
-        //console.log("精灵", spriteControl.sprite);
     });
 }
 
@@ -501,7 +505,7 @@ export function onlyDisplayFloor(floor) {
  * @date 2020-07-20
  * @export
  */
-export function initPath () {
+export function initPath() {
     let pathControl = app.pathControl;
     pathControl.texture = new THREE.TextureLoader().load('../style/arrow.png');
     pathControl.texture.mapping = THREE.UVMapping;
@@ -549,8 +553,8 @@ export function createPathTube(path) {
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
-            console.log("tex",tex)
-            let material = new THREE.MeshBasicMaterial({map: tex});
+            console.log("tex", tex)
+            let material = new THREE.MeshBasicMaterial({ map: tex });
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
             let tube = new THREE.Mesh(tubegeo, material);

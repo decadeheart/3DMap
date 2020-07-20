@@ -165,9 +165,11 @@ Page({
         main.navigateInit();
     },
     setStartPoint() {
+        main.setStartPoint();
         console.log("起点设置完成！");
     },
     setEndPoint() {
+        main.setEndPoint();
         console.log("终点设置完成！");
     },
     touchTap(e) {

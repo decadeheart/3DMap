@@ -35,7 +35,7 @@ main.initData = function () {
             app.THREE = THREE;            
             MODEL.renderModel(canvas,THREE);
             MODEL.initPath();
-            // MODEL.loadTargetText();
+            //MODEL.loadTargetText();
         });
     
     // 处理数据
@@ -99,6 +99,12 @@ main.onlyDisplayFloor = function (floor) {
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
+};
+main.setStartPoint = function () {
+    MODEL.showSprite(app.spriteControl.sprite.position,"start");
+};
+main.setEndPoint = function () {
+    MODEL.showSprite(app.spriteControl.sprite.position,"end");
 };
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
