@@ -2,5 +2,6 @@
   "navigationBarTitleText": "欢迎您！",
   "usingComponents": {
     "mp-searchbar": "weui-miniprogram/searchbar/searchbar"
+    
   }
 }

@@ -1,9 +1,7 @@
 {
   "pages": [
-    "index/index",
-    "search/search"
-    
-    
+    "search/search",
+    "index/index"
   ],
   "permission": {
     "scope.userLocation": {
@@ -14,7 +12,7 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": true
+    "enablePullDownRefresh": false 
   },
   "sitemapLocation": "sitemap.json",
   "useExtendedLib": {

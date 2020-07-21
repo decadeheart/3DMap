@@ -1,16 +1,28 @@
 <page-meta>
-  <navigation-bar title="{{buildingName+'欢迎您'}}" />
+	<navigation-bar title="{{buildingName+'欢迎您'}}" />
 </page-meta>
 
 <view class="search-container ">
-<view class="search-header">
-	<mp-icon type="field" icon="close" color="#ccc" bindtap="switchModal"></mp-icon>
-</view>
-<mp-searchbar id="search-bar" ></mp-searchbar>
-<view class="seach-body" >
-	<scroll-view>
-		<view>1</view>
-		<view>2</view>
-	</scroll-view>
-</view>
+	<mp-searchbar id="search-bar"></mp-searchbar>
+	
+	<mp-tabs tabs="{{tabs}}" activeTab="{{activeTab}}" swiperClass="weui-tabs-swiper" bindtabclick="onTabClick" bindchange="onChange" activeClass="tab-bar-title__selected">
+		<block wx:for="{{tabs}}" wx:key="title">
+			<view class="tab-content" data-set="{{item}}" slot="tab-content-{{index}}" bind:tap="handleClick">
+				<image src="{{item.img}}" mode="widthFix"></image>
+				<view class="item-title">
+					{{item.title2}}
+				</view>
+				<view class="item-desc">
+					{{item.desc}}
+				</view>
+			</view>
+		</block>
+	</mp-tabs>
+
+	<view class="seach-body">
+		<scroll-view>
+			<view>1</view>
+			<view>2</view>
+		</scroll-view>
+	</view>
 </view>

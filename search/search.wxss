@@ -1,38 +1,19 @@
 /* search/search.wxss */
-.container{
-	padding: 2%;
-	background-color: #ccc;
-}
 .search-container{
     position: absolute;
     top: 0;
     left: 0;
-    margin: 4%;
+    margin: 2%;
     width: 92%;
     height: 80%;
     background-color: #fff;
     border-radius: 10rpx;
-    z-index: 21;
 }
-.search-header{
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80rpx;
-}
-.search-header text:first-child{
-    display: inline-block;
-    font-size: 40rpx;
-    /* height: 100%; */
-}
-.search-header mp-icon{
-    position: absolute;
-    right: 3%;
-}
+
 #search-bar .weui-search-bar{
     background-color: #fff;
 }
 #search-bar .weui-search-bar .weui-search-bar__form{
     border: 3rpx solid #eee;
+    color: rgb(84,90,246);
 }
