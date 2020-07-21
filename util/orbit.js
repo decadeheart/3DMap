@@ -50,7 +50,7 @@ const registerOrbit = (THREE) => {
 		// How far you can orbit vertically, upper and lower limits.
 		// Range is 0 to Math.PI radians.
 		this.minPolarAngle = 0; // radians
-		this.maxPolarAngle = Math.PI/2; // radians
+		this.maxPolarAngle = Math.PI / 2; // radians
 
 		// How far you can orbit horizontally, upper and lower limits.
 		// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
@@ -65,7 +65,7 @@ const registerOrbit = (THREE) => {
 		// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
 		// Set to false to disable zooming
 		this.enableZoom = true;
-		this.zoomSpeed =1.5;
+		this.zoomSpeed = 1.5;
 
 		// Set to false to disable rotating
 		this.enableRotate = true;
@@ -1021,7 +1021,6 @@ const registerOrbit = (THREE) => {
 							state = STATE.TOUCH_DOLLY_ROTATE;
 
 							break;
-
 						default:
 
 							state = STATE.NONE;
@@ -1117,7 +1116,6 @@ const registerOrbit = (THREE) => {
 		}
 
 		//
-
 		scope.domElement.addEventListener('contextmenu', onContextMenu, false);
 
 		scope.domElement.addEventListener('mousedown', onMouseDown, false);
@@ -1169,8 +1167,8 @@ const registerOrbit = (THREE) => {
 
 	MapControls.prototype = Object.create(EventDispatcher.prototype);
 	MapControls.prototype.constructor = MapControls;
-	MapControls.prototype.setMaxPolarAngle=function(val){
-		this.maxPolarAngle=val;
+	MapControls.prototype.setMaxPolarAngle = function (val) {
+		this.maxPolarAngle = val;
 	}
 
 	return {

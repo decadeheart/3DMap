@@ -47,17 +47,5 @@ async function tts(text) {
         console.log(res.errMsg);
         console.log(res.errCode);
     });
-    // for (let i = 0; i < text.length; i++) {
-    // 	const innerAudioContext = wx.createInnerAudioContext()
-    // 	innerAudioContext.autoplay = true
-    // 	innerAudioContext.src = await getAudioSrc(text[i])
-    // 	innerAudioContext.onPlay(() => {
-    // 		console.log('开始播放')
-    // 	})
-    // 	innerAudioContext.onError((res) => {
-    // 		console.log(res.errMsg)
-    // 		console.log(res.errCode)
-    // 	})
-    // }
 }
 export default tts;

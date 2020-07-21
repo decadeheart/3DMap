@@ -6,8 +6,8 @@
 	<!-- 图片精灵容器 -->
 	<canvas type="2d" id="img"></canvas>
 
-	<!-- 正上方搜索框 5%-->
-	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="switchModal">
+	<!-- 正上方搜索框 16%-->
+	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="switchSearch">
 		<mp-icon type="field" icon="search" color="#ccc"></mp-icon>
 		<text>搜索目的位置</text>
 	</view>
@@ -110,7 +110,7 @@
 	<image class="logo" src="{{ logoUrl }}"></image>
 
 	<!-- 模态框 -->
-	<view wx:if="{{modalFlag}}" class="modal" bindtap="switchModal">
+	<!-- <view wx:if="{{modalFlag}}" class="modal" bindtap="switchModal">
 	</view>
 
 	<view wx:if="{{modalFlag}}" class="search-container ">
@@ -125,5 +125,5 @@
                 <view>2</view>
             </scroll-view>
         </view>
-	</view>
+	</view> -->
 </view>

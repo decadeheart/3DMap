@@ -3,6 +3,7 @@ import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
+import * as ca from "./camera"; //用户贴图
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -29,10 +30,11 @@ export function renderModel(canvasDom, Three) {
         scene = new THREE.Scene();
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
+
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0, 0, 1000);
+        camera.position.set(0, -500, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
@@ -47,9 +49,9 @@ export function renderModel(canvasDom, Three) {
         scene.add(light);
 
         //辅助坐标轴
-        // var axesHelper = new THREE.AxesHelper( 5000 );
-        // axesHelper.material.linewidth=500;
-        // scene.add( axesHelper );
+        var axesHelper = new THREE.AxesHelper(5000);
+        axesHelper.material.linewidth = 500;
+        scene.add(axesHelper);
 
         //加载模型
         loadModel(scene);
@@ -102,53 +104,25 @@ export function renderModel(canvasDom, Three) {
  * @export
  * @param {*} canvas 被渲染的canvas位置
  */
-export function cameraExchange() {
-    // let THREE = app.THREE;
-    // let canvas = app.canvas;
-    // initTween();
-    // animate();
-    // console.log(controls,controls.maxPolarAngle)
-    console.log("当前：", camera);
-    let camZ = camera.position.z;
-    let camX = camera.position.x > 0 ? Math.abs(camZ) : -Math.abs(camZ);
-    let camY = camera.position.y > 0 ? Math.abs(camZ) : -Math.abs(camZ);
+export function cameraExchange(index) {
+    console.log(camera.position, camera.rotation);
 
     if (controls.maxPolarAngle == 0) {
         console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.lookAt(0, 0, 0);
-        // camera.position.set(camX, camY, camZ);
-
-        // console.log(camera.position)
+        // camera.po;
     } else {
         console.log("3D->2D");
-        console.log(camera.position);
-        camera.lookAt(0, 0, 0);
+        camera.lookAt(camera.position.x, camera.position.y, 0);
+        caCoord.x = camera.position.x;
+        caCoord.y = camera.position.y;
+        caCoord.z = camera.position.z;
         controls.setMaxPolarAngle(0);
-        // camera.position.set(0, 0, camZ);
+
+        // camera.position.set(0, 0, cameraRelativeZ);
     }
     controls.update();
-    // animate();
-
-    /**
-     * @description 视角移动动画
-     */
-    function initTween() {
-        new TWEEN.Tween(camera.position).to({ x: 0, y: 0, z: 400 }, 1200).repeat(0).start();
-    }
-    //controls.update();
-    /**
-     * @description 渲染循环
-     */
-    function animate() {
-        // camera.position.set(0, 0, 400);
-        canvas.requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-
-        // camera.lookAt(new THREE.Vector3(0, 0, 0)); //保持注视位置不变
-        // scene.rotation.z = (Math.PI / 2) * 3;
-        // TWEEN.update(); //更新动画，配合initTween使用
-    }
 }
 
 /**
@@ -228,7 +202,10 @@ function makeSprite(message, imageURL) {
     //纹理贴图
     var texture = new THREE.TextureLoader().load(dataUrl);
     //创建精灵
-    let spriteMaterial = new THREE.SpriteMaterial({ map: texture, depthTest: true });
+    let spriteMaterial = new THREE.SpriteMaterial({
+        map: texture,
+        depthTest: true,
+    });
     let sprite = new THREE.Sprite(spriteMaterial);
     //这句为了防止warning
     sprite.material.map.minFilter = THREE.LinearFilter;
@@ -272,7 +249,10 @@ function makeSprite(message, imageURL) {
             //转为图片并作为纹理贴图
             var dataUrl = canvas2.toDataURL("../style/word.png");
             var texture2 = new THREE.TextureLoader().load(dataUrl);
-            let spriteMaterial = new THREE.SpriteMaterial({ map: texture2, depthTest: true });
+            let spriteMaterial = new THREE.SpriteMaterial({
+                map: texture2,
+                depthTest: true,
+            });
             sprite.material = spriteMaterial;
             //这句为了防止warning
             sprite.material.map.minFilter = THREE.LinearFilter;
@@ -339,10 +319,9 @@ export function showSprite(sprite, point, type) {
     let routeClass = app.routeClass;
     if (sprite != null) {
         sprite.position.set(point.x, point.y, point.z + 5);
-        if (type == 'start') {
+        if (type == "start") {
             routeClass.startPoint = point;
-
-        } else if (type == 'end') {
+        } else if (type == "end") {
             routeClass.endPoint = point;
         }
         if (!!app.pathControl.pathGroup) {
@@ -356,33 +335,30 @@ export function showSprite(sprite, point, type) {
             let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
             sprite = new THREE.Sprite(material);
             sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
-            sprite.initScale = { x: map_conf.noTargetSpriteScale, y: map_conf.noTargetSpriteScale, z: 1 };
+            sprite.initScale = {
+                x: map_conf.noTargetSpriteScale,
+                y: map_conf.noTargetSpriteScale,
+                z: 1,
+            };
             sprite.name = type + "Sprite";
             app.scaleInvariableGroup.push(sprite);
             sprite.center = new THREE.Vector2(0.5, 0.5);
             sprite.position.set(point.x, point.y, point.z + 5);
             sprite.floor = point.floor;
             scene.add(sprite);
-            if (type == 'cur') {
+            if (type == "cur") {
                 app.spriteControl.curSprite = sprite;
-
-            } else if (type == 'start') {
+            } else if (type == "start") {
                 app.spriteControl.startSprite = sprite;
                 routeClass.startPoint = point;
-
-            } else if (type == 'end') {
+            } else if (type == "end") {
                 app.spriteControl.endSprite = sprite;
                 routeClass.endPoint = point;
             }
             //console.log(sprite);
-
         });
     }
-
-
-
 }
-
 
 function dis3(nowLi, nowLi2) {
     //勾股定理
@@ -413,11 +389,10 @@ function getNearPOIName(obj) {
  * @returns
  */
 function cloneObj(oldObj) {
-    if (typeof (oldObj) != 'object') return oldObj;
+    if (typeof oldObj != "object") return oldObj;
     if (oldObj == null) return oldObj;
     var newObj = new Object();
-    for (var i in oldObj)
-        newObj[i] = cloneObj(oldObj[i]);
+    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
     return newObj;
 }
 
@@ -443,7 +418,6 @@ function extendObj() {
  * @param {*} index 屏幕坐标
  */
 export function selectObj(index) {
-
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     let map = app.map;
@@ -461,7 +435,7 @@ export function selectObj(index) {
             selectedPoint = extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
-            showSprite(app.spriteControl.curSprite, selectedPoint, 'cur');
+            showSprite(app.spriteControl.curSprite, selectedPoint, "cur");
             return selectedPoint.nearTAGname;
         }
     }
@@ -479,14 +453,14 @@ export function displayAllFloor() {
 
     function setVisible(obj) {
         obj.visible = true;
-        obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
+        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
             return;
         } else {
             obj.children.forEach(function (child) {
                 setVisible(child);
-            })
+            });
         }
     }
 }
@@ -500,7 +474,7 @@ export function onlyDisplayFloor(floor) {
     //     // console.log(pathControl.pathGroup.children)
     // }
     let map = app.map;
-    if (typeof floor !== 'number') {
+    if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
     // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
@@ -509,23 +483,24 @@ export function onlyDisplayFloor(floor) {
             setVisible(obj);
         }
     });
+
     function setVisible(obj) {
-        parseInt(obj.floor) === floor ? obj.visible = true : obj.visible = false;
-        obj.name === "path" || obj.name === "text" ? obj.visible = true : null;
+        parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
+        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
             return;
         } else {
             obj.children.forEach(function (child) {
                 setVisible(child);
-            })
+            });
         }
     }
     map.curFloor = floor;
     // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    console.log(scene)
+    console.log(scene);
 }
 /**
  * @description 初始化贴图模型
@@ -534,7 +509,7 @@ export function onlyDisplayFloor(floor) {
  */
 export function initPath() {
     let pathControl = app.pathControl;
-    pathControl.texture = new THREE.TextureLoader().load('../style/arrow.png');
+    pathControl.texture = new THREE.TextureLoader().load("../style/arrow.png");
     pathControl.texture.mapping = THREE.UVMapping;
     pathControl.texture.wrapS = THREE.RepeatWrapping;
     pathControl.texture.wrapT = THREE.RepeatWrapping;
@@ -563,14 +538,23 @@ export function createPathTube(path) {
     floorlist.push(path[0].floor);
     for (let i = 1; i < path.length; i++) {
         if (path[i].floor !== path[i - 1].floor) {
-            pointlist.push([new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map_conf.lineHeight), new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)]);
+            pointlist.push([
+                new THREE.Vector3(
+                    path[i - 1].x,
+                    path[i - 1].y,
+                    path[i - 1].z + map_conf.lineHeight
+                ),
+                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight),
+            ]);
             floorlist.push(path[i - 1].floor);
             let line = [];
             line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
             pointlist.push(line);
             floorlist.push(path[i].floor);
         } else {
-            pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+            pointlist[pointlist.length - 1].push(
+                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)
+            );
         }
     }
     pointlist.forEach(function (line, i) {
@@ -580,7 +564,7 @@ export function createPathTube(path) {
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
-            console.log("tex", tex)
+            console.log("tex", tex);
             let material = new THREE.MeshBasicMaterial({ map: tex });
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
@@ -588,64 +572,20 @@ export function createPathTube(path) {
             tube.floor = floorlist[i];
             pathControl.pathGroup.add(tube);
         }
-    })
+    });
 
-    pathControl.pathGroup.name = 'path';
+    pathControl.pathGroup.name = "path";
     scene.add(pathControl.pathGroup);
-
 }
 
 export function setStartClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
-    showSprite(app.spriteControl.startSprite, selectedPoint, 'start');
+    showSprite(app.spriteControl.startSprite, selectedPoint, "start");
 }
 
 export function setEndClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
-    showSprite(app.spriteControl.endSprite, selectedPoint, 'end');
-}
-export function backToMe() {
-    let me = app.me;
-    displayPoi(me.floor, me.position);
-}
-
-function displayPoi(floor, poi) {
-    if (typeof floor != 'number') {
-        floor = parseInt(floor);
-    }
-    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
-    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
-    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-    if (poi != null) {
-        cameraControl.focusPoint.x = poi.x;
-        cameraControl.focusPoint.y = poi.y;
-    }
-
-    scene.children.forEach(function (obj, i) {
-        if (typeof obj.floor != 'undefined') {
-            let floorOfObj = obj.floor;
-            if (parseInt(floorOfObj) == floor) {
-
-                obj.visible = true;
-            } else {
-                obj.visible = false;
-            }
-        }
-        if (obj.name == 'path') {
-            if (obj.type == 'Group') {
-                obj.children.forEach(function (o) {
-                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
-                });
-            }
-        }
-    });
-    map.curFloor = floor;
-    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-
-    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
-    // console.log(scene)
-    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+    showSprite(app.spriteControl.endSprite, selectedPoint, "end");
 }

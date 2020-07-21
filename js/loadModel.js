@@ -35,7 +35,7 @@ export function loadModel(scene) {
                 let building = glb.scene;
                 building.rotation.z += Math.PI/2;
                 scene.add(building);
-                //设置物体参数
+                // 设置物体参数
                 building.name = building.building_id + '_' + i + "_" + building.name;
                 setFloor(building, i);
                 map.int_loadedLayerNums += 1;
