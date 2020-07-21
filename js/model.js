@@ -61,7 +61,7 @@ export function renderModel(canvasDom, Three) {
         //loadTargetText(scene);
 
         let textureLoader = new THREE.TextureLoader();
-        textureLoader.load("../style/me.png", function (texture) {
+        textureLoader.load("../img/me.png", function (texture) {
             let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
             let material = new THREE.MeshBasicMaterial({
                 side: THREE.DoubleSide,
@@ -510,7 +510,7 @@ export function onlyDisplayFloor(floor) {
  */
 export function initPath() {
     let pathControl = app.pathControl;
-    pathControl.texture = new THREE.TextureLoader().load("../style/arrow.png");
+    pathControl.texture = new THREE.TextureLoader().load("../img/arrow.png");
     pathControl.texture.mapping = THREE.UVMapping;
     pathControl.texture.wrapS = THREE.RepeatWrapping;
     pathControl.texture.wrapT = THREE.RepeatWrapping;

@@ -1,6 +1,5 @@
 {
   "pages": [
-    "search/search",
     "index/index"
   ],
   "permission": {
