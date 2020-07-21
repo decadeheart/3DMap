@@ -35,7 +35,7 @@ export function renderModel(canvasDom, Three) {
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
-        camera.zoom = 2.5;
+        camera.zoom = 3;
         camera.updateProjectionMatrix();
 
         //设置灯光，当前为白色环境光
@@ -54,6 +54,7 @@ export function renderModel(canvasDom, Three) {
         //加载模型
         loadModel(scene);
         // scene.rotation.z += -Math.PI/2;
+        // camera.up.set(-1, 0, 0);
         //加载文字和图片
         //loadTargetText(scene);
 
@@ -306,7 +307,7 @@ export function loadTargetText() {
     let sprite;
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
-        if (item.floor < 3) {
+        if (item.floor == 6) {
             //暂时只显示第一层
             if (item.img) {
                 sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
@@ -338,19 +339,20 @@ export function showSprite(sprite, point, type) {
     let routeClass = app.routeClass;
     if (sprite != null) {
         sprite.position.set(point.x, point.y, point.z + 5);
-        if(type == 'start') {
+        if (type == 'start') {
             routeClass.startPoint = point;
 
-        }else if(type == 'end') {
+        } else if (type == 'end') {
             routeClass.endPoint = point;
         }
-        if(!! app.pathControl.pathGroup) {
+        if (!!app.pathControl.pathGroup) {
             scene.remove(app.pathControl.pathGroup);
         }
-    }else {
+    } else {
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
-        textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+        // textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+        textureLoader.load("../style/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
             sprite = new THREE.Sprite(material);
             sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
@@ -361,14 +363,14 @@ export function showSprite(sprite, point, type) {
             sprite.position.set(point.x, point.y, point.z + 5);
             sprite.floor = point.floor;
             scene.add(sprite);
-            if(type == 'cur') {
+            if (type == 'cur') {
                 app.spriteControl.curSprite = sprite;
-        
-            }else if(type == 'start') {
+
+            } else if (type == 'start') {
                 app.spriteControl.startSprite = sprite;
                 routeClass.startPoint = point;
 
-            }else if(type == 'end') {
+            } else if (type == 'end') {
                 app.spriteControl.endSprite = sprite;
                 routeClass.endPoint = point;
             }
@@ -596,11 +598,54 @@ export function createPathTube(path) {
 export function setStartClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
-    showSprite(app.spriteControl.startSprite,selectedPoint, 'start');
+    showSprite(app.spriteControl.startSprite, selectedPoint, 'start');
 }
 
 export function setEndClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
-    showSprite(app.spriteControl.endSprite,selectedPoint, 'end');
+    showSprite(app.spriteControl.endSprite, selectedPoint, 'end');
+}
+export function backToMe() {
+    let me = app.me;
+    displayPoi(me.floor, me.position);
+}
+
+function displayPoi(floor, poi) {
+    if (typeof floor != 'number') {
+        floor = parseInt(floor);
+    }
+    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
+    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
+    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+    if (poi != null) {
+        cameraControl.focusPoint.x = poi.x;
+        cameraControl.focusPoint.y = poi.y;
+    }
+
+    scene.children.forEach(function (obj, i) {
+        if (typeof obj.floor != 'undefined') {
+            let floorOfObj = obj.floor;
+            if (parseInt(floorOfObj) == floor) {
+
+                obj.visible = true;
+            } else {
+                obj.visible = false;
+            }
+        }
+        if (obj.name == 'path') {
+            if (obj.type == 'Group') {
+                obj.children.forEach(function (o) {
+                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
+                });
+            }
+        }
+    });
+    map.curFloor = floor;
+    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+
+    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
+    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
+    // console.log(scene)
+    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
 }

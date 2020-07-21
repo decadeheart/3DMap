@@ -32,12 +32,12 @@ main.initData = function () {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
             app.canvas = canvas;
-            app.THREE = THREE;            
-            MODEL.renderModel(canvas,THREE);
+            app.THREE = THREE;
+            MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
             //MODEL.loadTargetText();
         });
-    
+
     // 处理数据
     initData.then((res) => {
         // console.log(res);
@@ -85,7 +85,7 @@ main.initData = function () {
             }
         },
     });
-    
+
 };
 
 main.cameraExchange = function () {
@@ -101,10 +101,13 @@ main.selectObj = function (index) {
     return MODEL.selectObj(index);
 };
 main.setStartPoint = function () {
-    MODEL.showSprite(app.spriteControl.sprite.position,"start");
+    MODEL.showSprite(app.spriteControl.sprite.position, "start");
 };
 main.setEndPoint = function () {
-    MODEL.showSprite(app.spriteControl.sprite.position,"end");
+    MODEL.showSprite(app.spriteControl.sprite.position, "end");
+};
+main.backToMe = function () {
+    MODEL.backToMe();
 };
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {

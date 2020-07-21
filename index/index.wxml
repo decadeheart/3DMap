@@ -6,7 +6,7 @@
 	<!-- 图片精灵容器 -->
 	<canvas type="2d" id="img"></canvas>
 
-	<!-- 正上方搜索框 16%-->
+	<!-- 正上方搜索框 5%-->
 	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="switchModal">
 		<mp-icon type="field" icon="search" color="#ccc"></mp-icon>
 		<text>搜索目的位置</text>

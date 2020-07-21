@@ -16,7 +16,7 @@ Page({
         currentPointName: "华中科技大学",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
-        infoFlag: 2,
+        infoFlag: 0,
         showBlue: false,
         step: 0,
         buttons: [
@@ -135,6 +135,7 @@ Page({
      */
     getMyLocation() {
         console.log("我在这");
+        main.backToMe();
         // tts("你好中国");
         // tts("你好湖北");
         // tts("你好武汉");
@@ -169,13 +170,13 @@ Page({
         let dis = main.navigateInit();
         this.setData({
             distanceInfo: dis
-        });        
+        });
     },
 
     touchTap(e) {
         console.log("tap");
         app.curName = main.selectObj(e.touches[0]);
-        if(!!!app.curName) app.curName="室外";
+        if (!!!app.curName) app.curName = "室外";
         console.log(app.curName);
         this.setData({
             navFlag: 1,
@@ -215,9 +216,9 @@ Page({
      * @date 2020-07-20
      */
     setStartPoint() {
-    
+
         main.startClick();
-        if(!! app.spriteControl.endSprite) {
+        if (!!app.spriteControl.endSprite) {
             this.setData({
                 navFlag: 2,
                 infoFlag: 2
@@ -225,10 +226,10 @@ Page({
             let dis = main.navigateInit();
             this.setData({
                 distanceInfo: dis
-            });                  
+            });
         }
         this.setData({
-            startPointName :app.curName
+            startPointName: app.curName
         });
     },
 
@@ -238,18 +239,18 @@ Page({
      */
     setEndPoint() {
         main.endClick();
-        if(!! app.spriteControl.startSprite) {
+        if (!!app.spriteControl.startSprite) {
             this.setData({
                 navFlag: 2,
                 infoFlag: 2
-            });    
+            });
             let dis = main.navigateInit();
             this.setData({
                 distanceInfo: dis
-            }); 
+            });
         }
         this.setData({
-            endPointName :app.curName
+            endPointName: app.curName
         });
 
     },
