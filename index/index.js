@@ -232,16 +232,19 @@ Page({
      */
     setStartPoint() {
         main.startClick();
-        if (!!app.spriteControl.endSprite) {
-            this.setData({
-                navFlag: 2,
-                infoFlag: 2,
-            });
-            let dis = main.navigateInit();
-            this.setData({
-                distanceInfo: dis,
-            });
-        }
+        let self = this;
+        setTimeout(function(){
+            if (!!app.spriteControl.endSprite) {
+                self.setData({
+                    navFlag: 2,
+                    infoFlag: 2,
+                });
+                let dis = main.navigateInit();
+                self.setData({
+                    distanceInfo: dis,
+                });
+            }
+        }, 50);
         this.setData({
             startPointName: app.curName,
         });
@@ -253,16 +256,20 @@ Page({
      */
     setEndPoint() {
         main.endClick();
-        if (!!app.spriteControl.startSprite) {
-            this.setData({
-                navFlag: 2,
-                infoFlag: 2,
-            });
-            let dis = main.navigateInit();
-            this.setData({
-                distanceInfo: dis,
-            });
-        }
+        let self = this;
+        setTimeout(function(){
+            if (!!app.spriteControl.startSprite) {
+                self.setData({
+                    navFlag: 2,
+                    infoFlag: 2,
+                });
+                let dis = main.navigateInit();
+                self.setData({
+                    distanceInfo: dis,
+                });
+            }
+        }, 50);
+
         this.setData({
             endPointName: app.curName,
         });
