@@ -34,10 +34,10 @@ export function renderModel(canvasDom, Three) {
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0, -500, 1000);
+        camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
-        camera.zoom = 2.5;
+        camera.zoom = 3;
         camera.updateProjectionMatrix();
 
         //设置灯光，当前为白色环境光
@@ -49,13 +49,14 @@ export function renderModel(canvasDom, Three) {
         scene.add(light);
 
         //辅助坐标轴
-        var axesHelper = new THREE.AxesHelper(5000);
-        axesHelper.material.linewidth = 500;
-        scene.add(axesHelper);
+        // var axesHelper = new THREE.AxesHelper(5000);
+        // axesHelper.material.linewidth = 500;
+        // scene.add(axesHelper);
 
         //加载模型
         loadModel(scene);
         // scene.rotation.z += -Math.PI/2;
+        // camera.up.set(-1, 0, 0);
         //加载文字和图片
         //loadTargetText(scene);
 
@@ -287,7 +288,7 @@ export function loadTargetText() {
     let sprite;
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
-        if (item.floor < 3) {
+        if (item.floor == 6) {
             //暂时只显示第一层
             if (item.img) {
                 sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
@@ -330,7 +331,8 @@ export function showSprite(sprite, point, type) {
     } else {
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
-        textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+        // textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+        textureLoader.load("../style/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
             sprite = new THREE.Sprite(material);
             sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
