@@ -16,7 +16,7 @@ export function loadModel(scene) {
     loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '.glb', function (glb) {
         //添加地面到场景里
         let ground = glb.scene;
-        ground.rotation.z += Math.PI/2;
+        ground.rotation.z += -Math.PI/2;
         scene.add(ground);
         //设置物体参数
         ground.name = map_conf.map_id + "_" + "outside";
@@ -33,7 +33,7 @@ export function loadModel(scene) {
             loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '_' + building.building_id + '_' + i + '.glb', function (glb) {
                 //添加建筑物到场景里
                 let building = glb.scene;
-                building.rotation.z += Math.PI/2;
+                building.rotation.z += -Math.PI/2;
                 scene.add(building);
                 // 设置物体参数
                 building.name = building.building_id + '_' + i + "_" + building.name;

@@ -34,7 +34,7 @@ export function renderModel(canvasDom, Three) {
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(0, -500, 1000);
+        camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
@@ -49,9 +49,9 @@ export function renderModel(canvasDom, Three) {
         scene.add(light);
 
         //辅助坐标轴
-        var axesHelper = new THREE.AxesHelper(5000);
-        axesHelper.material.linewidth = 500;
-        scene.add(axesHelper);
+        // var axesHelper = new THREE.AxesHelper(5000);
+        // axesHelper.material.linewidth = 500;
+        // scene.add(axesHelper);
 
         //加载模型
         loadModel(scene);
