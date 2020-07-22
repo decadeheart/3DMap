@@ -19,8 +19,9 @@ App({
         defaultUserPosition: { x: 0, y: 0 },
         default_layer: 1,
         int_userHeight: 2,
-        TargetSpriteScale: 2,
-        noTargetSpriteScale: 10,
+        fontSpriteScale: 4,
+        imgSpriteScale: 2,
+        noTargetSpriteScale: 7,
         float_mapProportion: 0.3,
         layerHeight: 15,
         lineHeight: 1,
@@ -153,10 +154,10 @@ App({
             });
         }
     },
-    pathControl : {
+    pathControl: {
         PathTweengroup: [],//no use now
         textures: [],
-        texture:null,
+        texture: null,
         pathGroup: null,
         changeScale: function (scale) {
             if (this.pathGroup !== null) {
@@ -166,7 +167,7 @@ App({
             }
         }
     },
-    routeClass : {
+    routeClass: {
         startPoint: {},
         endPoint: {},
         distance: 0,

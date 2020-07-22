@@ -100,7 +100,8 @@ export function renderModel(canvasDom, Three) {
         //TWEEN.update();
     }
 }
-var caCoord={};
+
+var caCoord = {};
 /**
  * @description 2D-3D视角切换
  * @export
@@ -109,7 +110,7 @@ var caCoord={};
 export function cameraExchange(index) {
     // console.log(camera.position, camera.rotation);
 
-    if (controls.maxPolarAngle == 0 ||index==3) {
+    if (controls.maxPolarAngle == 0 || index == 3) {
         // console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.lookAt(0, 0, 0);
@@ -214,13 +215,13 @@ function makeSprite(message, imageURL) {
     sprite.material.map.minFilter = THREE.LinearFilter;
     //缩放比例
     sprite.scale.set(
-        (map_conf.TargetSpriteScale * width2) / height2,
-        map_conf.TargetSpriteScale,
+        (map_conf.fontSpriteScale * width2) / height2,
+        map_conf.fontSpriteScale,
         1
     );
     sprite.initScale = {
-        x: (map_conf.TargetSpriteScale * width2) / height2,
-        y: map_conf.TargetSpriteScale,
+        x: (map_conf.fontSpriteScale * width2) / height2,
+        y: map_conf.fontSpriteScale,
         z: 1,
     };
     //通过重设canvas大小清空内容（因为需要的内容已经传到sprite中）
@@ -261,8 +262,8 @@ function makeSprite(message, imageURL) {
             sprite.material.map.minFilter = THREE.LinearFilter;
             //缩放比例
             sprite.scale.set(
-                map_conf.TargetSpriteScale * (height3 / height2) * (width3 / height3),
-                map_conf.TargetSpriteScale * (height3 / height2),
+                map_conf.imgSpriteScale * (height3 / height2) * (width3 / height3),
+                map_conf.imgSpriteScale * (height3 / height2),
                 1
             );
             sprite.initScale = {
@@ -306,7 +307,6 @@ export function loadTargetTextByFloor(floor) {
         }
     });
     spriteGroup.name = "text";
-    spriteGroup.rotation.z += -Math.PI / 2;
     scene.add(spriteGroup);
     // spriteControl.targetSprites.push(spriteGroup);
     // console.log(spriteGroup);
@@ -434,13 +434,16 @@ export function selectObj(index) {
     //获取全局变量并改名
     let map = app.map;
     let me = app.me;
+    //定义一个极小的位移量，用于调整坐标点位置
+    let tinyPos = 1.5;
     //获取鼠标点击位置
     mouse.x = (index.pageX / canvas._width) * 2 - 1;
-    mouse.y = -(index.pageY / canvas._height) * 2 + 1;
+    mouse.y = -((index.pageY - tinyPos) / canvas._height) * 2 + 1;
     //转换为视点坐标系
     raycaster.setFromCamera(mouse, camera);
     //获取选中物体
-    let intersects = raycaster.intersectObjects(map.groundMeshes);
+    // let intersects = raycaster.intersectObjects(map.groundMeshes);
+    let intersects = raycaster.intersectObjects(scene.children, true);
     //被选中物体不为空时
     if (intersects.length > 0) {
         //获取坐标点

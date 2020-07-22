@@ -17,8 +17,6 @@ export function loadModel(scene) {
     loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '.glb', function (glb) {
         //添加地面到场景里
         let ground = glb.scene;
-        //做一个旋转操作让模型更好地适应屏幕（手机竖屏）
-        ground.rotation.z += -Math.PI / 2;
         scene.add(ground);
         //设置物体参数
         ground.name = map_conf.map_id + "_" + "outside";
@@ -35,8 +33,6 @@ export function loadModel(scene) {
             loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '_' + building.building_id + '_' + i + '.glb', function (glb) {
                 //添加建筑物到场景里
                 let building = glb.scene;
-                //做一个旋转操作让模型更好地适应屏幕（手机竖屏）
-                building.rotation.z += -Math.PI / 2;
                 scene.add(building);
                 // 设置物体参数
                 building.name = building.building_id + '_' + i + "_" + building.name;
@@ -51,16 +47,16 @@ export function loadModel(scene) {
         }
     });
     /**
-     * @description 设置楼层并将场景元素添加进map.groundMeshes中
+     * @description 设置楼层//并将场景元素添加进map.groundMeshes中
      * @param {*} obj 场景元素
      * @param {*} f 楼层
      */
     function setFloor(obj, f) {
         obj.floor = f;
-        if (obj.name.indexOf('Floor') !== -1 || obj.name.indexOf('ground') !== -1) {
-            map.groundMeshes.push(obj);
-            map.groundMeshes.push.apply(map.groundMeshes, obj.children);
-        }
+        // if (obj.name.indexOf('Floor') !== -1 || obj.name.indexOf('ground') !== -1) {
+        //     map.groundMeshes.push(obj);
+        //     map.groundMeshes.push.apply(map.groundMeshes, obj.children);
+        // }
         obj.children.forEach(function (child) {
             setFloor(child, f);
         })
