@@ -256,7 +256,6 @@ function navigation(nodeList) {
     resultParent.push(endLi);
 
 }
-//function navigate(start, end, nodeList)
 /**
  * @description 点击后开始导航
  * @date 2020-07-13
@@ -267,8 +266,6 @@ function navigate(nodeList, start, end) {
     let startNode = findnearest2(start, nodeList);
     let endNode = findnearest2(end, nodeList);
 
-    //let startNode = nodeList[0];
-    //let endNode = nodeList[10];
 
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
     navigation(nodeList);

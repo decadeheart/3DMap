@@ -75,7 +75,6 @@ Page({
         });
         var that = this;
         main.startBeaconDiscovery().then((res) => {
-            // console.log(res, this);
             that.setData({
                 showBlue: res.showBlueStatus,
             });
@@ -176,7 +175,7 @@ Page({
     /**
      * @description 模拟导航
      * @date 2020-07-20
-     * @param {*} e
+     * @param {*} e 事件
      */
     simNavigate(e) {
         // console.log(e);
