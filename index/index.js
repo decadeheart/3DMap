@@ -3,10 +3,10 @@ var app = getApp();
 Page({
     data: {
         baseUrl: "https://www.cleverguided.com/iLaN/3D-jxqzf/",
-        dimensionImgUrl: [],
+        dimensionImgUrl: ["../img/2D.png","../img/3D.png"],
         dimension: 3,
-        allFloorImgUrl: "",
-        floorImgUrl: [],
+        allFloorImgUrl: "../img/more.png",
+        floorImgUrl: ["../img/1F.png","../img/2F.png","../img/3F.png","../img/4F.png","../img/5F.png","../img/6F.png"],
         logoUrl: "",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
@@ -28,27 +28,27 @@ Page({
             },
         ],
         //模态框是否显示
-        // modalFlag: true,
+        modalFlag: true,
         searchTitle: app.map_conf.map_name,
     },
 
     onLoad: function () {
         //初始化图片url
         this.setData({
-            dimensionImgUrl: [
-                this.data.baseUrl + "ui_img/2D.png",
-                this.data.baseUrl + "ui_img/3D.png",
-            ],
-            allFloorImgUrl: this.data.baseUrl + "ui_img/more.png",
-            floorImgUrl: [
-                this.data.baseUrl + "ui_img/1F.png",
-                this.data.baseUrl + "ui_img/2F.png",
-                this.data.baseUrl + "ui_img/3F.png",
-                this.data.baseUrl + "ui_img/4F.png",
-                this.data.baseUrl + "ui_img/5F.png",
-                this.data.baseUrl + "ui_img/6F.png",
-            ],
-            logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
+            // dimensionImgUrl: [
+            //     this.data.baseUrl + "ui_img/2D.png",
+            //     this.data.baseUrl + "ui_img/3D.png",
+            // ],
+            // allFloorImgUrl: this.data.baseUrl + "ui_img/more.png",
+            // floorImgUrl: [
+            //     this.data.baseUrl + "ui_img/1F.png",
+            //     this.data.baseUrl + "ui_img/2F.png",
+            //     this.data.baseUrl + "ui_img/3F.png",
+            //     this.data.baseUrl + "ui_img/4F.png",
+            //     this.data.baseUrl + "ui_img/5F.png",
+            //     this.data.baseUrl + "ui_img/6F.png",
+            // ],
+            // logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
         });
 
         main.initData();
@@ -151,26 +151,26 @@ Page({
     /**
      * @description 点击搜索栏，页面跳转
      */
-    switchSearch() {
-        wx.navigateTo({
-            url: "../search/search",
-            events: {
-                // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-                acceptDataFromOpenedPage: function (data) {
-                    console.log(data);
-                },
-                someEvent: function (data) {
-                    console.log(data);
-                },
-            },
-            success: function (res) {
-                // 通过eventChannel向被打开页面传送数据
-                res.eventChannel.emit("acceptDataFromOpenerPage", { data: "test" });
-            },
+    switchModal() {
+        var status = this.data.modalFlag == true ? false : true;
+        this.setData({
+            modalFlag: status,
         });
-        // var status = this.data.modalFlag == true ? false : true;
-        // this.setData({
-        //     modalFlag: status,
+        // wx.navigateTo({
+        //     url: "../search/search",
+        //     events: {
+        //         // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+        //         acceptDataFromOpenedPage: function (data) {
+        //             console.log(data);
+        //         },
+        //         someEvent: function (data) {
+        //             console.log(data);
+        //         },
+        //     },
+        //     success: function (res) {
+        //         // 通过eventChannel向被打开页面传送数据
+        //         res.eventChannel.emit("acceptDataFromOpenerPage", { data: "test" });
+        //     },
         // });
     },
     /**

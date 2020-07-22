@@ -1,8 +1,6 @@
 {
   "pages": [
-    "index/index",
-    "search/search"
-    
+    "index/index"
   ],
   "permission": {
     "scope.userLocation": {

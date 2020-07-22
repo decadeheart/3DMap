@@ -100,21 +100,23 @@ export function renderModel(canvasDom, Three) {
         //TWEEN.update();
     }
 }
-
+var caCoord={};
 /**
  * @description 2D-3D视角切换
  * @export
  * @param {*} canvas 被渲染的canvas位置
  */
 export function cameraExchange(index) {
-    console.log(camera.position, camera.rotation);
-    if (controls.maxPolarAngle == 0) {
-        console.log("2D->3D");
+    // console.log(camera.position, camera.rotation);
+
+    if (controls.maxPolarAngle == 0 ||index==3) {
+        // console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.lookAt(0, 0, 0);
+        camera.position.set(caCoord.x, caCoord.y, caCoord.z);
         // camera.po;
     } else {
-        console.log("3D->2D");
+        // console.log("3D->2D");
         camera.lookAt(camera.position.x, camera.position.y, 0);
         caCoord.x = camera.position.x;
         caCoord.y = camera.position.y;
@@ -122,6 +124,7 @@ export function cameraExchange(index) {
         controls.setMaxPolarAngle(0);
         // camera.position.set(0, 0, cameraRelativeZ);
     }
+    camera.updateProjectionMatrix();
     controls.update();
 }
 
