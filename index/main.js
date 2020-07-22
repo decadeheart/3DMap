@@ -1,7 +1,7 @@
 import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
 import navigate from "../js/astar";
-import {initData} from "../js/data";
+import { initData } from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import accChange from "../js/motionDetection";
@@ -35,7 +35,7 @@ main.initData = function () {
             app.THREE = THREE;
             MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
-            //MODEL.loadTargetText();
+            MODEL.loadTargetTextByFloor(app.map.curFloor);
         });
 
     // 处理数据
@@ -95,6 +95,7 @@ main.displayAllFloor = function () {
 };
 main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
+    MODEL.loadTargetTextByFloor(floor);
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
@@ -108,6 +109,7 @@ main.setEndPoint = function () {
 main.backToMe = function () {
     MODEL.backToMe();
 };
+
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
     return new Promise((resolve, reject) => {

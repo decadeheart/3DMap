@@ -1,15 +1,18 @@
+//关于模型的各类操作
+
 import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
-import * as ca from "./camera"; //用户贴图
+import * as ca from "./camera"; //相机操作
 
 //全局变量，供各个函数调用
 var canvas, THREE;
 var camera, scene, renderer, controls;
 var app = getApp();
 var selectedPoint = {};
+
 /**
  * @description 初始化模型并渲染到canvas中
  * @export void 导出到index.js以供调用
@@ -43,7 +46,7 @@ export function renderModel(canvasDom, Three) {
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
-
+        //添加方向光，可以使建筑物更有立体感
         light = new THREE.DirectionalLight(0xffffff, 0.5);
         light.position.set(0, 0, 1);
         scene.add(light);
@@ -55,13 +58,12 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
-        // scene.rotation.z += -Math.PI/2;
-        // camera.up.set(-1, 0, 0);
         //加载文字和图片
         //loadTargetText(scene);
 
+        //加载用户贴图
         let textureLoader = new THREE.TextureLoader();
-        textureLoader.load("../style/me.png", function (texture) {
+        textureLoader.load("../img/me.png", function (texture) {
             let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
             let material = new THREE.MeshBasicMaterial({
                 side: THREE.DoubleSide,
@@ -106,7 +108,6 @@ export function renderModel(canvasDom, Three) {
  */
 export function cameraExchange(index) {
     console.log(camera.position, camera.rotation);
-
     if (controls.maxPolarAngle == 0) {
         console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
@@ -119,14 +120,13 @@ export function cameraExchange(index) {
         caCoord.y = camera.position.y;
         caCoord.z = camera.position.z;
         controls.setMaxPolarAngle(0);
-
         // camera.position.set(0, 0, cameraRelativeZ);
     }
     controls.update();
 }
 
 /**
- * @description 计算一个数字转为二进制后同位数最大值+1（如：5=>101的同位最大值为111，加一后为1000）
+ * @description 计算转二进制后天花板数（如：5=>101的天花板数为8=>1000）
  * @param {*} x 数字
  * @returns 见描述
  */
@@ -198,7 +198,7 @@ function makeSprite(message, imageURL) {
     context.putImageData(textdata, (width2 - textWidth) / 2, (height2 - height) / 2);
 
     //将canvas转换为图片，方便进行纹理贴图（canvas直接贴图会报没有相应转换函数的错误）
-    var dataUrl = canvas.toDataURL("../style/word.png");
+    var dataUrl = canvas.toDataURL("../img/word.png");
     //纹理贴图
     var texture = new THREE.TextureLoader().load(dataUrl);
     //创建精灵
@@ -247,7 +247,7 @@ function makeSprite(message, imageURL) {
             context.putImageData(imagedata, (width3 - imgsize) / 2, 0);
             context.putImageData(textdata, (width3 - textWidth) / 2, imgsize);
             //转为图片并作为纹理贴图
-            var dataUrl = canvas2.toDataURL("../style/word.png");
+            var dataUrl = canvas2.toDataURL("../img/word.png");
             var texture2 = new THREE.TextureLoader().load(dataUrl);
             let spriteMaterial = new THREE.SpriteMaterial({
                 map: texture2,
@@ -278,7 +278,7 @@ function makeSprite(message, imageURL) {
  * @description 加载所有地点名称及图标精灵并显示在scene中
  * @export
  */
-export function loadTargetText() {
+export function loadTargetTextByFloor(floor) {
     //为全局变量改名
     let POItarget = app.POItarget;
     // let THREE = app.THREE;
@@ -287,28 +287,28 @@ export function loadTargetText() {
     let sprite;
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
-        if (item.floor == 6) {
-            //暂时只显示第一层
+        if (item.floor == floor) {
+            //暂时只显示第6层
             if (item.img) {
                 sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
             } else {
                 sprite = makeSprite(item.name, null);
             }
             sprite.level = item.level;
-            sprite.position.set(item.x + 50, item.y, item.z + 5);
-            //微调位置
-            sprite.position.x += -50;
-            // sprite.position.y += -20;
+            sprite.position.set(item.x, item.y, item.z + 5);
+            //设置参数
             sprite.floor = item.floor;
             sprite.center = new THREE.Vector2(0.5, 0.5);
             spriteGroup.add(sprite);
         }
     });
     spriteGroup.name = "text";
+    spriteGroup.rotation.z += -Math.PI / 2;
     scene.add(spriteGroup);
-    //spriteControl.targetSprites.push(spriteGroup);
-    //console.log(spriteGroup);
+    // spriteControl.targetSprites.push(spriteGroup);
+    // console.log(spriteGroup);
 }
+
 /**
  * @description 显示精灵
  * @export
@@ -331,7 +331,7 @@ export function showSprite(sprite, point, type) {
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
         // textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
-        textureLoader.load("../style/" + type + ".png", function (texture) {
+        textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
             sprite = new THREE.Sprite(material);
             sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
@@ -355,11 +355,17 @@ export function showSprite(sprite, point, type) {
                 app.spriteControl.endSprite = sprite;
                 routeClass.endPoint = point;
             }
-            //console.log(sprite);
+            // console.log(sprite);
         });
     }
 }
 
+/**
+ * @description 三维勾股定理
+ * @param {*} nowLi 节点1
+ * @param {*} nowLi2 节点2
+ * @returns 
+ */
 function dis3(nowLi, nowLi2) {
     //勾股定理
     let a = nowLi.x - nowLi2.x;
@@ -367,9 +373,12 @@ function dis3(nowLi, nowLi2) {
     let c = nowLi.z - nowLi2.z;
     return Math.sqrt(a * a + b * b + c * c);
 }
-
+/**
+ * @description 获取最近POI名称
+ * @param {*} obj 被选中的物体
+ * @returns
+ */
 function getNearPOIName(obj) {
-    // console.log(obj)
     let k = 0;
     let list = app.POItarget;
     for (let i = 0; i < list.length; i++) {
@@ -395,7 +404,6 @@ function cloneObj(oldObj) {
     for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
     return newObj;
 }
-
 /**
  * @description 扩展对象
  * @date 2020-07-14
@@ -411,27 +419,33 @@ function extendObj() {
     }
     return temp;
 }
-
 /**
  * @description 根据屏幕坐标在场景中显示当前位置的图片精灵
  * @export
  * @param {*} index 屏幕坐标
  */
 export function selectObj(index) {
+    //创建射线类，用于获取选中物体
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
+    //获取全局变量并改名
     let map = app.map;
     let me = app.me;
-
+    //获取鼠标点击位置
     mouse.x = (index.pageX / canvas._width) * 2 - 1;
     mouse.y = -(index.pageY / canvas._height) * 2 + 1;
+    //转换为视点坐标系
     raycaster.setFromCamera(mouse, camera);
-
+    //获取选中物体
     let intersects = raycaster.intersectObjects(map.groundMeshes);
+    //被选中物体不为空时
     if (intersects.length > 0) {
+        //获取坐标点
         let point = intersects[0].point;
+        //获取被选中物体
         let obj = intersects[0].object;
         if (me != null) {
+            //在点击位置显示贴图精灵并返回最近POI地点名称
             selectedPoint = extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
@@ -450,7 +464,11 @@ export function displayAllFloor() {
             setVisible(obj);
         }
     });
-
+    /**
+     * @description 设置物体是否可见
+     * @param {*} obj 物体
+     * @returns
+     */
     function setVisible(obj) {
         obj.visible = true;
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
@@ -483,7 +501,11 @@ export function onlyDisplayFloor(floor) {
             setVisible(obj);
         }
     });
-
+    /**
+     * @description 设置物体是否可见
+     * @param {*} obj 物体
+     * @returns
+     */
     function setVisible(obj) {
         parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
@@ -500,8 +522,9 @@ export function onlyDisplayFloor(floor) {
     // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    console.log(scene);
+    // console.log(scene);
 }
+
 /**
  * @description 初始化贴图模型
  * @date 2020-07-20
@@ -509,7 +532,7 @@ export function onlyDisplayFloor(floor) {
  */
 export function initPath() {
     let pathControl = app.pathControl;
-    pathControl.texture = new THREE.TextureLoader().load("../style/arrow.png");
+    pathControl.texture = new THREE.TextureLoader().load("../img/arrow.png");
     pathControl.texture.mapping = THREE.UVMapping;
     pathControl.texture.wrapS = THREE.RepeatWrapping;
     pathControl.texture.wrapT = THREE.RepeatWrapping;

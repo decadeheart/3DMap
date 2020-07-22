@@ -88,7 +88,7 @@ App({
         bool_isMapModelReady: false,
         stepCount: 0,
         preStep: 0,
-        curFloor: 1,
+        curFloor: 6,
         mapOrientation: null,
         deviceOrientation: 0,
         groundMeshes: [],

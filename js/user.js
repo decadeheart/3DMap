@@ -16,11 +16,10 @@ function dis3(nowLi, nowLi2) {
     return Math.sqrt(a * a + b * b + c * c);
 }
 
-
 const userControl = {
     isInitUser: false,
     userToCamera: 0,
-    userDefaultPosition: {x: -5, y: 0, z: 0},
+    userDefaultPosition: { x: -5, y: 0, z: 0 },
     moveDetect: function () {
         let map = app.map
         let me = app.me
@@ -37,7 +36,7 @@ const userControl = {
         }
     },
     /**
-     * 改变缩放背书
+     * 改变缩放倍数
      * @param {*} scale  倍数
      */
     changeScale: function (scale) {
@@ -62,7 +61,7 @@ const userControl = {
             if (mode === "animation") {
                 //tweenjs类库主要用来调整和动画html5和js
                 console.log(123);
-                new TWEEN.Tween(me.rotation).to({x: x, y: y, z: z}, dis3(me.rotation, {
+                new TWEEN.Tween(me.rotation).to({ x: x, y: y, z: z }, dis3(me.rotation, {
                     x: x,
                     y: y,
                     z: z
@@ -85,7 +84,7 @@ const userControl = {
      */
     changePosition: function (x, y, z, mode, Group) {
         let me = app.me
-       
+
         if (this.isInitUser === false) {
             return;
         }
@@ -114,16 +113,15 @@ const userControl = {
     /**
      * 初始化用户
      */
-    initUser :function () {
+    initUser: function () {
         let me = app.me
         userControl.isInitUser = true;
         userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
         me.name = 'user';
         me.floor = app.map.curFloor;
         //userControl.changeRotation(null, null, Math.PI * 2 - (Math.PI / 180) * (app.map.mapOrientation));
-        userControl.changeRotation(null, null, Math.PI / 2);        
+        userControl.changeRotation(null, null, Math.PI / 2);
     }
 }
-
 
 export default userControl

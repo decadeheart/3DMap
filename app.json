@@ -3,7 +3,6 @@
     "index/index",
     "search/search"
     
-    
   ],
   "permission": {
     "scope.userLocation": {

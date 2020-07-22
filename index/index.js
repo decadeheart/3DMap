@@ -105,8 +105,8 @@ Page({
      */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
-        main.onlyDisplayFloor(floor);
-        console.log(floor);
+        main.onlyDisplayFloor(floor + 1);
+        console.log(floor + 1);
     },
 
     /**
@@ -234,7 +234,7 @@ Page({
     setStartPoint() {
         main.startClick();
         let self = this;
-        setTimeout(function(){
+        setTimeout(function () {
             if (!!app.spriteControl.endSprite) {
                 self.setData({
                     navFlag: 2,
@@ -258,7 +258,7 @@ Page({
     setEndPoint() {
         main.endClick();
         let self = this;
-        setTimeout(function(){
+        setTimeout(function () {
             if (!!app.spriteControl.startSprite) {
                 self.setData({
                     navFlag: 2,

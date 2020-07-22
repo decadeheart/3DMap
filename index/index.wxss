@@ -14,6 +14,21 @@
     /* background-color: wheat; */
     z-index: 0;
 }
+/* <!-- 精灵容器 --> */
+#font {
+    position: absolute;
+    width: 1rpx;
+    height: 1rpx;
+    /* background-color: wheat; */
+    z-index: 0;
+}
+#img {
+    position: absolute;
+    width: 1rpx;
+    height: 1rpx;
+    /* background-color: wheat; */
+    z-index: 0;
+}
 
 /* 正上方搜索框 包括上下留白 16% */
 .search {
@@ -178,8 +193,9 @@
 /* <!-- 左上角指南针 10%--> */
 .compass {
     position: absolute;
-    top: 16%;
-    height: 6%;
+    bottom: 13%;
+    left: 10%;
+    height: 8%;
     /* background-color: turquoise; */
     z-index: 10;
 }
@@ -187,7 +203,7 @@
 /* <!-- 左下角定位 9% --> */
 .myLocation {
     position: absolute;
-    bottom: 15%;
+    bottom: 13.5%;
     left: 2%;
     height: 8%;
     /* background-color: #fff; */
@@ -206,7 +222,7 @@
     bottom: 2.5%;
     left: 2%;
     width: 96%;
-    height: 16%;
+    height: 14%;
     font-size: x-large;
     background-color: rgb(254, 254, 255);
     border-radius: 10rpx;
@@ -221,7 +237,7 @@
     justify-content: center;
     align-items: center;
     /* padding-left: 30%; */
-    height: 58%;
+    height: 54%;
     width: 100%;
     border-bottom: 1rpx solid #ccc;
 }
@@ -241,7 +257,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 42%;
+    height: 46%;
     width: 100%;
 }
 
@@ -272,14 +288,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 60%;
+    width: 70%;
 }
 
 .detail-info text:first-child {
     display: inline-block;
     height: 60%;
     width: 80%;
-    font-size: 27rpx;
+    font-size: 32rpx;
     text-align: center;
     font-weight: bold;
 }
@@ -290,7 +306,7 @@
     width: 80%;
     border-top: 2rpx solid #ccc;
     text-align: center;
-    font-size: 25rpx;
+    font-size: 30rpx;
     color: #555;
 }
 
@@ -299,7 +315,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 40%;
+    width: 30%;
 }
 
 #navigating-btn-start {
