@@ -36,13 +36,13 @@ export function renderModel(canvasDom, Three) {
 
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
-        camera.lookAt(new THREE.Vector3(0, 0, 0));
+        camera.lookAt(new THREE.Vector3(-5, 0, 0));
         camera.position.set(0, 0, 1000);
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
         camera.updateProjectionMatrix();
-
+        // console.log(camera);
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
@@ -58,6 +58,7 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
+
         //加载文字和图片
         //loadTargetText(scene);
 
@@ -202,9 +203,9 @@ function makeSprite(message, imageURL) {
     context.putImageData(textdata, (width2 - textWidth) / 2, (height2 - height) / 2);
 
     //将canvas转换为图片，方便进行纹理贴图（canvas直接贴图会报没有相应转换函数的错误）
-    var dataUrl = canvas.toDataURL("../img/word.png");
+    let dataUrl = canvas.toDataURL("../img/word.png");
     //纹理贴图
-    var texture = new THREE.TextureLoader().load(dataUrl);
+    let texture = new THREE.TextureLoader().load(dataUrl);
     //创建精灵
     let spriteMaterial = new THREE.SpriteMaterial({
         map: texture,
@@ -226,6 +227,10 @@ function makeSprite(message, imageURL) {
     };
     //通过重设canvas大小清空内容（因为需要的内容已经传到sprite中）
     canvas.width = 0;
+    texture.dispose();
+    texture = null;
+    spriteMaterial = null;
+    // sprite = null;
 
     //绘制相应图标
     if (imageURL !== null) {
@@ -251,13 +256,14 @@ function makeSprite(message, imageURL) {
             context.putImageData(imagedata, (width3 - imgsize) / 2, 0);
             context.putImageData(textdata, (width3 - textWidth) / 2, imgsize);
             //转为图片并作为纹理贴图
-            var dataUrl = canvas2.toDataURL("../img/word.png");
-            var texture2 = new THREE.TextureLoader().load(dataUrl);
+            let dataUrl = canvas2.toDataURL("../img/word.png");
+            let texture2 = new THREE.TextureLoader().load(dataUrl);
             let spriteMaterial = new THREE.SpriteMaterial({
                 map: texture2,
                 depthTest: true,
             });
             sprite.material = spriteMaterial;
+            sprite.material.needsUpdate = true;
             //这句为了防止warning
             sprite.material.map.minFilter = THREE.LinearFilter;
             //缩放比例
@@ -274,25 +280,81 @@ function makeSprite(message, imageURL) {
             //通过重设canvas大小清空内容
             canvas.width = 0;
             canvas2.width = 0;
+            texture2.dispose();
+
+            texture2 = null;
+            spriteMaterial = null;
+            sprite = null;
         };
     }
     return sprite;
 }
 /**
+ * @description 删除模型中的物体并清除缓存
+ * @param myObjects 待删除的物体
+ * @returns
+ */
+function deleteObj(group) {
+    // 删除掉所有的模型组内的mesh
+    group.traverse(function (item) {
+        if (item instanceof THREE.Sprite) {
+            item.geometry.dispose(); // 删除几何体
+            item.material.dispose(); // 
+            console.log("delete!");
+        }
+    });
+    scene.remove(group);
+}
+
+function dispose(parent, child) {
+    if (child.children.length) {
+        let arr = child.children.filter(x => x);
+        arr.forEach(a => {
+            dispose(child, a)
+        })
+    }
+    if (child instanceof THREE.Mesh || child instanceof THREE.Line || child instanceof THREE.Sprite) {
+        if (child.material.map) {
+            child.material.map.dispose(); 
+            // console.log("纹理清除！");
+        }
+        child.material.dispose();
+        child.geometry.dispose();
+        // renderer.deallocateObject(child);
+    } else if (child.material) {
+        child.material.dispose();
+    }
+    child.remove();
+    child = null;
+    parent.remove(child);
+    // console.log("delete!");
+}
+
+/**
  * @description 加载所有地点名称及图标精灵并显示在scene中
  * @export
  */
 export function loadTargetTextByFloor(floor) {
+    // console.log(app.curSpriteGroup);
+    // if(!!app.curSpriteGroup) deleteObj(app.curSpriteGroup);
+    if (!!app.curSpriteGroup) dispose(scene, app.curSpriteGroup);
+    scene.remove(app.curSpriteGroup);
+    // console.log(app.curSpriteGroup);
+    // console.log(renderer.info);
+    // renderer.deallocateTexture(texture);
+    // console.log(renderer.info);
     //为全局变量改名
     let POItarget = app.POItarget;
     // let THREE = app.THREE;
     //创建精灵组
-    let spriteGroup = new THREE.Group();
+
+    app.curSpriteGroup = new THREE.Group();
+    let spriteGroup = app.curSpriteGroup;
     let sprite;
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
         if (item.floor == floor) {
-            //暂时只显示第6层
+            
             if (item.img) {
                 sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
             } else {
@@ -307,9 +369,11 @@ export function loadTargetTextByFloor(floor) {
         }
     });
     spriteGroup.name = "text";
+
     scene.add(spriteGroup);
+    spriteGroup = null;
     // spriteControl.targetSprites.push(spriteGroup);
-    // console.log(spriteGroup);
+    // console.log(scene);
 }
 
 /**
@@ -617,4 +681,74 @@ export function setEndClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
     showSprite(app.spriteControl.endSprite, selectedPoint, "end");
+}
+
+export function backToMe() {
+    let me = app.me;
+    displayPoi(me.floor, me.position);
+}
+
+export function camerafix() {
+    let cameraControl = ca.cameraControl;
+    let map = app.map;
+    let map_conf = app.map_conf;
+
+    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
+    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
+    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+
+    cameraControl.focusPoint.x = -5;
+    cameraControl.focusPoint.y = 0;
+
+
+    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+
+    camera.position.x = -5 + cameraControl.relativeCoordinate.x;
+    camera.position.y = 0 + cameraControl.relativeCoordinate.y;
+
+    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+    // console.log(camera);
+    controls.update();
+}
+
+function displayPoi(floor, poi) {
+    let cameraControl = ca.cameraControl;
+    let map = app.map;
+    let map_conf = app.map_conf;
+    console.log(floor);
+    if (typeof floor != 'number') {
+        floor = parseInt(floor);
+    }
+    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
+    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
+    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+    if (poi != null) {
+        cameraControl.focusPoint.x = poi.x;
+        cameraControl.focusPoint.y = poi.y;
+    }
+
+    scene.children.forEach(function (obj, i) {
+        if (typeof obj.floor != 'undefined') {
+            let floorOfObj = obj.floor;
+            if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
+                obj.visible = true;
+            } else {
+                obj.visible = false;
+            }
+        }
+        if (obj.name == 'path') {
+            if (obj.type == 'Group') {
+                obj.children.forEach(function (o) {
+                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
+                });
+            }
+        }
+    });
+    map.curFloor = floor;
+    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+
+    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
+    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
+    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+    controls.update();
 }

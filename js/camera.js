@@ -1,6 +1,6 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
-var THREE,camera,canvas;
-var cameraControl = {
+var THREE, camera, canvas;
+export var cameraControl = {
     preX: 0,
     preY: 0,
     preAngle: 0,
@@ -35,11 +35,11 @@ var cameraControl = {
             camera.position.set(x, y, z);
         }
     },
-    getPosition:function(){
-        let x = camera.position.x !== null ? camera.position.x  : 0;
+    getPosition: function () {
+        let x = camera.position.x !== null ? camera.position.x : 0;
         let y = camera.position.y !== null ? camera.position.y : 0;
         let z = camera.position.z !== null ? camera.position.z : 1000;
-        return {x:x,y:y,z:z};
+        return { x: x, y: y, z: z };
     },
     setFocus: function (x, y, z) {
         this.focusPoint.x = x === null ? this.focusPoint.x : x;
@@ -55,12 +55,14 @@ var cameraControl = {
         camera.lookAt(new THREE.Vector3(this.focusPoint.x, this.focusPoint.y, this.focusPoint.z));
     },
 };
-export var initCamera=(three,CANVAS)=>{
-    THREE=three;
-    canvas=CANVAS;
+
+export var initCamera = (three, CANVAS) => {
+    THREE = three;
+    canvas = CANVAS;
     return initPerspectiveCamera();
     // return  initOrthographicCamera()
 }
+
 function initPerspectiveCamera() {
     if (camera instanceof THREE.OrthographicCamera) {
         let zoom = camera.zoom;
@@ -81,7 +83,7 @@ function initPerspectiveCamera() {
 }
 
 function initOrthographicCamera() {
-    let position=cameraControl.getPosition();
+    let position = cameraControl.getPosition();
     let x = position.x;
     let y = position.y;
     let z = position.z;
@@ -105,9 +107,7 @@ function initOrthographicCamera() {
     return camera;
 }
 
-
-
-export function cameraExchange(index){                 
+export function cameraExchange(index) {
     // onlyDisplayFloor(map.curFloor);
     if (cameraControl.isExchanging === true) {
         return;
@@ -117,7 +117,7 @@ export function cameraExchange(index){
     cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
 
     // let sys = systemControl.state;
-    if (index==2) {
+    if (index == 2) {
         cameraControl.isExchanging = true;
         // initOrthographicCamera(camera.position);
         let distance = dis3(cameraControl.relativeCoordinate, { x: 0, y: 0, z: 0 });
@@ -135,15 +135,15 @@ export function cameraExchange(index){
                 ((distance - cameraControl.relativeCoordinate.z) / distance) * 3000
             )
             .easing(TWEEN.Easing.Quadratic.InOut)
-            .onStart(function () {})
+            .onStart(function () { })
             .onComplete(function () {
-                camera=initOrthographicCamera(camera.position);
+                camera = initOrthographicCamera(camera.position);
                 cameraControl.isExchanging = false;
             })
             .start();
-    } 
-    if(index==3) {
-        camera=initPerspectiveCamera();
+    }
+    if (index == 3) {
+        camera = initPerspectiveCamera();
         let distance = dis3(cameraControl.relativeCoordinate, { x: 0, y: 0, z: 0 });
 
         let v = new THREE.Vector2(
@@ -169,11 +169,11 @@ export function cameraExchange(index){
 
 }
 
-var dis3=(d1,d2)=>{
-    let x=(d1.x-d2.x)**2;
-    let y=(d1.y-d2.y)**2;
-    let z=(d1.z-d2.z)**2;
-    return Math.sqrt(x+y+z);
+var dis3 = (d1, d2) => {
+    let x = (d1.x - d2.x) ** 2;
+    let y = (d1.y - d2.y) ** 2;
+    let z = (d1.z - d2.z) ** 2;
+    return Math.sqrt(x + y + z);
 }
 
 function dragCamera(ev) {

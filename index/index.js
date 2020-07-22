@@ -28,7 +28,7 @@ Page({
             },
         ],
         //模态框是否显示
-        modalFlag: true,
+        modalFlag: false,
         searchTitle: app.map_conf.map_name,
     },
 
