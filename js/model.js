@@ -671,12 +671,22 @@ export function createPathTube(path) {
     scene.add(pathControl.pathGroup);
 }
 
+
+/**
+ * @description 点击设定起点响应事件
+ * @date 2020-07-22
+ * @export
+ */
 export function setStartClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
     showSprite(app.spriteControl.startSprite, selectedPoint, "start");
 }
-
+/**
+ * @description 点击设定终点响应事件
+ * @date 2020-07-22
+ * @export
+ */
 export function setEndClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;

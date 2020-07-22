@@ -146,18 +146,24 @@ main.startBeaconDiscovery = function () {
     });
 };
 
+
+/** 步数改变监测 */
 main.stepChange = function (that) {
     accChange(that);
 }
 
+
+/** 获得起点和终点信息后获得导航路径 */
 main.navigateInit = function () {
     return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
 }
 
+/** 起点设定 */
 main.startClick = function () {
     MODEL.setStartClick();
 }
 
+/** 终点设定 */
 main.endClick = function () {
     MODEL.setEndClick();
 }
