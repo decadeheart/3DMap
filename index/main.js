@@ -31,10 +31,10 @@ main.initMap = function () {
             const THREE = createScopedThreejs(canvas);
             app.canvas = canvas;
             app.THREE = THREE;
-            // MODEL.renderModel(canvas, THREE);
-            // MODEL.camerafix();
-            // MODEL.initPath();
-            // MODEL.loadTargetTextByFloor(6);
+            MODEL.renderModel(canvas, THREE);
+            MODEL.camerafix();
+            MODEL.initPath();
+            // MODEL.loadTargetTextByFloor(app.map.curFloor);
         });
     
     /** 初始化授权 */
