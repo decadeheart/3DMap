@@ -3,10 +3,10 @@ var app = getApp();
 Page({
     data: {
         baseUrl: "https://www.cleverguided.com/iLaN/3D-jxqzf/",
-        dimensionImgUrl: ["../img/2D.png","../img/3D.png"],
+        dimensionImgUrl: ["../img/2D.png", "../img/3D.png"],
         dimension: 3,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: ["../img/1F.png","../img/2F.png","../img/3F.png","../img/4F.png","../img/5F.png","../img/6F.png"],
+        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png", "../img/6F.png"],
         logoUrl: "",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
@@ -19,22 +19,51 @@ Page({
         infoFlag: 0,
         showBlue: false,
         step: 0,
-        buttons: [
-            {
-                type: "primary",
-                className: "",
-                text: "确认",
-                value: 1,
-            },
-        ],
-        //模态框是否显示
-        modalFlag: false,
+        buttons: [{
+            type: "primary",
+            className: "",
+            text: "确认",
+            value: 1,
+        }, ],
+        //模态框是否显示,模态框搜索结果
+        modalFlag: true,
+        searchResult: [],
+        buildingList: [],
+        buildingIndex: 0,
+        buildingData: [],
+        buildingData1D: [],
+        searchHidden: true,
         searchTitle: app.map_conf.map_name,
     },
 
     onLoad: function () {
+        main.initMap();
+        var that = this;
+        main.startBeaconDiscovery().then((res) => {
+            // console.log(res, this);
+            that.setData({
+                showBlue: res.showBlueStatus,
+            });
+        });
+
+        main.getBuildingData().then(buildingDataTmp => {
+            // 将其变成一维数组，方便遍历
+            var eachFloor = (function flatten(arr) {
+                return [].concat(...arr.map(x => Array.isArray(x) ? flatten(x) : x))
+            })(buildingDataTmp[1]);
+            that.setData({
+                buildingList: buildingDataTmp[0],
+                buildingData: buildingDataTmp[1],
+                searchResult: eachFloor,
+                buildingData1D: eachFloor
+            });
+        });
+
+        /** 步数监测 */
+        main.stepChange(that);
         //初始化图片url
         this.setData({
+            modalSearch: this.modalSearch.bind(this),
             // dimensionImgUrl: [
             //     this.data.baseUrl + "ui_img/2D.png",
             //     this.data.baseUrl + "ui_img/3D.png",
@@ -51,17 +80,6 @@ Page({
             // logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
         });
 
-        main.initData();
-        var that = this;
-        main.startBeaconDiscovery().then((res) => {
-            console.log(res, this);
-            that.setData({
-                showBlue: res.showBlueStatus,
-            });
-        });
-
-        /** 步数监测 */
-        main.stepChange(that);
     },
 
     /**
@@ -135,9 +153,7 @@ Page({
     getMyLocation() {
         console.log("我在这");
         main.backToMe();
-        // tts("你好中国");
-        // tts("你好湖北");
-        // tts("你好武汉");
+
     },
     test() {
         this.setData({
@@ -173,6 +189,48 @@ Page({
         // });
     },
     /**
+     * @description 模态框搜索
+     */
+    modalSearch(e) {
+        let searchInput=e.detail.value;
+        searchInput=searchInput.replace(/\s+/g,'');
+        if (searchInput.length!=0) {
+            let tmp = this.data.buildingData1D.filter(item => {
+                var reg = new RegExp(searchInput);
+                return reg.test(item.name) || reg.test(item.name2);
+            });
+            this.setData({
+                searchResult: tmp
+            })
+        }
+        return new Promise(() => {})
+    },
+    /**
+     * @description 搜索提示框隐藏和显示
+     */
+    switchHidden() {
+        this.setData({
+            searchHidden: !this.data.searchHidden
+        })
+    },
+    /**
+     * @description 选中搜索结果后触发
+     */
+    selectResult: function (e) {
+        console.log('select result', e.target.dataset.selected);
+        var target = e.target.dataset.selected;
+        // 对应关闭模态框，显示提示框，修改当前地点的名字
+        this.setData({
+            currentPointName: target.name + target.name2,
+            modalFlag: false,
+            infoFlag: 1
+        });
+        //调用 
+        main.onlyDisplayFloor(parseInt(target.floor))
+        main.setCurClick(target);
+
+    },
+    /**
      * @description 模拟导航
      * @date 2020-07-20
      * @param {*} e 事件
@@ -186,6 +244,7 @@ Page({
         let dis = main.navigateInit();
         this.setData({
             distanceInfo: dis,
+            infoFlag: 3
         });
     },
 

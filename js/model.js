@@ -670,7 +670,20 @@ export function createPathTube(path) {
     pathControl.pathGroup.name = "path";
     scene.add(pathControl.pathGroup);
 }
-
+/**
+ * @description 显示当前选择的地方，并在图上标出
+ * @date 2020-07-22
+ * @export
+ */
+export function setCurClick(point) {
+    if(point!=null){
+        console.log(point)
+        scene.remove(app.spriteControl.curSprite);
+        app.spriteControl.curSprite = null;
+        showSprite(app.spriteControl.startSprite, point, "cur");
+        selectedPoint=point;
+    }
+}
 
 /**
  * @description 点击设定起点响应事件
@@ -681,6 +694,7 @@ export function setStartClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
     showSprite(app.spriteControl.startSprite, selectedPoint, "start");
+    
 }
 /**
  * @description 点击设定终点响应事件
