@@ -36,7 +36,7 @@ main.initData = function () {
             MODEL.renderModel(canvas, THREE);
             MODEL.camerafix();
             MODEL.initPath();
-            MODEL.loadTargetTextByFloor(6);
+            // MODEL.loadTargetTextByFloor(app.map.curFloor);
         });
 
     // 处理数据

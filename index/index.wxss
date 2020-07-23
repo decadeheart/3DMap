@@ -17,8 +17,8 @@
 /* <!-- 精灵容器 --> */
 #font {
     position: absolute;
-    width: 1rpx;
-    height: 1rpx;
+    width: 200rpx;
+    height: 100rpx;
     /* background-color: wheat; */
     z-index: 0;
 }

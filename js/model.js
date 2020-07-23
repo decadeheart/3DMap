@@ -163,23 +163,24 @@ function getByteLen(val) {
     }
     return len / 2;
 }
+
+let texture;
+
 /**
  * @description 创建文字和图片精灵
  * @param {*} message 文字信息
  * @param {*} imageURL 图片地址
  * @returns 返回创建完成的精灵
  */
-function makeSprite(message, imageURL) {
+function makeSprite(canvas, textureLoader, message, imageURL) {
     //为全局变量改名
-    // let THREE = app.THREE;
     let map_conf = app.map_conf;
 
     //字体类型、大小、颜色
     let fontface = "Arial";
     let fontsize = 60;
     let fontColor = "#000000";
-    //创建画布并设置宽高
-    let canvas = app.canvasFont;
+    //获取画布并设置宽高
     let messageLen = getByteLen(message);
     let width = messageLen * fontsize * 2;
     let height = fontsize * 1.3;
@@ -201,11 +202,16 @@ function makeSprite(message, imageURL) {
     canvas.width = width2;
     canvas.height = height2;
     context.putImageData(textdata, (width2 - textWidth) / 2, (height2 - height) / 2);
+   
+
+  
 
     //将canvas转换为图片，方便进行纹理贴图（canvas直接贴图会报没有相应转换函数的错误）
     let dataUrl = canvas.toDataURL("../img/word.png");
     //纹理贴图
-    let texture = new THREE.TextureLoader().load(dataUrl);
+    // let texture = new THREE.TextureLoader().load(dataUrl);
+
+    texture = textureLoader.load(dataUrl);
     //创建精灵
     let spriteMaterial = new THREE.SpriteMaterial({
         map: texture,
@@ -232,61 +238,61 @@ function makeSprite(message, imageURL) {
     spriteMaterial = null;
     // sprite = null;
 
-    //绘制相应图标
-    if (imageURL !== null) {
-        //创建图像实例并设置相关参数
-        let img = canvas.createImage();
-        let imgsize = 64;
-        img.src = imageURL;
-        //加载图片
-        img.onload = function () {
-            //在画布上创建图片原型并绘制
-            let canvas2 = app.canvasImg;
-            let context2 = canvas2.getContext("2d");
-            canvas2.width = imgsize;
-            canvas2.height = imgsize;
-            context2.drawImage(img, 0, 0, imgsize, imgsize);
-            //获取画布的图像信息，一个副本
-            let imagedata = context2.getImageData(0, 0, imgsize, imgsize);
-            //重新设置画布的大小
-            let width3 = maxnum_exp2(Math.max(textWidth, imgsize));
-            let height3 = maxnum_exp2(height + imgsize);
-            canvas.width = width3;
-            canvas.height = height3;
-            context.putImageData(imagedata, (width3 - imgsize) / 2, 0);
-            context.putImageData(textdata, (width3 - textWidth) / 2, imgsize);
-            //转为图片并作为纹理贴图
-            let dataUrl = canvas2.toDataURL("../img/word.png");
-            let texture2 = new THREE.TextureLoader().load(dataUrl);
-            let spriteMaterial = new THREE.SpriteMaterial({
-                map: texture2,
-                depthTest: true,
-            });
-            sprite.material = spriteMaterial;
-            sprite.material.needsUpdate = true;
-            //这句为了防止warning
-            sprite.material.map.minFilter = THREE.LinearFilter;
-            //缩放比例
-            sprite.scale.set(
-                map_conf.imgSpriteScale * (height3 / height2) * (width3 / height3),
-                map_conf.imgSpriteScale * (height3 / height2),
-                1
-            );
-            sprite.initScale = {
-                x: sprite.scale.x,
-                y: sprite.scale.y,
-                z: 1,
-            };
-            //通过重设canvas大小清空内容
-            canvas.width = 0;
-            canvas2.width = 0;
-            texture2.dispose();
+    // //绘制相应图标
+    // if (imageURL !== null) {
+    //     //创建图像实例并设置相关参数
+    //     let img = canvas.createImage();
+    //     let imgsize = 64;
+    //     img.src = imageURL;
+    //     //加载图片
+    //     img.onload = function () {
+    //         //在画布上创建图片原型并绘制
+    //         let canvas2 = app.canvasImg;
+    //         let context2 = canvas2.getContext("2d");
+    //         canvas2.width = imgsize;
+    //         canvas2.height = imgsize;
+    //         context2.drawImage(img, 0, 0, imgsize, imgsize);
+    //         //获取画布的图像信息，一个副本
+    //         let imagedata = context2.getImageData(0, 0, imgsize, imgsize);
+    //         //重新设置画布的大小
+    //         let width3 = maxnum_exp2(Math.max(textWidth, imgsize));
+    //         let height3 = maxnum_exp2(height + imgsize);
+    //         // canvas.width = width3;
+    //         // canvas.height = height3;
+    //         context.putImageData(imagedata, (width3 - imgsize) / 2, 0);
+    //         context.putImageData(textdata, (width3 - textWidth) / 2, imgsize);
+    //         //转为图片并作为纹理贴图
+    //         let dataUrl = canvas2.toDataURL("../img/word.png");
+    //         let texture2 = new THREE.TextureLoader().load(dataUrl);
+    //         let spriteMaterial = new THREE.SpriteMaterial({
+    //             map: texture2,
+    //             depthTest: true,
+    //         });
+    //         sprite.material = spriteMaterial;
+    //         sprite.material.needsUpdate = true;
+    //         //这句为了防止warning
+    //         sprite.material.map.minFilter = THREE.LinearFilter;
+    //         //缩放比例
+    //         sprite.scale.set(
+    //             map_conf.imgSpriteScale * (height3 / height2) * (width3 / height3),
+    //             map_conf.imgSpriteScale * (height3 / height2),
+    //             1
+    //         );
+    //         sprite.initScale = {
+    //             x: sprite.scale.x,
+    //             y: sprite.scale.y,
+    //             z: 1,
+    //         };
+    //         //通过重设canvas大小清空内容
+    //         // canvas.width = 0;
+    //         // canvas2.width = 0;
+    //         texture2.dispose();
 
-            texture2 = null;
-            spriteMaterial = null;
-            sprite = null;
-        };
-    }
+    //         texture2 = null;
+    //         spriteMaterial = null;
+    //         sprite = null;
+    //     };
+    // }
     return sprite;
 }
 /**
@@ -315,7 +321,7 @@ function dispose(parent, child) {
     }
     if (child instanceof THREE.Mesh || child instanceof THREE.Line || child instanceof THREE.Sprite) {
         if (child.material.map) {
-            child.material.map.dispose(); 
+            child.material.map.dispose();
             // console.log("纹理清除！");
         }
         child.material.dispose();
@@ -335,6 +341,17 @@ function dispose(parent, child) {
  * @export
  */
 export function loadTargetTextByFloor(floor) {
+    app.canvasFont.width = 512;
+    app.canvasFont.height = 128;
+    console.log(app.canvasFont.width);
+    console.log(app.canvasFont.height);
+    // wx.getStorageInfo({
+    //     success(res) {
+    //         console.log(res.keys)
+    //         console.log(res.currentSize)
+    //         console.log(res.limitSize)
+    //     }
+    // })
     // console.log(app.curSpriteGroup);
     // if(!!app.curSpriteGroup) deleteObj(app.curSpriteGroup);
     if (!!app.curSpriteGroup) dispose(scene, app.curSpriteGroup);
@@ -347,18 +364,18 @@ export function loadTargetTextByFloor(floor) {
     let POItarget = app.POItarget;
     // let THREE = app.THREE;
     //创建精灵组
-
+    var textureLoader = new THREE.TextureLoader();
     app.curSpriteGroup = new THREE.Group();
     let spriteGroup = app.curSpriteGroup;
     let sprite;
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
         if (item.floor == floor) {
-            
+
             if (item.img) {
-                sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
+                sprite = makeSprite(app.canvasFont, textureLoader, item.name, app.map_conf.img_dir + item.img);
             } else {
-                sprite = makeSprite(item.name, null);
+                sprite = makeSprite(app.canvasFont, textureLoader, item.name, null);
             }
             sprite.level = item.level;
             sprite.position.set(item.x, item.y, item.z + 5);
@@ -695,6 +712,7 @@ export function setEndClick() {
 
 export function backToMe() {
     let me = app.me;
+    console.log(me);
     displayPoi(me.floor, me.position);
 }
 
@@ -722,43 +740,46 @@ export function camerafix() {
 }
 
 function displayPoi(floor, poi) {
-    let cameraControl = ca.cameraControl;
-    let map = app.map;
-    let map_conf = app.map_conf;
-    console.log(floor);
-    if (typeof floor != 'number') {
-        floor = parseInt(floor);
-    }
-    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
-    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
-    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-    if (poi != null) {
-        cameraControl.focusPoint.x = poi.x;
-        cameraControl.focusPoint.y = poi.y;
-    }
+    // let cameraControl = ca.cameraControl;
+    // let map = app.map;
+    // let map_conf = app.map_conf;
+    // console.log(floor);
+    // if (typeof floor != 'number') {
+    //     floor = parseInt(floor);
+    // }
+    // cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
+    // cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
+    // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+    // if (poi != null) {
+    //     cameraControl.focusPoint.x = poi.x;
+    //     cameraControl.focusPoint.y = poi.y;
+    // }
 
-    scene.children.forEach(function (obj, i) {
-        if (typeof obj.floor != 'undefined') {
-            let floorOfObj = obj.floor;
-            if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
-                obj.visible = true;
-            } else {
-                obj.visible = false;
-            }
-        }
-        if (obj.name == 'path') {
-            if (obj.type == 'Group') {
-                obj.children.forEach(function (o) {
-                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
-                });
-            }
-        }
-    });
-    map.curFloor = floor;
-    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+    // scene.children.forEach(function (obj, i) {
+    //     if (typeof obj.floor != 'undefined') {
+    //         let floorOfObj = obj.floor;
+    //         if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
+    //             obj.visible = true;
+    //         } else {
+    //             obj.visible = false;
+    //         }
+    //     }
+    //     if (obj.name == 'path') {
+    //         if (obj.type == 'Group') {
+    //             obj.children.forEach(function (o) {
+    //                 parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
+    //             });
+    //         }
+    //     }
+    // });
+    // map.curFloor = floor;
+    // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
 
-    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
-    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+    // camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
+    // camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
+    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+    // controls.update();
+    camera.position.set(0, -500, 1000);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
     controls.update();
 }

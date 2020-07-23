@@ -33,6 +33,9 @@ export function loadModel(scene) {
             loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '_' + building.building_id + '_' + i + '.glb', function (glb) {
                 //添加建筑物到场景里
                 let building = glb.scene;
+                //设置可见性
+                // if (i == 1) building.visible = true;
+                // else building.visible = false;
                 scene.add(building);
                 // 设置物体参数
                 building.name = building.building_id + '_' + i + "_" + building.name;
