@@ -270,6 +270,7 @@ function navigate(nodeList, start, end) {
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
     navigation(nodeList);
     console.log("结果: ", resultParent);
+    app.resultParent = resultParent;
 
     MODEL.createPathTube(resultParent);
 

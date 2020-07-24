@@ -5,6 +5,8 @@ import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import accChange from "../js/motionDetection";
+import { autoMoving } from "../js/simNavigate";
+import * as TWEEN from "../util/tween.min"; //动画操作
 
 var app = getApp();
 var main = {};
@@ -151,4 +153,7 @@ main.getBuildingData= ()=>{
     })
 }
 
+main.autoMove = (path)=> {
+    autoMoving(path);
+} 
 export default main;
