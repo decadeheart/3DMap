@@ -26,7 +26,7 @@ Page({
             value: 1,
         }, ],
         //模态框是否显示,模态框搜索结果
-        modalFlag: true,
+        modalFlag: false,
         searchResult: [],
         buildingList: [],
         buildingIndex: 0,

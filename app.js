@@ -4,6 +4,8 @@ App({
     canvasFont: null,
     canvasImg: null,
     THREE: null,
+   
+    canvasSprite: null,
     curSpriteGroup: null,
     beaconCoordinate: [],
     me: [],
@@ -92,7 +94,7 @@ App({
         bool_isMapModelReady: false,
         stepCount: 0,
         preStep: 0,
-        curFloor: 1,
+        curFloor: 6,
         mapOrientation: null,
         deviceOrientation: 0,
         groundMeshes: [],

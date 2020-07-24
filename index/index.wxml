@@ -1,10 +1,9 @@
 <view class="container">
 	<!-- 地图容器 -->
 	<canvas type="webgl" id="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap"></canvas>
-	<!-- 文字精灵容器 -->
-	<canvas type="2d" id="font" canvas-id="test"></canvas>
-	<!-- 图片精灵容器 -->
-	<canvas type="2d" id="img"></canvas>
+	<!-- 精灵容器 -->
+	<canvas type="2d" id="sprite"></canvas>
+
 
 	<!-- 正上方搜索框 16%-->
 	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="switchModal">
