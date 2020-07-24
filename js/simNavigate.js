@@ -1,4 +1,5 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
+import * as MODEL from "../js/model";
 import userControl from "./user"; //用户贴图
 
 
@@ -20,22 +21,21 @@ export function autoMoving(path) {
         userControl.changePosition(path[0].x, path[0].y, null, "direction");
         return;
     }
+    MODEL.addUser();
     let me =app.me
     let THREE = app.THREE
     /** 首先从我的当前位置移动到导航路径的起点 */
 
-    let meTween = new TWEEN.Tween(me.position).to({
+    new TWEEN.Tween(me.position).to({
         x: path[0].x,
         y: path[0].y,
         z: me.position.z
     },
     dis3(me.position, path[0]) * 100
-    )
-    //meTween.onStop(rotate(0))
-    meTween.start();
-    //meTween.update();
-    console.log(meTween);
-    userControl.changePosition(path[0].x,path[0].y, me.position.z, "animation");
+    ).onStop(rotate(0)).start();
+
+    //userControl.changePosition(path[0].x,path[0].y, me.position.z, "animation");
+    MODEL.animate()
 
     /**
      * @description 在导航路径上图标向前移动
