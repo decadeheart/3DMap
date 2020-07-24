@@ -31,9 +31,9 @@ main.initMap = function () {
             const THREE = createScopedThreejs(canvas);
             app.canvas = canvas;
             app.THREE = THREE;
-            MODEL.renderModel(canvas, THREE);
-            MODEL.camerafix();
-            MODEL.initPath();
+            // MODEL.renderModel(canvas, THREE);
+            // MODEL.camerafix();
+            // MODEL.initPath();
             // MODEL.loadTargetTextByFloor(app.map.curFloor);
         });
     

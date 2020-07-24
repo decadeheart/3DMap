@@ -32,20 +32,16 @@ Page({
         buildingIndex: 0,
         buildingData: [],
         buildingData1D: [],
+        buildingRoomGroup:[],
         searchHidden: true,
+        floorIndex:0,
+        // tabSelectStyle:[],
         searchTitle: app.map_conf.map_name,
     },
 
     onLoad: function () {
         main.initMap();
         var that = this;
-        main.startBeaconDiscovery().then((res) => {
-            // console.log(res, this);
-            that.setData({
-                showBlue: res.showBlueStatus,
-            });
-        });
-
         main.getBuildingData().then(buildingDataTmp => {
             // 将其变成一维数组，方便遍历
             var eachFloor = (function flatten(arr) {
@@ -54,31 +50,40 @@ Page({
             that.setData({
                 buildingList: buildingDataTmp[0],
                 buildingData: buildingDataTmp[1],
+                buildingRoomGroup:buildingDataTmp[2],
                 searchResult: eachFloor,
-                buildingData1D: eachFloor
+                buildingData1D: eachFloor,
+                modalSearch: that.modalSearch.bind(that),
             });
+
+            main.startBeaconDiscovery().then((res) => {
+                that.setData({
+                    showBlue: res.showBlueStatus,
+                })
+            });
+            
         });
 
         /** 步数监测 */
         main.stepChange(that);
         //初始化图片url
-        this.setData({
-            modalSearch: this.modalSearch.bind(this),
-            // dimensionImgUrl: [
-            //     this.data.baseUrl + "ui_img/2D.png",
-            //     this.data.baseUrl + "ui_img/3D.png",
-            // ],
-            // allFloorImgUrl: this.data.baseUrl + "ui_img/more.png",
-            // floorImgUrl: [
-            //     this.data.baseUrl + "ui_img/1F.png",
-            //     this.data.baseUrl + "ui_img/2F.png",
-            //     this.data.baseUrl + "ui_img/3F.png",
-            //     this.data.baseUrl + "ui_img/4F.png",
-            //     this.data.baseUrl + "ui_img/5F.png",
-            //     this.data.baseUrl + "ui_img/6F.png",
-            // ],
-            // logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
-        });
+        // this.setData({
+        //     modalSearch: this.modalSearch.bind(this),
+        //     dimensionImgUrl: [
+        //         this.data.baseUrl + "ui_img/2D.png",
+        //         this.data.baseUrl + "ui_img/3D.png",
+        //     ],
+        //     allFloorImgUrl: this.data.baseUrl + "ui_img/more.png",
+        //     floorImgUrl: [
+        //         this.data.baseUrl + "ui_img/1F.png",
+        //         this.data.baseUrl + "ui_img/2F.png",
+        //         this.data.baseUrl + "ui_img/3F.png",
+        //         this.data.baseUrl + "ui_img/4F.png",
+        //         this.data.baseUrl + "ui_img/5F.png",
+        //         this.data.baseUrl + "ui_img/6F.png",
+        //     ],
+        //     logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
+        // });
 
     },
 
@@ -231,6 +236,35 @@ Page({
 
     },
     /**
+     * @description 搜索栏切换tab
+     * @date 2020-07-24
+     * @param {*} e 事件
+     */
+    switchTap(e){
+        let index=e.target.dataset.tapindex;
+        // let style=[];
+        // style[index]="color: rgb(92,99,231);border-bottom:5rpx solid rgb(92,99,231);"
+        this.setData({
+            buildingIndex:index,
+            // tabSelectStyle:style
+        });
+
+    },
+    /**
+     * @description 显示该楼层的具体房间，如果重复选择该层，则隐藏
+     * @date 2020-07-24
+     * @param {*} e 事件
+     */
+    showFloor(e){
+        let index=e.currentTarget.dataset.floorindex;
+        index= index==this.data.floorIndex?-1:index;
+        // console.log(index);
+        this.setData({
+            floorIndex:index
+        })
+        
+    },
+    /**
      * @description 模拟导航
      * @date 2020-07-20
      * @param {*} e 事件
@@ -294,19 +328,16 @@ Page({
         let self = this;
         setTimeout(function () {
             if (!!app.spriteControl.endSprite) {
+                let dis = main.navigateInit();
                 self.setData({
                     navFlag: 2,
                     infoFlag: 2,
-                });
-                let dis = main.navigateInit();
-                self.setData({
                     distanceInfo: dis,
+                    startPointName: app.curName
                 });
             }
         }, 50);
-        this.setData({
-            startPointName: app.curName,
-        });
+
     },
 
     /**
@@ -318,19 +349,14 @@ Page({
         let self = this;
         setTimeout(function () {
             if (!!app.spriteControl.startSprite) {
+                let dis = main.navigateInit();
                 self.setData({
                     navFlag: 2,
                     infoFlag: 2,
-                });
-                let dis = main.navigateInit();
-                self.setData({
                     distanceInfo: dis,
+                    endPointName: app.curName
                 });
             }
         }, 50);
-
-        this.setData({
-            endPointName: app.curName,
-        });
     },
 });
