@@ -25,12 +25,14 @@ export function renderModel(canvasDom, Three) {
     registerGLTFLoader(THREE);
     init();
     animate();
+
     /**
      * @description 初始化场景、相机等元素
      */
     function init() {
         //设置场景，背景默认为黑色，通过background设置背景色
         scene = new THREE.Scene();
+
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
 
@@ -62,21 +64,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         //loadTargetText(scene);
 
-        //加载用户贴图
-        let textureLoader = new THREE.TextureLoader();
-        textureLoader.load("../img/me.png", function (texture) {
-            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
-            let material = new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
-                map: texture,
-                transparent: true,
-                opacity: 1,
-                depthTest: false,
-            });
-            app.me = new THREE.Mesh(usergeometry, material);
-            userControl.initUser();
-            scene.add(app.me);
-        });
+        addUser();
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -101,7 +89,33 @@ export function renderModel(canvasDom, Three) {
         //TWEEN.update();
     }
 }
+export function getScene(){
+    return scene;
+}
 
+export function animate() {
+    canvas.requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+    TWEEN.update();    
+}
+
+export function addUser() {
+        //加载用户贴图
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load("../img/me.png", function (texture) {
+            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
+            let material = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: texture,
+                transparent: true,
+                opacity: 1,
+                depthTest: false,
+            });
+            app.me = new THREE.Mesh(usergeometry, material);
+            userControl.initUser();
+            scene.add(app.me);
+        });
+}
 var caCoord = {};
 /**
  * @description 2D-3D视角切换
@@ -128,269 +142,6 @@ export function cameraExchange(index) {
     }
     camera.updateProjectionMatrix();
     controls.update();
-}
-
-/**
- * @description 计算转二进制后天花板数（如：5=>101的天花板数为8=>1000）
- * @param {*} x 数字
- * @returns 见描述
- */
-function maxnum_exp2(x) {
-    let position,
-        num = 1;
-    if (x !== 0) {
-        for (position = 0; x !== 0; ++position) {
-            x >>= 1;
-        }
-    }
-    num = 1 << position;
-    return num;
-}
-/**
- * @description 获取文字长度
- * @param {*} val 文字信息
- * @returns 返回文字长度
- */
-function getByteLen(val) {
-    let len = 0;
-    for (let i = 0; i < val.length; i++) {
-        let a = val.charAt(i);
-        if (a.match(/[^\x00-\xff]/gi) != null) {
-            len += 2;
-        } else {
-            len += 1;
-        }
-    }
-    return len / 2;
-}
-
-let texture;
-
-/**
- * @description 创建文字和图片精灵
- * @param {*} message 文字信息
- * @param {*} imageURL 图片地址
- * @returns 返回创建完成的精灵
- */
-function makeSprite(canvas, textureLoader, message, imageURL) {
-    //为全局变量改名
-    let map_conf = app.map_conf;
-
-    //字体类型、大小、颜色
-    let fontface = "Arial";
-    let fontsize = 60;
-    let fontColor = "#000000";
-    //获取画布并设置宽高
-    let messageLen = getByteLen(message);
-    let width = messageLen * fontsize * 2;
-    let height = fontsize * 1.3;
-    canvas.width = width;
-    canvas.height = height;
-    //在画布上创建字体原型
-    let context = canvas.getContext("2d");
-    context.fillStyle = fontColor;
-    context.font = fontsize + "px " + fontface;
-    context.fillText(message, 0, fontsize);
-    //获取文字的大小数据，高度取决于文字的大小
-    let textWidth = context.measureText(message).width;
-    //获取画布的图像信息，一个副本
-    let textdata = context.getImageData(0, 0, textWidth, height);
-
-    //重新设置画布的大小
-    let width2 = maxnum_exp2(textWidth);
-    let height2 = maxnum_exp2(height);
-    canvas.width = width2;
-    canvas.height = height2;
-    context.putImageData(textdata, (width2 - textWidth) / 2, (height2 - height) / 2);
-   
-
-  
-
-    //将canvas转换为图片，方便进行纹理贴图（canvas直接贴图会报没有相应转换函数的错误）
-    let dataUrl = canvas.toDataURL("../img/word.png");
-    //纹理贴图
-    // let texture = new THREE.TextureLoader().load(dataUrl);
-
-    texture = textureLoader.load(dataUrl);
-    //创建精灵
-    let spriteMaterial = new THREE.SpriteMaterial({
-        map: texture,
-        depthTest: true,
-    });
-    let sprite = new THREE.Sprite(spriteMaterial);
-    //这句为了防止warning
-    sprite.material.map.minFilter = THREE.LinearFilter;
-    //缩放比例
-    sprite.scale.set(
-        (map_conf.fontSpriteScale * width2) / height2,
-        map_conf.fontSpriteScale,
-        1
-    );
-    sprite.initScale = {
-        x: (map_conf.fontSpriteScale * width2) / height2,
-        y: map_conf.fontSpriteScale,
-        z: 1,
-    };
-    //通过重设canvas大小清空内容（因为需要的内容已经传到sprite中）
-    canvas.width = 0;
-    texture.dispose();
-    texture = null;
-    spriteMaterial = null;
-    // sprite = null;
-
-    // //绘制相应图标
-    // if (imageURL !== null) {
-    //     //创建图像实例并设置相关参数
-    //     let img = canvas.createImage();
-    //     let imgsize = 64;
-    //     img.src = imageURL;
-    //     //加载图片
-    //     img.onload = function () {
-    //         //在画布上创建图片原型并绘制
-    //         let canvas2 = app.canvasImg;
-    //         let context2 = canvas2.getContext("2d");
-    //         canvas2.width = imgsize;
-    //         canvas2.height = imgsize;
-    //         context2.drawImage(img, 0, 0, imgsize, imgsize);
-    //         //获取画布的图像信息，一个副本
-    //         let imagedata = context2.getImageData(0, 0, imgsize, imgsize);
-    //         //重新设置画布的大小
-    //         let width3 = maxnum_exp2(Math.max(textWidth, imgsize));
-    //         let height3 = maxnum_exp2(height + imgsize);
-    //         // canvas.width = width3;
-    //         // canvas.height = height3;
-    //         context.putImageData(imagedata, (width3 - imgsize) / 2, 0);
-    //         context.putImageData(textdata, (width3 - textWidth) / 2, imgsize);
-    //         //转为图片并作为纹理贴图
-    //         let dataUrl = canvas2.toDataURL("../img/word.png");
-    //         let texture2 = new THREE.TextureLoader().load(dataUrl);
-    //         let spriteMaterial = new THREE.SpriteMaterial({
-    //             map: texture2,
-    //             depthTest: true,
-    //         });
-    //         sprite.material = spriteMaterial;
-    //         sprite.material.needsUpdate = true;
-    //         //这句为了防止warning
-    //         sprite.material.map.minFilter = THREE.LinearFilter;
-    //         //缩放比例
-    //         sprite.scale.set(
-    //             map_conf.imgSpriteScale * (height3 / height2) * (width3 / height3),
-    //             map_conf.imgSpriteScale * (height3 / height2),
-    //             1
-    //         );
-    //         sprite.initScale = {
-    //             x: sprite.scale.x,
-    //             y: sprite.scale.y,
-    //             z: 1,
-    //         };
-    //         //通过重设canvas大小清空内容
-    //         // canvas.width = 0;
-    //         // canvas2.width = 0;
-    //         texture2.dispose();
-
-    //         texture2 = null;
-    //         spriteMaterial = null;
-    //         sprite = null;
-    //     };
-    // }
-    return sprite;
-}
-/**
- * @description 删除模型中的物体并清除缓存
- * @param myObjects 待删除的物体
- * @returns
- */
-function deleteObj(group) {
-    // 删除掉所有的模型组内的mesh
-    group.traverse(function (item) {
-        if (item instanceof THREE.Sprite) {
-            item.geometry.dispose(); // 删除几何体
-            item.material.dispose(); // 
-            console.log("delete!");
-        }
-    });
-    scene.remove(group);
-}
-
-function dispose(parent, child) {
-    if (child.children.length) {
-        let arr = child.children.filter(x => x);
-        arr.forEach(a => {
-            dispose(child, a)
-        })
-    }
-    if (child instanceof THREE.Mesh || child instanceof THREE.Line || child instanceof THREE.Sprite) {
-        if (child.material.map) {
-            child.material.map.dispose();
-            // console.log("纹理清除！");
-        }
-        child.material.dispose();
-        child.geometry.dispose();
-        // renderer.deallocateObject(child);
-    } else if (child.material) {
-        child.material.dispose();
-    }
-    child.remove();
-    child = null;
-    parent.remove(child);
-    // console.log("delete!");
-}
-
-/**
- * @description 加载所有地点名称及图标精灵并显示在scene中
- * @export
- */
-export function loadTargetTextByFloor(floor) {
-    app.canvasFont.width = 512;
-    app.canvasFont.height = 128;
-    console.log(app.canvasFont.width);
-    console.log(app.canvasFont.height);
-    // wx.getStorageInfo({
-    //     success(res) {
-    //         console.log(res.keys)
-    //         console.log(res.currentSize)
-    //         console.log(res.limitSize)
-    //     }
-    // })
-    // console.log(app.curSpriteGroup);
-    // if(!!app.curSpriteGroup) deleteObj(app.curSpriteGroup);
-    if (!!app.curSpriteGroup) dispose(scene, app.curSpriteGroup);
-    scene.remove(app.curSpriteGroup);
-    // console.log(app.curSpriteGroup);
-    // console.log(renderer.info);
-    // renderer.deallocateTexture(texture);
-    // console.log(renderer.info);
-    //为全局变量改名
-    let POItarget = app.POItarget;
-    // let THREE = app.THREE;
-    //创建精灵组
-    var textureLoader = new THREE.TextureLoader();
-    app.curSpriteGroup = new THREE.Group();
-    let spriteGroup = app.curSpriteGroup;
-    let sprite;
-    //添加精灵到精灵组
-    POItarget.forEach(function (item) {
-        if (item.floor == floor) {
-
-            if (item.img) {
-                sprite = makeSprite(app.canvasFont, textureLoader, item.name, app.map_conf.img_dir + item.img);
-            } else {
-                sprite = makeSprite(app.canvasFont, textureLoader, item.name, null);
-            }
-            sprite.level = item.level;
-            sprite.position.set(item.x, item.y, item.z + 5);
-            //设置参数
-            sprite.floor = item.floor;
-            sprite.center = new THREE.Vector2(0.5, 0.5);
-            spriteGroup.add(sprite);
-        }
-    });
-    spriteGroup.name = "text";
-
-    scene.add(spriteGroup);
-    spriteGroup = null;
-    // spriteControl.targetSprites.push(spriteGroup);
-    // console.log(scene);
 }
 
 /**
@@ -610,6 +361,8 @@ export function onlyDisplayFloor(floor) {
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     // console.log(scene);
+    scene.remove(app.me);
+    addUser();
 }
 
 /**
@@ -693,12 +446,12 @@ export function createPathTube(path) {
  * @export
  */
 export function setCurClick(point) {
-    if(point!=null){
+    if (point != null) {
         console.log(point)
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
         showSprite(app.spriteControl.startSprite, point, "cur");
-        selectedPoint=point;
+        selectedPoint = point;
     }
 }
 
@@ -711,7 +464,7 @@ export function setStartClick() {
     scene.remove(app.spriteControl.curSprite);
     app.spriteControl.curSprite = null;
     showSprite(app.spriteControl.startSprite, selectedPoint, "start");
-    
+
 }
 /**
  * @description 点击设定终点响应事件

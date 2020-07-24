@@ -12,23 +12,14 @@
     width: 100%;
     height: 100%;
     /* background-color: wheat; */
-    z-index: 0;
+    z-index: 1;
 }
 
 /* <!-- 精灵容器 --> */
-#font {
-    position: absolute;
-    width: 200rpx;
-    height: 100rpx;
-    /* background-color: wheat; */
-    z-index: 0;
-}
-
-#img {
+#sprite {
     position: fixed;
     width: 1rpx;
     height: 1rpx;
-    /* background-color: wheat; */
     z-index: 0;
 }
 

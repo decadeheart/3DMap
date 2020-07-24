@@ -26,7 +26,7 @@ Page({
             value: 1,
         }, ],
         //模态框是否显示,模态框搜索结果
-        modalFlag: true,
+        modalFlag: false,
         searchResult: [],
         buildingList: [],
         buildingIndex: 0,
@@ -274,12 +274,7 @@ Page({
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;
-
-        let dis = main.navigateInit();
-        this.setData({
-            distanceInfo: dis,
-            infoFlag: 3
-        });
+        main.autoMove(app.resultParent)
     },
 
     touchTap(e) {

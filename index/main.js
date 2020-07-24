@@ -1,10 +1,13 @@
 import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
+import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import accChange from "../js/motionDetection";
+import { autoMoving } from "../js/simNavigate";
+import * as TWEEN from "../util/tween.min"; //动画操作
 
 var app = getApp();
 var main = {};
@@ -12,16 +15,10 @@ main.initMap = function () {
 
     //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
     wx.createSelectorQuery()
-        .select("#font")
+        .select("#sprite")
         .node()
         .exec((res) => {
-            app.canvasFont = res[0].node;
-        });
-    wx.createSelectorQuery()
-        .select("#img")
-        .node()
-        .exec((res) => {
-            app.canvasImg = res[0].node;
+            app.canvasSprite = res[0].node;
         });
     wx.createSelectorQuery()
         .select("#map")
@@ -31,12 +28,12 @@ main.initMap = function () {
             const THREE = createScopedThreejs(canvas);
             app.canvas = canvas;
             app.THREE = THREE;
-            // MODEL.renderModel(canvas, THREE);
-            // MODEL.camerafix();
-            // MODEL.initPath();
-            // MODEL.loadTargetTextByFloor(app.map.curFloor);
+            MODEL.renderModel(canvas, THREE);
+            MODEL.camerafix();
+            MODEL.initPath();
+            SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
         });
-    
+
     /** 初始化授权 */
     wx.getSetting({
         success(res) {
@@ -62,7 +59,7 @@ main.displayAllFloor = function () {
 };
 main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
-    MODEL.loadTargetTextByFloor(floor);
+    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
@@ -143,12 +140,15 @@ main.endClick = function () {
  * @date 2020-07-23
  * @return 格式化后的数据 [[],[]]
  */
-main.getBuildingData= ()=>{
-    return new Promise((resolve,reject)=>{
-        initData.then(res=>{
+main.getBuildingData = () => {
+    return new Promise((resolve, reject) => {
+        initData.then(res => {
             resolve(res);
         })
     })
 }
 
+main.autoMove = (path)=> {
+    autoMoving(path);
+} 
 export default main;
