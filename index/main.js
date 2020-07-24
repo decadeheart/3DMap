@@ -1,29 +1,22 @@
 import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
+import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
-import { initData } from "../js/data";
+import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import accChange from "../js/motionDetection";
 
 var app = getApp();
-var nodeList;
-
 var main = {};
-main.initData = function () {
+main.initMap = function () {
 
     //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
     wx.createSelectorQuery()
-        .select("#font")
+        .select("#sprite")
         .node()
         .exec((res) => {
-            app.canvasFont = res[0].node;
-        });
-    wx.createSelectorQuery()
-        .select("#img")
-        .node()
-        .exec((res) => {
-            app.canvasImg = res[0].node;
+            app.canvasSprite = res[0].node;
         });
     wx.createSelectorQuery()
         .select("#map")
@@ -36,41 +29,9 @@ main.initData = function () {
             MODEL.renderModel(canvas, THREE);
             MODEL.camerafix();
             MODEL.initPath();
-            // MODEL.loadTargetTextByFloor(app.map.curFloor);
+            SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
         });
 
-    // 处理数据
-    initData.then((res) => {
-        let data = res.data;
-        // console.log(data);
-        nodeList = data.nodeList;
-
-        let target = data.target;
-        app.beaconCoordinate = data.beaconCoordinate;
-
-        app.nodeList = nodeList;
-
-        for (let build in target) {
-            for (let floor in target[build]) {
-                target[build][floor].forEach(function (item) {
-                    item.z = (item.floor - 1) * app.map_conf.layerHeight;
-                    item.floor = parseInt(floor);
-                    item.building = build;
-                    app.POItarget.push(item);
-                });
-            }
-        }
-
-        nodeList.forEach(function (node) {
-            node.z = (node.floor - 1) * app.map_conf.layerHeight;
-        });
-        app.beaconCoordinate.forEach(function (node) {
-            node.z = (node.floor - 1) * app.map_conf.layerHeight;
-        });
-    }),
-        (err) => {
-            console.log(err);
-        };
     /** 初始化授权 */
     wx.getSetting({
         success(res) {
@@ -96,7 +57,7 @@ main.displayAllFloor = function () {
 };
 main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
-    MODEL.loadTargetTextByFloor(floor);
+    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
@@ -157,6 +118,10 @@ main.stepChange = function (that) {
 main.navigateInit = function () {
     return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
 }
+/** 起点设定 */
+main.setCurClick = function (point) {
+    MODEL.setCurClick(point);
+}
 
 /** 起点设定 */
 main.startClick = function () {
@@ -167,4 +132,18 @@ main.startClick = function () {
 main.endClick = function () {
     MODEL.setEndClick();
 }
+
+/**
+ * @description 通过data.js 向服务器获取数据集、初始化数据
+ * @date 2020-07-23
+ * @return 格式化后的数据 [[],[]]
+ */
+main.getBuildingData = () => {
+    return new Promise((resolve, reject) => {
+        initData.then(res => {
+            resolve(res);
+        })
+    })
+}
+
 export default main;

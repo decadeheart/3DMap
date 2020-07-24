@@ -8,25 +8,17 @@
 
 /* <!-- 地图容器 --> */
 #map {
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     /* background-color: wheat; */
     z-index: 0;
 }
 /* <!-- 精灵容器 --> */
-#font {
-    position: absolute;
+#sprite {
+    position: fixed;
     width: 1rpx;
     height: 1rpx;
-    /* background-color: wheat; */
-    z-index: 0;
-}
-#img {
-    position: absolute;
-    width: 1rpx;
-    height: 1rpx;
-    /* background-color: wheat; */
     z-index: 0;
 }
 
@@ -294,16 +286,16 @@
     width: 70%;
 }
 
-.detail-info text:first-child {
+.detail-info text:nth-child(-n+2) {
     display: inline-block;
-    height: 60%;
+    height: 30%;
     width: 80%;
     font-size: 32rpx;
     text-align: center;
     font-weight: bold;
 }
 
-.detail-info text:nth-child(2) {
+.detail-info text:last-child {
     display: inline-block;
     height: 40%;
     width: 80%;
@@ -374,11 +366,13 @@
     left: 0;
     margin: 4%;
     width: 92%;
-    height: 80%;
+    height: 90%;
     background-color: #fff;
     border-radius: 10rpx;
+    box-shadow: 0 2rpx 2rpx #eee;
     z-index: 21;
 }
+/* 模态框搜索栏 */
 .search-header{
     position: relative;
     display: flex;
@@ -400,4 +394,30 @@
 }
 #search-bar .weui-search-bar .weui-search-bar__form{
     border: 3rpx solid #eee;
+}
+
+.search-result{
+    position: absolute;
+    left: 3%;
+    overflow: hidden;
+    width: 93%;
+    height: 61.8%;
+    background-color:white;
+    border: 2rpx solid #ccc ;
+    border-radius: 10rpx;
+    box-shadow: 0 2rpx 2rpx #ccc;
+    z-index: 23;
+    transition: all 1s;
+}
+.search-result scroll-view view{
+    padding: 4rpx;
+    padding-left: 40rpx;
+}
+.search-result scroll-view view:hover{
+  background-color: skyblue; 
+}
+.search-body{
+    position: absolute;
+    top: 0;
+    z-index: 22;
 }

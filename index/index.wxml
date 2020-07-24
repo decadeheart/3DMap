@@ -1,10 +1,9 @@
 <view class="container">
 	<!-- 地图容器 -->
 	<canvas type="webgl" id="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap"></canvas>
-	<!-- 文字精灵容器 -->
-	<canvas type="2d" id="font" canvas-id="test"></canvas>
-	<!-- 图片精灵容器 -->
-	<canvas type="2d" id="img"></canvas>
+	<!-- 精灵容器 -->
+	<canvas type="2d" id="sprite"></canvas>
+
 
 	<!-- 正上方搜索框 16%-->
 	<view wx:if="{{ navFlag == 1 }}" class="search" bindtap="switchModal">
@@ -70,14 +69,14 @@
 			<!-- <button id="navigating-btn-go" size="mini" hover-class="btn-hover">到这去</button> -->
 		</view>
 		<view class="settingBox">
-			<view  bindtap="setStartPoint">
+			<view bindtap="setStartPoint">
 				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(133, 212, 166)"></mp-icon>设为起点
 			</view>
 			<view bindtap="setEndPoint">
-				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)" ></mp-icon>设为终点
+				<mp-icon type="field" icon="location" size="{{ 20 }} " color="rgb(220, 95, 90)"></mp-icon>设为终点
 			</view>
 			<view bindtap="goThere">
-				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)" ></mp-icon>到这去
+				<mp-icon type="field" icon="star" size="{{ 20 }} " color="rgb(72, 131, 246)"></mp-icon>到这去
 			</view>
 		</view>
 	</view>
@@ -85,7 +84,8 @@
 	<!-- 开始导航、模拟导航 -->
 	<view wx:elif="{{ infoFlag == 2 }}" class="navigating-simu">
 		<view class="detail-info">
-			<text> 从{{ startPointName }} 到 {{endPointName}}</text>
+			<text> 从{{ startPointName }} </text>
+			<text> 到{{endPointName}} </text>
 			<text> {{ distanceInfo }}</text>
 		</view>
 
@@ -114,16 +114,30 @@
 	</view>
 
 	<view wx:if="{{modalFlag}}" class="search-container ">
+
 		<view class="search-header">
 			<text>{{searchTitle}}欢迎您!</text>
 			<mp-icon type="field" icon="close" color="#ccc" bindtap="switchModal"></mp-icon>
 		</view>
-		<mp-searchbar id="search-bar" ></mp-searchbar>
-        <view class="seach-body" catchtouchmove="test()">
-            <scroll-view>
-                <view>1</view>
-                <view>2</view>
-            </scroll-view>
-        </view>
+		<mp-searchbar id="search-bar" bindtap="switchHidden"  bindinput="modalSearch" data-hidden="true">
+		</mp-searchbar>
+
+		<view class="search-result" hidden="{{searchHidden}}">
+			<scroll-view scroll-y="true" style="height: 100%;" bindscroll="" scroll-into-view="{{}}" scroll-top="{{}}">
+				<block wx:key="index" wx:for="{{searchResult}}">
+					<view bindtap="selectResult" data-selected="{{item}}">{{item.name+" "+item.name2}}</view>
+				</block>
+
+			</scroll-view>
+
+		</view>
+
+		<view class="seach-body" catchtouchmove="test()">
+			<scroll-view>
+				<view>{{buildingList[0]}}</view>
+				<view>{{buildingList[1]}}</view>
+			</scroll-view>
+		</view>
+
 	</view>
 </view>
