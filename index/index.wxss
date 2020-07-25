@@ -36,8 +36,7 @@
     width: 90%;
     margin: 0 auto;
     border: 2rpx solid gainsboro;
-    background-color: #fff;
-    opacity: 90%;
+    background-color: rgba(255, 255, 255, 0.9);
     color: #aaa;
     border-radius: 10rpx;
     z-index: 10;
@@ -59,9 +58,9 @@
     padding-top: 1rpx;
     width: 100%;
     height: 12%;
-    background-color: rgb(254, 255, 255);
+    background-color: rgba(255, 255, 255, 0.9);
     z-index: 10;
-    opacity: 90%;
+    /* opacity: 90%; */
 }
 
 .point-container {
@@ -139,9 +138,10 @@
     padding-top: 1rpx;
     width: 96%;
     height: 12%;
-    background-color: rgb(43, 54, 73);
+    background-color: rgba(43, 54, 73,0.9);
     border-radius: 20rpx;
     z-index: 10;
+    
 }
 
 .nav-text {
@@ -162,7 +162,7 @@
     right: 5%;
     width: 8%;
     /* height: 50%; */
-    background-color: rgb(243, 255, 255);
+    background-color: rgb(243, 255, 255,0.9);
     border: 2rpx solid #ccc;
     border-radius: 40rpx;
     box-shadow: 0 2rpx 4rpx 2rpx #dddddd;
@@ -219,8 +219,8 @@
     width: 96%;
     height: 14%;
     font-size: x-large;
-    background-color: rgb(254, 254, 255);
-    opacity: 90%;
+    background-color: rgba(254, 254, 255,0.9);
+    /* opacity: 90%; */
     border-radius: 10rpx;
     border: 2rpx solid rgb(141, 200, 245);
     /* border-bottom: 0; */
