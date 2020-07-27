@@ -1,7 +1,6 @@
 //关于精灵的各类操作
 
 let app = getApp();
-
 /**
  * @description 创建文字和图片精灵
  * @param {*} canvas 画布
@@ -10,11 +9,12 @@ let app = getApp();
  * @param {*} imageURL 图片地址
  * @returns 返回创建完成的精灵
  */
-function makeSprite(canvas, textureLoader, message, imageURL) {
+function makeSprite(message, imageURL) {
     //为全局变量改名
     let map_conf = app.map_conf;
     let THREE = app.THREE;
     //获取canvas上下文
+    let canvas = app.canvasSprite;
     let context = canvas.getContext("2d");
     //字体类型、大小、颜色
     let fontface = "Arial";
@@ -34,7 +34,7 @@ function makeSprite(canvas, textureLoader, message, imageURL) {
     //将canvas转换为图片，方便进行纹理贴图（canvas直接贴图会报没有相应转换函数的错误）
     let dataUrl = canvas.toDataURL("../img/word.png");
     //加载纹理并创建材质
-    let texture = textureLoader.load(dataUrl);
+    let texture = new THREE.TextureLoader().load(dataUrl);
     let spriteMaterial = new THREE.SpriteMaterial({
         map: texture,
         depthTest: true,
@@ -69,7 +69,7 @@ function makeSprite(canvas, textureLoader, message, imageURL) {
             context.drawImage(img, 0, 0, imgsize, imgsize);
             //转为图片并作为纹理贴图
             let dataUrl = canvas.toDataURL("../img/word.png");
-            texture = textureLoader.load(dataUrl);
+            texture = new THREE.TextureLoader().load(dataUrl);
             spriteMaterial = new THREE.SpriteMaterial({
                 map: texture,
                 depthTest: true,
@@ -77,7 +77,7 @@ function makeSprite(canvas, textureLoader, message, imageURL) {
             sprite.material = spriteMaterial;
             //这句为了防止warning
             sprite.material.map.minFilter = THREE.LinearFilter;
-            
+
             //缩放比例
             sprite.scale.set(
                 map_conf.imgSpriteScale * Math.max(width, imgsize) / height,
@@ -103,6 +103,158 @@ function makeSprite(canvas, textureLoader, message, imageURL) {
     return sprite;
 }
 /**
+ * @description 创建文字精灵
+ * @param {*} message 文字信息
+ * @returns 返回创建完成的精灵
+ */
+function makeFontSprite(message) {
+    //为全局变量改名
+    let map_conf = app.map_conf;
+    let THREE = app.THREE;
+    //获取canvas上下文
+    let canvas = app.canvasSprite;
+    let context = canvas.getContext("2d");
+    //字体类型、大小、颜色
+    let fontface = "Arial";
+    let fontsize = 60;
+    let fontColor = "#000000";
+    //文字高度（只考虑一行）
+    let height = 128;
+    //获取文字长度作为宽度
+    let width = context.measureText(message).width;
+    //设置canvas宽高（调整大小后canvas内容被清除）
+    canvas.width = width;
+    canvas.height = height;
+    //在画布上创建字体原型
+    context.fillStyle = fontColor;
+    context.font = fontsize + "px " + fontface;
+    context.fillText(message, 0, fontsize);
+    //将canvas转换为图片，方便进行纹理贴图（canvas直接贴图会报没有相应转换函数的错误）
+    let dataUrl = canvas.toDataURL("../img/word.png");
+    //加载纹理并创建材质
+    let texture = new THREE.TextureLoader().load(dataUrl);
+    let spriteMaterial = new THREE.SpriteMaterial({
+        map: texture,
+        depthTest: true,
+    });
+    //创建精灵
+    let sprite = new THREE.Sprite(spriteMaterial);
+    //这句为了防止warning
+    sprite.material.map.minFilter = THREE.LinearFilter;
+    //缩放比例
+    sprite.scale.set(
+        (map_conf.fontSpriteScale * width) / height,
+        map_conf.fontSpriteScale,
+        1
+    );
+    sprite.initScale = {
+        x: (map_conf.fontSpriteScale * width) / height,
+        y: map_conf.fontSpriteScale,
+        z: 1,
+    };
+    //通过重设canvas大小清空内容
+    canvas.width = 0;
+    //销毁threejs元素
+    texture.dispose();
+    texture = null;
+    spriteMaterial.dispose()
+    spriteMaterial = null;
+
+    return sprite;
+}
+/**
+ * @description 创建图片精灵
+ * @param {*} imageURL 图片地址
+ * @returns 返回创建完成的精灵
+ */
+function makeImgSprite(imageURL) {
+    let sprite;
+    //为全局变量改名
+    let map_conf = app.map_conf;
+    let THREE = app.THREE;
+    //获取canvas上下文
+    let canvas = app.canvasSprite;
+    let context = canvas.getContext("2d");
+    //创建图像实例并设置相关参数
+    let img = canvas.createImage();
+    let imgsize = 64;
+    img.src = imageURL;
+    //在画布上创建图片原型并绘制
+    canvas.width = imgsize;
+    canvas.height = imgsize;
+    //绘制相应图标
+    context.drawImage(img, 0, 0, imgsize, imgsize);
+    //转为图片并作为纹理贴图
+    let dataUrl = canvas.toDataURL("../img/word.png");
+    //加载纹理并创建材质
+    let texture = new THREE.TextureLoader().load(dataUrl);
+    let spriteMaterial = new THREE.SpriteMaterial({
+        map: texture,
+        depthTest: true,
+    });
+    //创建精灵
+    sprite = new THREE.Sprite(spriteMaterial);
+    //这句为了防止warning
+    sprite.material.map.minFilter = THREE.LinearFilter;
+    //缩放比例
+    sprite.scale.set(
+        map_conf.imgSpriteScale * 2,
+        map_conf.imgSpriteScale * 2,
+        1
+    );
+    sprite.initScale = {
+        x: sprite.scale.x,
+        y: sprite.scale.y,
+        z: 1,
+    };
+
+    //通过重设canvas大小清空内容
+    canvas.width = 0;
+    //销毁threejs元素
+    texture.dispose();
+    texture = null;
+    spriteMaterial.dispose()
+    spriteMaterial = null;
+
+    return sprite;
+}
+
+/**
+ * @description 加载所有地点名称及图标精灵并显示在scene中
+ * @export
+ * @param {*} scene 场景
+ * @param {*} floor 楼层
+ */
+export function loadTargetTextByFloor(scene, floor) {
+    //为全局变量改名
+    let POItarget = app.POItarget;
+    let THREE = app.THREE;
+    //创建精灵组
+    let spriteGroup = new THREE.Group();
+    let sprite;
+    //添加精灵到精灵组
+    POItarget.forEach(function (item) {
+        if (item.floor == floor) {
+            if (item.img) {
+                sprite = makeSprite(item.name, app.map_conf.img_dir + item.img);
+            } else {
+                sprite = makeSprite(item.name, null);
+            }
+            sprite.level = item.level;
+            sprite.position.set(item.x, item.y, item.z + 5);
+            //设置参数
+            sprite.floor = item.floor;
+            sprite.center = new THREE.Vector2(0.5, 0.5);
+            spriteGroup.add(sprite);
+        }
+    });
+    spriteGroup.name = "text";
+    scene.add(spriteGroup);
+    spriteGroup = null;
+    // spriteControl.targetSprites.push(spriteGroup);
+}
+
+/**
  * @description 清除threejs中的元素，释放缓存
  * @param {*} parent 被清除的元素所在的父元素
  * @param {*} child 要被清除的元素
@@ -125,47 +277,6 @@ function disposeObj(parent, child) {
         child.material.dispose();
     }
     child.remove();
-    child = null;
     parent.remove(child);
-}
-
-/**
- * @description 加载所有地点名称及图标精灵并显示在scene中
- * @export
- */
-export function loadTargetTextByFloor(scene, floor) {
-    if (!!app.curSpriteGroup) disposeObj(scene, app.curSpriteGroup);
-    scene.remove(app.curSpriteGroup);
-    // console.log(renderer.info);
-    //为全局变量改名
-    let POItarget = app.POItarget;
-    let THREE = app.THREE;
-    //创建精灵组
-    var textureLoader = new THREE.TextureLoader();
-    app.curSpriteGroup = new THREE.Group();
-    let spriteGroup = app.curSpriteGroup;
-    let sprite;
-    //添加精灵到精灵组
-    POItarget.forEach(function (item) {
-        if (item.floor == floor) {
-
-            if (item.img) {
-                sprite = makeSprite(app.canvasSprite, textureLoader, item.name, app.map_conf.img_dir + item.img);
-            } else {
-                sprite = makeSprite(app.canvasSprite, textureLoader, item.name, null);
-            }
-            sprite.level = item.level;
-            sprite.position.set(item.x, item.y, item.z + 5);
-            //设置参数
-            sprite.floor = item.floor;
-            sprite.center = new THREE.Vector2(0.5, 0.5);
-            spriteGroup.add(sprite);
-        }
-    });
-    spriteGroup.name = "text";
-
-    scene.add(spriteGroup);
-    spriteGroup = null;
-    // spriteControl.targetSprites.push(spriteGroup);
-    // console.log(scene);
+    child = null;
 }

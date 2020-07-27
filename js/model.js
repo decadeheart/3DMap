@@ -92,6 +92,10 @@ export function renderModel(canvasDom, Three) {
 export function getScene(){
     return scene;
 }
+<<<<<<< HEAD
+export function getRenderer(){
+    return renderer;
+=======
 
 export function animate() {
     canvas.requestAnimationFrame(animate);
@@ -115,6 +119,7 @@ export function addUser() {
             userControl.initUser();
             scene.add(app.me);
         });
+>>>>>>> 216669cef3197cb3c729c5cb90870be930f85479
 }
 var caCoord = {};
 /**
@@ -548,5 +553,5 @@ function displayPoi(floor, poi) {
     // controls.update();
     camera.position.set(0, -500, 1000);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
-    controls.update();
+    // controls.update();
 }
