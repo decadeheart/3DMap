@@ -106,6 +106,9 @@ export function renderModel(canvasDom, Three) {
 export function getScene(){
     return scene;
 }
+export function getRenderer(){
+    return renderer;
+}
 var caCoord = {};
 /**
  * @description 2D-3D视角切换
@@ -536,5 +539,5 @@ function displayPoi(floor, poi) {
     // controls.update();
     camera.position.set(0, -500, 1000);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
-    controls.update();
+    // controls.update();
 }
