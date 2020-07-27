@@ -69,7 +69,6 @@ var dataPreProcess = (res) => {
 		}
 		buildingData.push(floor);
 	}
-	// console.log(buildingData)
 
 	buildingData.forEach(building => {
 		let eachBuilding = [];
@@ -100,10 +99,8 @@ var dataPreProcess = (res) => {
 			eachFloor.push(group);
 			eachBuilding.push(eachFloor);
 		})
-		// console.log(eachBuilding)
 		buildingRoomGroup.push(eachBuilding);
 	})
-	console.log(buildingRoomGroup)
 
 	return [buildingList, buildingData,buildingRoomGroup];
 }

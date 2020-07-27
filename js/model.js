@@ -95,7 +95,7 @@ export function getScene(){
 
 export function animate() {
     canvas.requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+    //renderer.render(scene, camera);
     TWEEN.update();    
 }
 

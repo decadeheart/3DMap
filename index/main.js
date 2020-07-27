@@ -31,7 +31,7 @@ main.initMap = function () {
             MODEL.renderModel(canvas, THREE);
             MODEL.camerafix();
             MODEL.initPath();
-            SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
+            //SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
         });
 
     /** 初始化授权 */
@@ -59,7 +59,7 @@ main.displayAllFloor = function () {
 };
 main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
-    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
+    //SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
