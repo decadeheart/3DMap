@@ -1,14 +1,16 @@
 //配置文件参数   
 App({
     onLaunch: function () { },
-   
-    canvasSprite: null,
+    canvasFont: null,
+    canvasImg: null,
+    THREE: null,
     curSpriteGroup: null,
     beaconCoordinate: [],
     me: [],
     arrow: [],
     scaleInvariableGroup: [],
     POItarget: [],
+    resultParent: [],
     curName: '',
     map_conf: {
         map_id: "jxqzf",
@@ -90,7 +92,7 @@ App({
         bool_isMapModelReady: false,
         stepCount: 0,
         preStep: 0,
-        curFloor: 6,
+        curFloor: 1,
         mapOrientation: null,
         deviceOrientation: 0,
         groundMeshes: [],

@@ -64,21 +64,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         //loadTargetText(scene);
 
-        //加载用户贴图
-        let textureLoader = new THREE.TextureLoader();
-        textureLoader.load("../img/me.png", function (texture) {
-            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
-            let material = new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
-                map: texture,
-                transparent: true,
-                opacity: 1,
-                depthTest: false,
-            });
-            app.me = new THREE.Mesh(usergeometry, material);
-            userControl.initUser();
-            scene.add(app.me);
-        });
+        addUser();
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -106,8 +92,34 @@ export function renderModel(canvasDom, Three) {
 export function getScene(){
     return scene;
 }
+<<<<<<< HEAD
 export function getRenderer(){
     return renderer;
+=======
+
+export function animate() {
+    canvas.requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+    TWEEN.update();    
+}
+
+export function addUser() {
+        //加载用户贴图
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load("../img/me.png", function (texture) {
+            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
+            let material = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: texture,
+                transparent: true,
+                opacity: 1,
+                depthTest: false,
+            });
+            app.me = new THREE.Mesh(usergeometry, material);
+            userControl.initUser();
+            scene.add(app.me);
+        });
+>>>>>>> 216669cef3197cb3c729c5cb90870be930f85479
 }
 var caCoord = {};
 /**
@@ -354,6 +366,8 @@ export function onlyDisplayFloor(floor) {
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     // console.log(scene);
+    scene.remove(app.me);
+    addUser();
 }
 
 /**
