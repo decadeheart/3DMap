@@ -5,7 +5,6 @@ import userControl from "./user"; //用户贴图
 
 var app = getApp();
 
-
 /**
  * @description 模拟导航当中的自己转弯和向前移动
  * @date 2020-07-24
@@ -17,7 +16,56 @@ export function autoMoving(path) {
     /** 如果路径当中只有两点和一点的情况 */
     if (path.length < 1) {
         return;
-    }else if (path.length < 2) {
+    } else if (path.length < 2) {
+        userControl.changePosition(path[0].x, path[0].y, null, "direction");
+        return;
+    }
+    MODEL.addUser();
+    let me = app.me
+    let THREE = app.THREE
+    /** 首先从我的当前位置移动到导航路径的起点 */
+
+    new TWEEN.Tween(me.position).to({
+        x: path[0].x,
+        y: path[0].y,
+        z: path[0].z
+    },
+        dis3(me.position, path[0]) * 10
+    ).onStop(move()).start();
+    function move() {
+        me.position.x = path[0].x;
+        me.position.y = path[0].y;
+        me.position.z = path[0].z;
+        console.log("step 2")
+        new TWEEN.Tween(me.position).to({
+            x: path[1].x,
+            y: path[1].y,
+            z: path[1].z
+        },
+            dis3(me.position, path[1]) * 10
+        ).start();
+    }
+    MODEL.animate()
+
+    //userControl.changePosition(path[0].x,path[0].y, me.position.z, "animation");
+
+
+
+}
+
+
+/**
+ * @description 模拟导航当中的自己转弯和向前移动
+ * @date 2020-07-24
+ * @export
+ * @param {*} path
+ * @returns
+ */
+export function autoMoving2(path) {
+    /** 如果路径当中只有两点和一点的情况 */
+    if (path.length < 1) {
+        return;
+    } else if (path.length < 2) {
         userControl.changePosition(path[0].x, path[0].y, null, "direction");
         return;
     }
@@ -80,69 +128,69 @@ export function autoMoving(path) {
      */
     function rotate(i) {
 
-        if(i===path.length-1){return;}
+        if (i === path.length - 1) { return; }
 
-        let angle = figureVectorAngle(new THREE.Vector2(0, 1), new THREE.Vector2(path[i+1].x - path[i].x,
-            path[i+1].y - path[i].y));
-        console.log('角度',angle)
+        let angle = figureVectorAngle(new THREE.Vector2(0, 1), new THREE.Vector2(path[i + 1].x - path[i].x,
+            path[i + 1].y - path[i].y));
+        console.log('角度', angle)
         if (angle < 0) {
             angle += Math.PI * 2;
         }
 
         let A = null;
-        if(angle - me.rotation.z>Math.PI){
+        if (angle - me.rotation.z > Math.PI) {
             // alert("ccs")
             A = new TWEEN.Tween(me.rotation).to({
-                    x: me.rotation.x,
-                    y: me.rotation.y,
-                    z: 0
-                },
+                x: me.rotation.x,
+                y: me.rotation.y,
+                z: 0
+            },
                 Math.abs(me.rotation.z - 0) / Math.PI * 1000
             ).onStart(function () {
 
             }).onComplete(function () {
 
-                me.rotation.z = Math.PI*2;
+                me.rotation.z = Math.PI * 2;
 
                 rotate(i)
             })
-        }else if(angle - me.rotation.z<-Math.PI){
+        } else if (angle - me.rotation.z < -Math.PI) {
 
             A = new TWEEN.Tween(me.rotation).to({
-                    x: me.rotation.x,
-                    y: me.rotation.y,
-                    z: Math.PI*2
-                },
-                Math.abs(me.rotation.z - Math.PI*2) / Math.PI * 1000
+                x: me.rotation.x,
+                y: me.rotation.y,
+                z: Math.PI * 2
+            },
+                Math.abs(me.rotation.z - Math.PI * 2) / Math.PI * 1000
             ).onComplete(function () {
                 me.rotation.z = 0;
                 rotate(i);
             }).onStart(function () {
 
             })
-        }else{
+        } else {
             A = new TWEEN.Tween(me.rotation).to({
-                    x: me.rotation.x,
-                    y: me.rotation.y,
-                    z: angle
-                },
+                x: me.rotation.x,
+                y: me.rotation.y,
+                z: angle
+            },
                 Math.abs(me.rotation.z - angle) / Math.PI * 1000
             ).onComplete(function () {
 
 
 
-                move(i+1);
+                move(i + 1);
             }).onStart(function () {
 
-                if(Math.abs(me.rotation.z - angle)===0){
+                if (Math.abs(me.rotation.z - angle) === 0) {
 
                 }
             });
         }
-        if(A!==null){
+        if (A !== null) {
             A.start();
 
-        }else {
+        } else {
             // B.start();
 
         }
@@ -180,7 +228,7 @@ function dis3(nowLi, nowLi2) {
  */
 function figureVectorAngle(v1, v2) {
     //v1,v2 must be Three.Vector2
-    if(v1.length() === 0 || v2.length() === 0) {return 0;}
+    if (v1.length() === 0 || v2.length() === 0) { return 0; }
     let res = Math.acos(v1.dot(v2) / (v1.length() * v2.length()));
     //若结果为正，则向量v2在v1的逆时针方向 返回值为弧度
     return v1.cross(v2) > 0 ? res : -res;
