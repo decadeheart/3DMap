@@ -82,7 +82,6 @@ function makeImgSprite(imageURL) {
     };
     return sprite;
 }
-
 /**
  * @description 加载所有地点名称及图标精灵并显示在scene中
  * @export
@@ -100,12 +99,9 @@ export function loadTargetTextByFloor(scene, floor) {
     POItarget.forEach(function (item) {
         if (item.floor == floor) {
             if (item.img) {
-                // sprite = makeSprite2(item.name, app.map_conf.img_dir + item.img);
                 sprite = makeImgSprite(app.map_conf.img_dir + item.img);
             } else {
                 sprite = makeFontSprite(item.name);
-                // sprite = makeSprite2(item.name, null);
-
             }
             //设置参数
             sprite.level = item.level;
@@ -120,7 +116,7 @@ export function loadTargetTextByFloor(scene, floor) {
     spriteGroup = null;
     // spriteControl.targetSprites.push(spriteGroup);
 }
-
+//暂时未用到下面的函数
 /**
  * @description 清除threejs中的元素，释放缓存
  * @param {*} parent 被清除的元素所在的父元素
