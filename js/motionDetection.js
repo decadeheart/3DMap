@@ -16,9 +16,9 @@ function accChange(that) {
             oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]
         );
         detectorNewStep(gravityNew);
-        that.setData({
-            step: app.map.stepCount,
-        });
+        // that.setData({
+        //     step: app.map.stepCount,
+        // });
     });
 }
 

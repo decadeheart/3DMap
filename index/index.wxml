@@ -116,8 +116,8 @@
 	<view wx:if="{{modalFlag}}" class="search-container ">
 
 		<view class="search-header">
-			<text>{{searchTitle}}欢迎您!</text>
 			<mp-icon type="field" icon="close" color="#ccc" bindtap="switchModal"></mp-icon>
+			<text>{{searchTitle}}欢迎您!</text>
 		</view>
 
 		<mp-searchbar id="search-bar" bindtap="switchHidden" bindinput="modalSearch" data-hidden="true">
@@ -142,6 +142,7 @@
 
 		<!-- 按层显示 -->
 		<view class="search-body" catchtouchmove="test()">
+			<scroll-view scroll-y="true">
 				<block wx:for="{{buildingRoomGroup[buildingIndex]}}" wx:key="index" wx:for-item="floor">
 					<view class="modal-floor-item">
 						<!-- 抽屉头部 -->
@@ -154,28 +155,29 @@
 						</view>
 
 						<!-- 抽屉内容 按组显示-->
-						<!-- <view class="floor-item-bd {{floorIndex==index ? 'floor-item-bd-show' : ''}}">
+
+						<view class="floor-item-bd {{floorIndex==index ? 'floor-item-bd-show' : ''}}">
 							<view class="option-box {{floorIndex==index ? 'option-box-show' : ''}}">
-								<scroll-view scroll-y="true" style="height: 100%;">
+
 								<block wx:for="{{floor}}" wx:key="index" wx:for-item="group">
 									<view class="group-item">
 										<text>{{group.expend}}</text>
 										<view class="rooms-container">
-											<block wx:for="{{group.rooms}}" wx:key="index" wx:for-item="room">
-											<view class="room-item">
-											{{room.name+' '+room.name2}}
-											</view>
-										</block>
+											<block  wx:key="index" wx:for="{{group.rooms}}" wx:for-item="room">
+												<view class="room-item" bindtap="selectResult" data-selected="{{room}}">
+													<view>{{room.name+' '+room.name2}}</view>
+												</view>
+											</block>
 										</view>
 									</view>
 								</block>
-								</scroll-view>
+
 							</view>
-						</view> -->
-						
+						</view>
+
 					</view>
 				</block>
+			</scroll-view>
 		</view>
-
-	</view> 
+	</view>
 </view>

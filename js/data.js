@@ -75,13 +75,13 @@ var dataPreProcess = (res) => {
 		let eachBuilding = [];
 		building.forEach(floor => {
 			let eachFloor = [];
-			var group = {
+			let group = {
 				expend: "通用",
 				rooms: []
 			};
 			floor.forEach(room => {
-				if (!eachFloor.some(item => item.expend == room.expend)){
-					if(!(room.expend==group.expend)){
+				if(!eachFloor.some(item => item.expend == room.expend)){
+					if(room.expend!==group.expend){
 						eachFloor.push({
 							expend:room.expend,
 							rooms:[]
@@ -89,21 +89,28 @@ var dataPreProcess = (res) => {
 					}
 				}
 				eachFloor.forEach(item=>{
-					if(item.expend==group.expend){
-						group.rooms.push(room);
-					}
-					else if(item.expend==room.expend){
+					if(item.expend==room.expend){
 						item.rooms.push(room);
 					}
 				})
+				if(room.expend==group.expend){
+					// console.log(item);
+					group.rooms.push(room);
+				}
 			})
+			
 			eachFloor.push(group);
+			//按照办公室号排序
+			eachFloor.forEach(item=>{
+				item.rooms.sort((a,b)=>  parseInt(a.name)-parseInt(b.name));
+			})
+			// console.log(eachFloor)
 			eachBuilding.push(eachFloor);
 		})
 		// console.log(eachBuilding)
 		buildingRoomGroup.push(eachBuilding);
 	})
-	console.log(buildingRoomGroup)
+	// console.log(buildingRoomGroup)
 
 	return [buildingList, buildingData,buildingRoomGroup];
 }

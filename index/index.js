@@ -44,9 +44,8 @@ Page({
         var that = this;
         main.getBuildingData().then(buildingDataTmp => {
             // 将其变成一维数组，方便遍历
-            var eachFloor = (function flatten(arr) {
-                return [].concat(...arr.map(x => Array.isArray(x) ? flatten(x) : x))
-            })(buildingDataTmp[1]);
+            var eachFloor=[].concat(...buildingDataTmp[1]);
+            eachFloor=[].concat(...eachFloor);  
             that.setData({
                 buildingList: buildingDataTmp[0],
                 buildingData: buildingDataTmp[1],
@@ -222,8 +221,8 @@ Page({
      * @description 选中搜索结果后触发
      */
     selectResult: function (e) {
-        console.log('select result', e.target.dataset.selected);
-        var target = e.target.dataset.selected;
+        // console.log('select result', e.currentTarget.dataset.selected);
+        var target = e.currentTarget.dataset.selected;
         // 对应关闭模态框，显示提示框，修改当前地点的名字
         this.setData({
             currentPointName: target.name + target.name2,

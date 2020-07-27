@@ -40,8 +40,8 @@ const registerOrbit = (THREE) => {
 		this.target = new Vector3();
 
 		// How far you can dolly in and out ( PerspectiveCamera only )
-		this.minDistance = 50;
-		this.maxDistance = 1000;
+		this.minDistance = 100;
+		this.maxDistance = 2000;
 
 		// How far you can zoom in and out ( OrthographicCamera only )
 		this.minZoom = 0;

@@ -1,4 +1,5 @@
 .container {
+    top: 2%;
     position: relative;
     height: 100%;
     width: 100%;
@@ -26,14 +27,14 @@
 /* 正上方搜索框 包括上下留白 16% */
 .search {
     position: absolute;
-    top: 3%;
+    top: 9%;
     left: 50%;
     transform: translate(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 6%;
-    width: 90%;
+    height: 5%;
+    width: 95%;
     margin: 0 auto;
     border: 2rpx solid gainsboro;
     background-color: rgba(255, 255, 255, 0.9);
@@ -366,9 +367,9 @@
 
 .search-container {
     position: absolute;
-    top: 0;
+    top: 2%;
     left: 0;
-    margin: 4%;
+    margin: 5%;
     width: 92%;
     height: 90%;
     background-color: #fff;
@@ -388,15 +389,15 @@
     padding-top: 8rpx;
 }
 
+.search-header mp-icon {
+    position: absolute;
+    left: 3%;
+}
+
 .search-header text:first-child {
     display: inline-block;
     font-size: 40rpx;
     /* height: 100%; */
-}
-
-.search-header mp-icon {
-    position: absolute;
-    right: 3%;
 }
 
 #search-bar .weui-search-bar {
@@ -456,7 +457,11 @@ scroll-view {
 
 .search-body {
     position: relative;
+    height: 80%;
     z-index: 22;
+}
+.search-body scroll-view:nth-child(1){
+    height: 100%;
 }
 
 .modal-floor-item {
@@ -527,17 +532,32 @@ scroll-view {
 .group-item{
     width: 100%;
     height:auto;
-    background-color:rgb(247,247,247);
-    margin-bottom: 5rpx;
+    /* background-color:rgb(247,247,247); */
+    margin: 30rpx 0;
+    border-bottom: 1rpx solid whitesmoke;
+}
+.group-item text:nth-child(1){
+    margin: 10rpx;
 }
 .rooms-container{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: left;
 }
 .room-item{
     width: auto;
+    padding:1% 2%;
     background-color: white;
-    border-radius: 15rpx;
+    border: 2rpx solid #ccc;
+    border-radius: 30rpx;
     margin: 5rpx;
+    color: black;
+}
+.room-item:hover{
+    color: rgb(92, 99, 231);
+    background-color: rgba(92, 99, 231, 0.2);
+}
+.room-item-click{
+    color: rgb(92, 99, 231);
 }
