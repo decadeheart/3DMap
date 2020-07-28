@@ -135,22 +135,15 @@ function animate() {
     prevTime = time;
     renderer.render(scene, camera);
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 1793100ac9944772bb0989c60b95494a4a413abf
 export function getScene() {
     return scene;
 }
 
-<<<<<<< HEAD
-=======
 export function animate() {
     canvas.requestAnimationFrame(animate);
     //renderer.render(scene, camera);
     TWEEN.update();    
 }
->>>>>>> 1793100ac9944772bb0989c60b95494a4a413abf
 
 export function addUser() {
     //加载用户贴图
@@ -607,16 +600,6 @@ function displayPoi(floor, poi) {
     map.curFloor = floor;
     cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
 
-<<<<<<< HEAD
-    // camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    // camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
-    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    // controls.update();
-    camera.position.set(0, -500, 1000);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
-    // controls.update();
-}
-=======
     camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
     camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
     camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
@@ -626,4 +609,3 @@ function displayPoi(floor, poi) {
     controls.update();
    
 }
->>>>>>> 1793100ac9944772bb0989c60b95494a4a413abf
