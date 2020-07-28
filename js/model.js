@@ -63,7 +63,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         //loadTargetText(scene);
 
-        addUser();
+        // addUser();
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -97,12 +97,11 @@ export function simAnimate() {
     TWEEN.update();    
 }
 
-
 export function getScene() {
     return scene;
 }
 
-export function addUser() {
+export function addUser(x,y,z) {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load("../img/me.png", function (texture) {
@@ -115,7 +114,7 @@ export function addUser() {
             depthTest: false,
         });
         app.me = new THREE.Mesh(usergeometry, material);
-        userControl.initUser();
+        userControl.initUser(x,y,z);
         scene.add(app.me);
     });
 }

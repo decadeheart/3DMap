@@ -5,6 +5,7 @@ import navigate from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
+import gps from "../js/gps"
 import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
@@ -31,7 +32,7 @@ main.initMap = function () {
             MODEL.renderModel(canvas, THREE);
             MODEL.camerafix();
             MODEL.initPath();
-            //SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
+            // SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
         });
 
     /** 初始化授权 */
@@ -109,18 +110,36 @@ main.startBeaconDiscovery = function () {
     });
 };
 
+// 打开GPS
+main.openGPS=function(){
+    gps.openGPS();
+}
+var gpsInterval;
+//获取当前经纬度坐标
+main.getLngLat=function(){
+    gpsInterval=setInterval(()=>{
+        gps.getLocation().then(res=>{
+            console.log(res)
+        })
+    },1500)
+
+}
+//关闭GPS并清除定时器
+main.closeGPS=function(){
+    clearInterval(gpsInterval);
+    gps.closeGPS();
+}
 
 /** 步数改变监测 */
 main.stepChange = function (that) {
     accChange(that);
 }
 
-
 /** 获得起点和终点信息后获得导航路径 */
 main.navigateInit = function () {
     return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
 }
-/** 起点设定 */
+/** 当前点设定 */
 main.setCurClick = function (point) {
     MODEL.setCurClick(point);
 }

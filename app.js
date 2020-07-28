@@ -50,6 +50,7 @@ App({
     localization: {
         lastBluePosition: { x: null, y: null, z: null, floor: null },
         lastBluePosition: 1,
+        outsideScale:1,
         isWXReady: false,
         GPSOpen: 0,
         BluetoothOpen: 1,

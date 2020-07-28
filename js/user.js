@@ -112,11 +112,12 @@ const userControl = {
     /**
      * 初始化用户
      */
-    initUser: function () {
+    initUser: function (x,y,z) {
         let me = app.me
         userControl.isInitUser = true;
-        userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
-        me.name = 'user';
+        // userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+        userControl.changePosition(x, y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+        // me.name = 'user';
         me.floor = app.map.curFloor;
         //userControl.changeRotation(null, null, Math.PI * 2 - (Math.PI / 180) * (app.map.mapOrientation));
         userControl.changeRotation(null, null, Math.PI / 2);
