@@ -60,7 +60,6 @@ const userControl = {
             z = (z === null) ? me.rotation.z : z;
             if (mode === "animation") {
                 //tweenjs类库主要用来调整和动画html5和js
-                console.log(123);
                 new TWEEN.Tween(me.rotation).to({ x: x, y: y, z: z }, dis3(me.rotation, {
                     x: x,
                     y: y,

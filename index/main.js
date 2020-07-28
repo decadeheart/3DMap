@@ -9,10 +9,11 @@ import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as ca from "../js/camera"; //相机操作
+import { showOrientationText } from "../js/directionNotify";
 
 var app = getApp();
 var main = {};
-main.initMap = function () {
+main.initMap = function (that) {
 
     //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
     wx.createSelectorQuery()
@@ -32,7 +33,36 @@ main.initMap = function () {
             MODEL.renderModel(canvas, THREE);
             MODEL.camerafix();
             MODEL.initPath();
+            let renderer = MODEL.getRender();
+            let scene = MODEL.getScene();
+            let camera = MODEL.getCamera();
+            //MODEL.navRender(that);
             //SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
+            navRender();
+            function navRender() {
+                renderer.clear();
+            
+                let systemControl = app.systemControl;
+                if(systemControl.state === 'navigating' || systemControl.state === 'previewing') {
+                    app.pathControl.textures.forEach(function (item) {
+                        item.offset.x -= 0.05;
+                    })
+                }
+                if (systemControl.state === 'navigating') {
+            
+                    let text = showOrientationText();
+                    if(text) {
+                        that.setData({
+                            navInformation: text,
+                        });
+                    }
+                }
+            
+                TWEEN.update();
+                renderer.render(scene, camera);
+                renderer.clearDepth();
+                canvas.requestAnimationFrame(navRender);
+            }
         });
 
     /** 初始化授权 */
@@ -101,7 +131,6 @@ main.startBeaconDiscovery = function () {
                 resolve(data);
             },
             fail: (res) => {
-                console.log(res);
                 if (res.errCode === 11000 || res.errCode === 11001) {
                     var data = {
                         status: "error",
@@ -156,4 +185,5 @@ main.getBuildingData = () => {
 main.autoMove = (path)=> {
     autoMoving(path);
 } 
+
 export default main;

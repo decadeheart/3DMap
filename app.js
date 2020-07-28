@@ -6,6 +6,7 @@ App({
     THREE: null,
     curSpriteGroup: null,
     beaconCoordinate: [],
+    navigateFlag: 0,
     me: [],
     arrow: [],
     scaleInvariableGroup: [],

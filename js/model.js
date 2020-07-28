@@ -6,6 +6,8 @@ import * as TWEEN from "../util/tween.min"; //动画操作
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as ca from "./camera"; //相机操作
+import { showOrientationText } from "./directionNotify";
+import tts from "./tts";
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -151,6 +153,14 @@ export function getScene() {
 }
 export function getCamera() {
     return camera;
+}
+
+export function getCanvas() {
+    return canvas;
+}
+
+export function getRender() {
+    return renderer;
 }
 
 export function addUser() {
@@ -396,12 +406,14 @@ export function onlyDisplayFloor(floor) {
             setVisible(obj);
         }
     });
+    console.log(scene.children);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
      * @returns
      */
     function setVisible(obj) {
+
         parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
@@ -412,14 +424,17 @@ export function onlyDisplayFloor(floor) {
                 setVisible(child);
             });
         }
+        if (obj.name === 'user') {
+            obj.visible = true;
+        }
     }
     map.curFloor = floor;
     // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     // console.log(scene);
-    scene.remove(app.me);
-    addUser();
+    // scene.remove(app.me);
+    // addUser();
 }
 
 /**
