@@ -100,7 +100,6 @@ const userControl = {
         switch (mode) {
             case "direction":
                 me.position.set(nextpoint.x, nextpoint.y, nextpoint.z);
-                console.log(me.position);
                 break;
             case "animation":
                 let meTween = new TWEEN.Tween(me.position).to(nextpoint, dis3(me.position, nextpoint) * 100);

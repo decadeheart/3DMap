@@ -21,21 +21,26 @@ export function autoMoving(path) {
         userControl.changePosition(path[0].x, path[0].y, null, "direction");
         return;
     }
-    MODEL.addUser();
-    let me =app.me
+    var me =app.me
     let THREE = app.THREE
     /** 首先从我的当前位置移动到导航路径的起点 */
 
-    new TWEEN.Tween(me.position).to({
+    MODEL.animate()
+   //animate();
+
+    var neTween = new TWEEN.Tween(me.position)
+    neTween.to({
         x: path[0].x,
         y: path[0].y,
-        z: me.position.z
+        z: path[0].z + app.map_conf.int_userHeight
     },
-    dis3(me.position, path[0]) * 100
-    ).onStop(rotate(0)).start();
+    dis3(me.position, path[0]) * 10
+    )
+    neTween.onStop(move(1))
+    //neTween.onComplete(move(1));
+    neTween.start();
 
     //userControl.changePosition(path[0].x,path[0].y, me.position.z, "animation");
-    MODEL.animate()
 
     /**
      * @description 在导航路径上图标向前移动
@@ -45,18 +50,26 @@ export function autoMoving(path) {
      */
     function move(i) {
         if( i===path.length) {return;}
-
+        console.log('移动',i,path[i]);
+        // let me = app.me;
+        //userControl.changePosition(path[0].x,path[0].y, path[0].z, "direction");
+        me.position.x = path[i-1].x;
+        me.position.y = path[i-1].y;
+        me.position.z = path[i-1].z + app.map_conf.int_userHeight;
         new TWEEN.Tween(me.position).to({
             x: path[i].x,
             y: path[i].y,
-            z: path[i].z + app.map_conf.int_userheight
-        }, dis3(path[i - 1], path[i]) * 200)
+            z: path[i].z + app.map_conf.int_userHeight
+        }, dis3(path[i - 1], path[i]) * 10)
             .onStart(function () {
 
             }).onComplete(function () {
                 //结束时朝向和路的方向一致
                 rotate(i);
+                console.log('继续');
             }).start()
+
+        console.log('me',me.position);
     }
 
     /**
@@ -133,6 +146,12 @@ export function autoMoving(path) {
             // B.start();
 
         }
+    }
+
+
+    function animate(){
+        requestAnimationFrame(animate);
+        TWEEN.update();
     }
 }
 
