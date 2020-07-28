@@ -5,9 +5,11 @@ let OrientationNotification = ["直行", "右前方直行", "右拐", "右后方
 let app = getApp();
 
 
+
 function getDirectionText(index) {
     let text;
     let resultParent = app.resultParent;
+    let THREE = app.THREE
     if (!!resultParent[index - 1]) {
         if(!!resultParent[index + 1]) {
             if(resultParent[index + 1].floor - resultParent[index].floor === 0&&resultParent[index].floor === resultParent[index - 1].floor) {
@@ -72,8 +74,8 @@ function angleToDirection(angle) {
 let preNearestNode;
 let preText = '';
 
-function showOrientationText() {
-    let nearestNode = findnearest2(app.me.position);
+export function showOrientationText() {
+    let nearestNode = findnearest2(app.me.position, app.nodeList);
     if(preNearestNode === nearestNode) {
         return;
     }
@@ -103,8 +105,11 @@ function showOrientationText() {
             if(preText != text) {
                 preText = text;
             }
-            console.log('导航',text)
-            return;
+            if(!text) {
+                text = '直行'
+            }
+
+            return text;
         }
     }
 }

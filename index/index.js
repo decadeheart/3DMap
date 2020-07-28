@@ -40,8 +40,9 @@ Page({
     },
 
     onLoad: function () {
-        main.initMap();
         var that = this;
+        main.initMap(that);
+
         main.getBuildingData().then(buildingDataTmp => {
             // 将其变成一维数组，方便遍历
             var eachFloor=[].concat(...buildingDataTmp[1]);
@@ -83,6 +84,7 @@ Page({
         //     ],
         //     logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
         // });
+
 
     },
 

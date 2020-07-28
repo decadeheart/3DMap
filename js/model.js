@@ -6,6 +6,7 @@ import * as TWEEN from "../util/tween.min"; //动画操作
 import {loadModel} from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as ca from "./camera"; //相机操作
+import { showOrientationText } from "./directionNotify";
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -145,6 +146,18 @@ export function simAnimate() {
 
 export function getScene() {
     return scene;
+}
+
+export function getCamera() {
+    return camera;
+}
+
+export function getCanvas() {
+    return canvas;
+}
+
+export function getRender() {
+    return renderer;
 }
 
 export function addUser() {
@@ -610,4 +623,29 @@ function displayPoi(floor, poi) {
     console.log(cameraControl);
     controls.update();
    
+}
+
+
+export function navRender(that) {
+    renderer.clear();
+
+    let systemControl = app.systemControl;
+    if(systemControl.state === 'navigating' || systemControl.state === 'previewing') {
+        app.pathControl.textures.forEach(function (item) {
+            item.offset.x -= 0.05;
+        })
+    }
+    if (systemControl.state === 'navigating') {
+
+        let text = showOrientationText();
+        console.log(text);
+        that.setData({
+            navInformation: text,
+        });
+    }
+
+    TWEEN.update();
+    renderer.render(scene, camera);
+    renderer.clearDepth();
+    canvas.requestAnimationFrame(navRender);
 }
