@@ -274,6 +274,10 @@ Page({
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;
         main.autoMove(app.resultParent);
+        this.setData({
+            navFlag: 3,
+            infoFlag: 3,
+        });
     },
 
     touchTap(e) {
