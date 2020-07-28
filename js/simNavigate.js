@@ -60,16 +60,13 @@ export function autoMoving(path) {
             x: path[i].x,
             y: path[i].y,
             z: path[i].z + app.map_conf.int_userHeight
-        }, dis3(path[i - 1], path[i]) * 10)
+        }, dis3(path[i - 1], path[i]) * 100)
             .onStart(function () {
 
             }).onComplete(function () {
                 //结束时朝向和路的方向一致
                 rotate(i);
-                console.log('继续');
             }).start()
-
-        console.log('me',me.position);
     }
 
     /**
@@ -148,11 +145,6 @@ export function autoMoving(path) {
         }
     }
 
-
-    function animate(){
-        requestAnimationFrame(animate);
-        TWEEN.update();
-    }
 }
 
 
@@ -178,7 +170,7 @@ function dis3(nowLi, nowLi2) {
  * @param {*} v2
  * @returns
  */
-function figureVectorAngle(v1, v2) {
+export function figureVectorAngle(v1, v2) {
     //v1,v2 must be Three.Vector2
     if(v1.length() === 0 || v2.length() === 0) {return 0;}
     let res = Math.acos(v1.dot(v2) / (v1.length() * v2.length()));
