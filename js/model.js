@@ -7,6 +7,7 @@ import {loadModel} from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as ca from "./camera"; //相机操作
 import { showOrientationText } from "./directionNotify";
+import tts from "./tts";
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -135,12 +136,11 @@ function animate() {
     // }
     // prevTime = time;
     renderer.render(scene, camera);
+    TWEEN.update();  
+
 }
 
-export function simAnimate() {
-    canvas.requestAnimationFrame(simAnimate);
-    //renderer.render(scene, camera);
-    TWEEN.update();    
+export function simAnimate() { 
 }
 
 
@@ -403,12 +403,14 @@ export function onlyDisplayFloor(floor) {
             setVisible(obj);
         }
     });
+    console.log(scene.children);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
      * @returns
      */
     function setVisible(obj) {
+
         parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
@@ -419,14 +421,17 @@ export function onlyDisplayFloor(floor) {
                 setVisible(child);
             });
         }
+        if (obj.name === 'user') {
+            obj.visible = true;
+        }
     }
     map.curFloor = floor;
     // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     // console.log(scene);
-    scene.remove(app.me);
-    addUser();
+    // scene.remove(app.me);
+    // addUser();
 }
 
 /**
@@ -625,27 +630,3 @@ function displayPoi(floor, poi) {
    
 }
 
-
-export function navRender(that) {
-    renderer.clear();
-
-    let systemControl = app.systemControl;
-    if(systemControl.state === 'navigating' || systemControl.state === 'previewing') {
-        app.pathControl.textures.forEach(function (item) {
-            item.offset.x -= 0.05;
-        })
-    }
-    if (systemControl.state === 'navigating') {
-
-        let text = showOrientationText();
-        console.log(text);
-        that.setData({
-            navInformation: text,
-        });
-    }
-
-    TWEEN.update();
-    renderer.render(scene, camera);
-    renderer.clearDepth();
-    canvas.requestAnimationFrame(navRender);
-}

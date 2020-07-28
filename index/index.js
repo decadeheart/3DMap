@@ -129,7 +129,7 @@ Page({
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
         main.onlyDisplayFloor(floor + 1);
-        console.log(floor + 1);
+
     },
 
     /**
@@ -294,10 +294,8 @@ Page({
     touchTap(e) {
 
         if(! app.navigateFlag) {
-            console.log("tap");
             app.curName = main.selectObj(e.touches[0]);
             if (!!!app.curName) app.curName = "室外";
-            console.log(app.curName);
             this.setData({
                 navFlag: 1,
                 infoFlag: 1,

@@ -1,4 +1,5 @@
 import {figureVectorAngle} from "./simNavigate"
+import tts from "./tts";
 
 
 let OrientationNotification = ["直行", "右前方直行", "右拐", "右后方直行", "后方直行", "左后方直行", "左拐", "左前方直行"];
@@ -15,7 +16,7 @@ function getDirectionText(index) {
             if(resultParent[index + 1].floor - resultParent[index].floor === 0&&resultParent[index].floor === resultParent[index - 1].floor) {
                 let curtmpIndex = angleToDirection(figureVectorAngle(new THREE.Vector2(resultParent[index + 1].x - resultParent[index].x, resultParent[index + 1].y - resultParent[index].y),
                 new THREE.Vector2(resultParent[index].x - resultParent[index - 1].x, resultParent[index].y - resultParent[index - 1].y)));
-                let text = OrientationNotification[curtmpIndex];
+                text = OrientationNotification[curtmpIndex];
 
             } else if (resultParent[index + 1].floor - resultParent[index].floor < 0) {
                 let i = index;
@@ -102,13 +103,17 @@ export function showOrientationText() {
             }
 
 
-            if(preText != text) {
+            if(preText != text)
+            {   
+                if(!text) {
+                    text = '直行'
+                }
+                tts(text);
                 preText = text;
             }
             if(!text) {
                 text = '直行'
             }
-
             return text;
         }
     }

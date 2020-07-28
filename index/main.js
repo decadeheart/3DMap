@@ -35,7 +35,6 @@ main.initMap = function (that) {
             let renderer = MODEL.getRender();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            console.log(that);
             //MODEL.navRender(that);
             //SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
             navRender();
@@ -51,10 +50,11 @@ main.initMap = function (that) {
                 if (systemControl.state === 'navigating') {
             
                     let text = showOrientationText();
-                    console.log(text);
-                    that.setData({
-                        navInformation: text,
-                    });
+                    if(text) {
+                        that.setData({
+                            navInformation: text,
+                        });
+                    }
                 }
             
                 TWEEN.update();
@@ -126,7 +126,6 @@ main.startBeaconDiscovery = function () {
                 resolve(data);
             },
             fail: (res) => {
-                console.log(res);
                 if (res.errCode === 11000 || res.errCode === 11001) {
                     var data = {
                         status: "error",
