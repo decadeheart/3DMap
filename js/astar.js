@@ -23,7 +23,7 @@ var closeArr = [];
 var resultParent = [];
 
 /**
- * @description 得到指定iid节点
+ * @description 得到指定id节点
  * @date 2020-07-10
  * @param {*} id 指定id
  * @param {*} nodeList 节点组

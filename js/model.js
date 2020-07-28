@@ -1,15 +1,15 @@
 //关于模型的各类操作
-
-import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
+import {registerGLTFLoader} from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
+import registerPoint from "../util/PointerLockControls"; //相机操作
 import * as TWEEN from "../util/tween.min"; //动画操作
-import { loadModel } from "./loadModel"; //加载模型
+import {loadModel} from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as ca from "./camera"; //相机操作
 
 //全局变量，供各个函数调用
 var canvas, THREE;
-var camera, scene, renderer, controls;
+var camera, scene, renderer, controls, cameraControls;
 var app = getApp();
 var selectedPoint = {};
 
@@ -76,45 +76,88 @@ export function renderModel(canvasDom, Three) {
         renderer.gammaFactor = 2.2;
 
         //加载手势控制器，有MapControls和OrbitControls两种操作方式
-        const { MapControls } = registerOrbit(THREE);
+        const {MapControls} = registerOrbit(THREE);
         controls = new MapControls(camera, renderer.domElement);
+        controls.target.set( 0, 0, 0 );
         controls.update();
-    }
-    /**
-     * @description 渲染循环
-     */
-    function animate() {
-        canvas.requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-        //TWEEN.update();
+
+        const {PointerLockControls} = registerPoint(THREE);
+        cameraControls = new PointerLockControls(camera, renderer.domElement);
+        scene.add(cameraControls.getObject());
+
+        velocity = new THREE.Vector3();
+        direction = new THREE.Vector3();
+
     }
 }
-export function getScene(){
+var prevTime = performance.now();
+var moveForward = false;
+var moveBackward = false;
+var moveLeft = true;
+var moveRight = false;
+var velocity ;
+var direction;
+/**
+ * @description 渲染循环
+ */
+function animate() {
+    canvas.requestAnimationFrame(animate);
+    var time = performance.now();
+    var delta = (time - prevTime) / 10000;
+
+    velocity.x -= velocity.x * 10.0 * delta;
+    velocity.z -= velocity.z * 10.0 * delta;
+
+    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+
+    direction.z = Number(moveForward) - Number(moveBackward);
+    direction.x = Number(moveRight) - Number(moveLeft);
+    direction.normalize(); // this ensures consistent movements in all directions
+
+    if (moveForward || moveBackward)
+        velocity.z -= direction.z * 400.0 * delta;
+    if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+
+    // if (onObject === true) {
+    // 	velocity.y = Math.max(0, velocity.y);
+    // 	canJump = true;
+    // }
+
+    cameraControls.moveRight(-velocity.x * delta);
+    cameraControls.moveForward(-velocity.z * delta);
+
+    cameraControls.getObject().position.y += velocity.y * delta; // new behavior
+
+    if (cameraControls.getObject().position.y < 10) {
+        velocity.y = 0;
+        cameraControls.getObject().position.y = 10;
+        // canJump = true;
+    }
+    prevTime = time;
+    renderer.render(scene, camera);
+}
+
+export function getScene() {
     return scene;
 }
 
-export function animate() {
-    canvas.requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-    TWEEN.update();    
-}
 
 export function addUser() {
-        //加载用户贴图
-        let textureLoader = new THREE.TextureLoader();
-        textureLoader.load("../img/me.png", function (texture) {
-            let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
-            let material = new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
-                map: texture,
-                transparent: true,
-                opacity: 1,
-                depthTest: false,
-            });
-            app.me = new THREE.Mesh(usergeometry, material);
-            userControl.initUser();
-            scene.add(app.me);
+    //加载用户贴图
+    let textureLoader = new THREE.TextureLoader();
+    textureLoader.load("../img/me.png", function (texture) {
+        let usergeometry = new THREE.PlaneGeometry(10, 10, 27);
+        let material = new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: texture,
+            transparent: true,
+            opacity: 1,
+            depthTest: false,
         });
+        app.me = new THREE.Mesh(usergeometry, material);
+        userControl.initUser();
+        scene.add(app.me);
+    });
 }
 var caCoord = {};
 /**
@@ -167,7 +210,10 @@ export function showSprite(sprite, point, type) {
         let textureLoader = new THREE.TextureLoader();
         // textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
         textureLoader.load("../img/" + type + ".png", function (texture) {
-            let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+            let material = new THREE.SpriteMaterial({
+                map: texture,
+                depthTest: false
+            });
             sprite = new THREE.Sprite(material);
             sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
             sprite.initScale = {
@@ -428,7 +474,9 @@ export function createPathTube(path) {
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
             console.log("tex", tex);
-            let material = new THREE.MeshBasicMaterial({ map: tex });
+            let material = new THREE.MeshBasicMaterial({
+                map: tex
+            });
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
             let tube = new THREE.Mesh(tubegeo, material);
