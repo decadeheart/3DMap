@@ -1,11 +1,13 @@
 //关于模型的各类操作
-import {registerGLTFLoader} from "../util/gltf-loader"; //将GLTFLoader注入到THREE
+import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import registerPoint from "../util/PointerLockControls"; //相机操作
 import * as TWEEN from "../util/tween.min"; //动画操作
-import {loadModel} from "./loadModel"; //加载模型
+import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as ca from "./camera"; //相机操作
+import { showOrientationText } from "./directionNotify";
+import tts from "./tts";
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -56,6 +58,14 @@ export function renderModel(canvasDom, Three) {
         // var axesHelper = new THREE.AxesHelper(5000);
         // axesHelper.material.linewidth = 500;
         // scene.add(axesHelper);
+        // //正交投影照相机
+        // let camera2 = new THREE.OrthographicCamera(-10, 10, 10, -10, 5, 300);
+        // renderer = new THREE.WebGLRenderer({ alpha: true });
+        // camera2.position.set(0, 0, 200);
+        // camera2.lookAt(new THREE.Vector3(0, 0, 0));
+        // //照相机辅助线
+        // let cameraHelper = new THREE.CameraHelper(camera2);
+        // scene.add(cameraHelper);
 
         //加载模型
         loadModel(scene);
@@ -75,9 +85,9 @@ export function renderModel(canvasDom, Three) {
         renderer.gammaFactor = 2.2;
 
         //加载手势控制器，有MapControls和OrbitControls两种操作方式
-        const {MapControls} = registerOrbit(THREE);
+        const { MapControls } = registerOrbit(THREE);
         controls = new MapControls(camera, renderer.domElement);
-        controls.target.set( 0, 0, 0 );
+        controls.target.set(0, 0, 0);
         controls.update();
 
     }
@@ -89,16 +99,22 @@ export function renderModel(canvasDom, Three) {
 function animate() {
     canvas.requestAnimationFrame(animate);
     renderer.render(scene, camera);
-}
-
-export function simAnimate() {
-    canvas.requestAnimationFrame(simAnimate);
-    //renderer.render(scene, camera);
-    TWEEN.update();    
+    TWEEN.update();
 }
 
 export function getScene() {
     return scene;
+}
+export function getCamera() {
+    return camera;
+}
+
+export function getCanvas() {
+    return canvas;
+}
+
+export function getRender() {
+    return renderer;
 }
 
 export function addUser(x,y,z) {
@@ -344,12 +360,14 @@ export function onlyDisplayFloor(floor) {
             setVisible(obj);
         }
     });
+    console.log(scene.children);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
      * @returns
      */
     function setVisible(obj) {
+
         parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
@@ -360,14 +378,17 @@ export function onlyDisplayFloor(floor) {
                 setVisible(child);
             });
         }
+        if (obj.name === 'user') {
+            obj.visible = true;
+        }
     }
     map.curFloor = floor;
     // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
     // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     // console.log(scene);
-    scene.remove(app.me);
-    addUser();
+    // scene.remove(app.me);
+    // addUser();
 }
 
 /**
@@ -484,25 +505,11 @@ export function setEndClick() {
     showSprite(app.spriteControl.endSprite, selectedPoint, "end");
 }
 
-export function changeMe(floor, position) {
-    let me = app.me;
-    me.floor = floor;
-    // console.log(position);
-    me.position.set(position[0], position[1], position[2]);
-}
-
-export function backToMe() {
-    let me = app.me;
-    changeMe(6, [0, 500, 300])
-    // console.log(me);
-    displayPoi(me.floor, me.position);
-}
-
 export function camerafix() {
     let cameraControl = ca.cameraControl;
     let map = app.map;
     let map_conf = app.map_conf;
-
+    console.log(camera);
     cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
     cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
     cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
@@ -517,51 +524,177 @@ export function camerafix() {
     camera.position.y = 0 + cameraControl.relativeCoordinate.y;
 
     camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    // console.log(camera);
+    console.log(camera);
     controls.update();
 }
 
-function displayPoi(floor, poi) {
-    let cameraControl = ca.cameraControl;
-    let map = app.map;
-    let map_conf = app.map_conf;
-    if (typeof floor != 'number') {
-        floor = parseInt(floor);
-    }
-    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
-    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
-    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-    if (poi != null) {
-        cameraControl.focusPoint.x = poi.x;
-        cameraControl.focusPoint.y = poi.y;
-    }
-    //设置物体可见性
-    scene.children.forEach(function (obj, i) {
-        if (typeof obj.floor != 'undefined') {
-            let floorOfObj = obj.floor;
-            if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
-                obj.visible = true;
-            } else {
-                obj.visible = false;
-            }
-        }
-        if (obj.name == 'path') {
-            if (obj.type == 'Group') {
-                obj.children.forEach(function (o) {
-                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
-                });
-            }
-        }
-    });
-    map.curFloor = floor;
-    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+export function changeMe(floor, position) {
+    let me = app.me;
+    me.floor = floor;
+    // console.log(position);
+    me.position.set(position[0], position[1], position[2]);
+}
 
-    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
-    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    console.log(camera);
-    console.log(camera.getWorldDirection());
-    console.log(cameraControl);
-    controls.update();
-   
+export function backToMe() {
+    let me = app.me;
+    // changeMe(6, [0, 500, 300])
+    // console.log(me);
+    displayPoi(me.floor, me.position);
+}
+
+
+
+function displayPoi(floor, poi) {
+    // let cameraControl = ca.cameraControl;
+    // let map = app.map;
+    // let map_conf = app.map_conf;
+    // if (typeof floor != 'number') {
+    //     floor = parseInt(floor);
+    // }
+    // cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
+    // cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
+    // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+    // if (poi != null) {
+    //     cameraControl.focusPoint.x = poi.x;
+    //     cameraControl.focusPoint.y = poi.y;
+    // }
+    // //设置物体可见性
+    // scene.children.forEach(function (obj, i) {
+    //     if (typeof obj.floor != 'undefined') {
+    //         let floorOfObj = obj.floor;
+    //         if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
+    //             obj.visible = true;
+    //         } else {
+    //             obj.visible = false;
+    //         }
+    //     }
+    //     if (obj.name == 'path') {
+    //         if (obj.type == 'Group') {
+    //             obj.children.forEach(function (o) {
+    //                 parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
+    //             });
+    //         }
+    //     }
+    // });
+    // map.curFloor = floor;
+    // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+
+    // camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
+    // camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
+    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
+
+
+    // camera.position.set(-5, 0, 1000);
+    // controls.target.set(0, 0, 0)// = new THREE.Vector3(0, 0, 0);
+
+    // camera.updateProjectionMatrix();
+    // controls.update();
+
+    let newP = { x: 400, y: 0, z: 1000 };
+    let newT = { x: 0, y: 0, z: 0 };
+    console.log(camera)
+    console.log(controls.target)
+    animateCamera(camera.position, controls.target, newP, controls.target);
+    // let me = app.me;
+    // console.log(me)
+    // new TWEEN.Tween(poi)
+    //     .to({ x: 400, y: 0, z: 100 }, 3000).repeat(Infinity).start();
+
+    // let tween = new TWEEN.Tween(camera.position);
+
+    // tween.to({ x: 100, y: 0, z: 1000 }, 1000);
+    // controls.target = new THREE.Vector3(100, 0, 1000);
+
+    // tween.start();
+
+
+}
+// current1 相机当前的位置
+// target1 相机的controls的target
+// current2 新相机的目标位置
+// target2 新的controls的target
+
+
+function animateCamera(current1, target1, current2, target2) {
+
+    let positionVar = {
+        x1: current1.x,
+        y1: current1.y,
+        z1: current1.z,
+        x2: target1.x,
+        y2: target1.y,
+        z2: target1.z
+    };
+    //关闭控制器
+    controls.enabled = false;
+    var tween = new TWEEN.Tween(positionVar);
+    tween.to({
+        x1: current2.x,
+        y1: current2.y,
+        z1: current2.z,
+        x2: target2.x,
+        y2: target2.y,
+        z2: target2.z
+    }, 5000);
+
+    tween.onUpdate(function () {
+        camera.position.x = positionVar.x1;
+        camera.position.y = positionVar.y1;
+        camera.position.z = positionVar.z1;
+        controls.target.x = positionVar.x2;
+        controls.target.y = positionVar.y2;
+        controls.target.z = positionVar.z2;
+        controls.update();
+        // console.log(positionVar);
+    })
+
+    tween.onComplete(function () {
+        ///开启控制器
+        controls.enabled = true;
+    })
+
+    tween.easing(TWEEN.Easing.Cubic.InOut);
+    tween.start();
+}
+
+// oldP  相机原来的位置
+// oldT  target原来的位置
+// newP  相机新的位置
+// newT  target新的位置
+// callBack  动画结束时的回调函数
+function animateCamera2(oldP, oldT, newP, newT, callBack) {
+    var tween = new TWEEN.Tween({
+        x1: oldP.x, // 相机x
+        y1: oldP.y, // 相机y
+        z1: oldP.z, // 相机z
+        x2: oldT.x, // 控制点的中心点x
+        y2: oldT.y, // 控制点的中心点y
+        z2: oldT.z  // 控制点的中心点z
+    });
+    tween.to({
+        x1: newP.x,
+        y1: newP.y,
+        z1: newP.z,
+        x2: newT.x,
+        y2: newT.y,
+        z2: newT.z
+    }, 1000);
+
+    tween.onUpdate(function (object) {
+        console.log(object)
+        camera.position.x = object.x1;
+        camera.position.y = object.y1;
+        camera.position.z = object.z1;
+        controls.target.x = object.x2;
+        controls.target.y = object.y2;
+        controls.target.z = object.z2;
+
+        controls.update();
+    })
+    tween.onComplete(function () {
+        controls.enabled = true;
+        callBack && callBack()
+    })
+    tween.easing(TWEEN.Easing.Cubic.InOut);
+    tween.start();
 }

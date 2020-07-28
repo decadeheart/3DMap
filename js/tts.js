@@ -38,7 +38,7 @@ async function tts(text) {
     wx.setInnerAudioOption({
         obeyMuteSwitch: false,
     });
-    // innerAudioContext.playbackRate = 2;
+    //innerAudioContext.playbackRate = 2;
     innerAudioContext.autoplay = true;
     innerAudioContext.src = encodeURI(await getAudioSrc(text));
     innerAudioContext.onPlay(() => {

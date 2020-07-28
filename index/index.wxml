@@ -101,7 +101,7 @@
 			<text> {{ currentPointName }} </text>
 			<text> {{ distanceInfo }}</text>
 		</view>
-		<button size="mini" hover-class="btn-hover">结束导航</button>
+		<button size="mini" hover-class="btn-hover" bindtap="stopNavigate">结束导航</button>
 	</view>
 
 	<!-- 蓝牙反馈-->

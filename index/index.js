@@ -42,8 +42,9 @@ Page({
     },
 
     onLoad: function () {
-        main.initMap();
         var that = this;
+        main.initMap(that);
+
         main.getBuildingData().then(buildingDataTmp => {
             // 将其变成一维数组，方便遍历
             var eachFloor=[].concat(...buildingDataTmp[1]);
@@ -85,6 +86,7 @@ Page({
         //     ],
         //     logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
         // });
+
 
     },
 
@@ -129,7 +131,7 @@ Page({
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
         main.onlyDisplayFloor(floor + 1);
-        console.log(floor + 1);
+
     },
 
     /**
@@ -257,22 +259,32 @@ Page({
         app.systemControl.realMode = false;
         app.map.FloorChangeCheckTime = 1000;
         main.autoMove(app.resultParent);
+        app.navigateFlag = 1;
         this.setData({
             navFlag: 3,
             infoFlag: 3,
         });
     },
-
-    touchTap(e) {
-        console.log("tap");
-        app.curName = main.selectObj(e.touches[0]);
-        if (!!!app.curName) app.curName = "室外";
-        console.log(app.curName);
+    stopNavigate(e) {
+        app.systemControl.state = "normal";
+        app.systemControl.realMode = true;
+        app.navigateFlag = 0;
         this.setData({
-            navFlag: 1,
-            infoFlag: 1,
-            currentPointName: app.curName,
-        });
+            navFlag: 2,
+            infoFlag: 2,
+        });        
+    },
+    touchTap(e) {
+
+        if(! app.navigateFlag) {
+            app.curName = main.selectObj(e.touches[0]);
+            if (!!!app.curName) app.curName = "室外";
+            this.setData({
+                navFlag: 1,
+                infoFlag: 1,
+                currentPointName: app.curName,
+            });
+        }
     },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
@@ -285,6 +297,8 @@ Page({
             ...e,
             type: "touchmove",
         });
+        // console.log(e)
+        main.dragCamera(e.touches[0])
     },
     touchEnd(e) {
         app.canvas.dispatchTouchEvent({
