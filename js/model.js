@@ -139,12 +139,6 @@ export function getScene() {
     return scene;
 }
 
-export function animate() {
-    canvas.requestAnimationFrame(animate);
-    //renderer.render(scene, camera);
-    TWEEN.update();    
-}
-
 export function addUser() {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
