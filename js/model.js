@@ -135,6 +135,14 @@ function animate() {
     // prevTime = time;
     renderer.render(scene, camera);
 }
+
+export function simAnimate() {
+    canvas.requestAnimationFrame(simAnimate);
+    //renderer.render(scene, camera);
+    TWEEN.update();    
+}
+
+
 export function getScene() {
     return scene;
 }

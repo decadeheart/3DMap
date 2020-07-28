@@ -25,7 +25,7 @@ export function autoMoving(path) {
     let THREE = app.THREE
     /** 首先从我的当前位置移动到导航路径的起点 */
 
-    MODEL.animate()
+    MODEL.simAnimate();
    //animate();
 
     var neTween = new TWEEN.Tween(me.position)
