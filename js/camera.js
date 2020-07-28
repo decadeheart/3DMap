@@ -1,5 +1,10 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
-var THREE, camera, canvas;
+import * as MODEL from "../js/model";
+
+let app = getApp();
+
+var THREE = app.THREE;
+var camera = MODEL.getCamera();
 export var cameraControl = {
     preX: 0,
     preY: 0,
@@ -176,36 +181,37 @@ var dis3 = (d1, d2) => {
     return Math.sqrt(x + y + z);
 }
 
-function dragCamera(ev) {
-    let dx =
-        (ev.x - cameraControl.preX) *
-        cameraControl.dragSpeed *
-        ((camera.position.z - (map.curFloor - 1) * map_conf.layerHeight) / 100); //that means drag distance*cameraControl.dragspeed
-    let dy =
-        (ev.y - cameraControl.preY) *
-        cameraControl.dragSpeed *
-        ((camera.position.z - (map.curFloor - 1) * map_conf.layerHeight) / 100); //that means drag distance*cameraControl.dragspeed
+export function dragCamera(ev) {
+    let camera = MODEL.getCamera();
+    // camera.position.x=0;
+    // camera.position.y=0;
+
+    let THREE = app.THREE;
+    let map = app.map;
+    let map_conf = app.map_conf;
+    // $('#tt').text(ev.fingersCount );
+
+    // if(camera.position.x-cameraControl.focusPoint.x==0&&camera.position.y-cameraControl.focusPoint.y==0){
+    //     camera.position.x+=1;
+    // }
+    let dx = (ev.x - cameraControl.preX) * cameraControl.dragSpeed * ((camera.position.z - (map.curFloor - 1) * map_conf.layerHeight) / 100);//that means drag distance*cameraControl.dragspeed
+    let dy = (ev.y - cameraControl.preY) * cameraControl.dragSpeed * ((camera.position.z - (map.curFloor - 1) * map_conf.layerHeight) / 100);//that means drag distance*cameraControl.dragspeed
     let v3 = new THREE.Vector3();
-    v3 = camera.getWorldDirection(); // direct vector of camera`s eyes
+    camera.getWorldDirection(v3);  // direct vector of camera`s eyes
     let v2 = new THREE.Vector2(v3.x, v3.y).normalize();
     if (v2.x === 0 && v2.y === 0) {
-        v2 = new THREE.Vector2(
-            -cameraControl.relativeCoordinate.x,
-            -cameraControl.relativeCoordinate.y
-        ).normalize();
+        v2 = new THREE.Vector2(-cameraControl.relativeCoordinate.x, -cameraControl.relativeCoordinate.y).normalize();
     }
-    let ax = v2.x.toFixed(4); //the camera view direction
-    let ay = v2.y.toFixed(4);
-    if (camera instanceof THREE.PerspectiveCamera) {
-    }
+    let ax = (v2.x.toFixed(4));  //the camera view direction
+    let ay = (v2.y.toFixed(4));
+    
 
     let x0 = camera.position.x;
     let y0 = camera.position.y;
-    let bx; //vector b is vertical to a
+    let bx;  //vector b is vertical to a
     let by;
-    let result = { x: 0, y: 0 }; //result we need
-    if (ax == 0) {
-        //can not use ===
+    let result = { x: 0, y: 0 };  //result we need
+    if (ax == 0) {//can not use ===
         if (ay < 0) {
             bx = -1;
             by = 0;
@@ -213,8 +219,7 @@ function dragCamera(ev) {
             bx = 1;
             by = 0;
         }
-    } else if (ay == 0) {
-        //can not use ===
+    } else if (ay == 0) {//can not use ===
         if (ax < 0) {
             bx = 0;
             by = 1;
@@ -222,11 +227,12 @@ function dragCamera(ev) {
             bx = 0;
             by = -1;
         }
-    } else {
+    }
+    else {
         bx = 1 / Math.sqrt(1 + (ax * ax) / (ay * ay));
         by = (-ax / ay) * bx;
-        if (ax > 0 && ay > 0) {
-            //limit b is on right of a`s positive direction
+
+        if (ax > 0 && ay > 0) {         //limit b is on right of a`s positive direction
             bx = Math.abs(bx);
             by = -Math.abs(by);
         } else if (ax > 0 && ay < 0) {
@@ -239,19 +245,19 @@ function dragCamera(ev) {
             bx = Math.abs(bx);
             by = Math.abs(by);
         }
+
     }
-    result.x = bx * -dx + ax * dy + x0; //coordinate transformation
-    result.y = by * -dx + ay * dy + y0;
-    if (isNaN(result.y)) {
-        console.log(by, dx, ay, dy, y0);
-        alert("c");
-    }
-    camera.position.x = result.x;
-    camera.position.y = result.y;
-    cameraControl.setPosition(result.x, result.y, null, "direction");
-    cameraControl.setUp(0, 0, 1);
+   
+    result.x = bx * (-dx) + ax * (dy) + x0; //coordinate transformation
+    result.y = by * (-dx) + ay * (dy) + y0;
+    
+    // camera.position.x = result.x;
+    // camera.position.y = result.y;
+    // console.log(camera);
+    // camera.up.set(0, 0, 1);
     cameraControl.focusPoint.x += result.x - x0;
     cameraControl.focusPoint.y += result.y - y0;
+    
     cameraControl.preX = ev.x;
     cameraControl.preY = ev.y;
 }

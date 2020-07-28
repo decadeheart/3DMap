@@ -8,6 +8,7 @@ import beaconUpdate from "../js/ibeacon";
 import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
+import * as ca from "../js/camera"; //相机操作
 
 var app = getApp();
 var main = {};
@@ -73,7 +74,11 @@ main.setEndPoint = function () {
 main.backToMe = function () {
     MODEL.backToMe();
 };
-
+main.dragCamera = function(ev){
+    // console.log(1,MODEL.getCamera());
+    ca.dragCamera(ev);
+    // ca.cameraExchange();
+};
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
     return new Promise((resolve, reject) => {
