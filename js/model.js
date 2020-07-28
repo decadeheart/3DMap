@@ -80,59 +80,59 @@ export function renderModel(canvasDom, Three) {
         controls.target.set( 0, 0, 0 );
         controls.update();
 
-        const {PointerLockControls} = registerPoint(THREE);
-        cameraControls = new PointerLockControls(camera, renderer.domElement);
-        scene.add(cameraControls.getObject());
+        // const {PointerLockControls} = registerPoint(THREE);
+        // cameraControls = new PointerLockControls(camera, renderer.domElement);
+        // scene.add(cameraControls.getObject());
 
-        velocity = new THREE.Vector3();
-        direction = new THREE.Vector3();
+        // velocity = new THREE.Vector3();
+        // direction = new THREE.Vector3();
 
     }
 }
-var prevTime = performance.now();
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = true;
-var moveRight = false;
-var velocity ;
-var direction;
+// var prevTime = performance.now();
+// var moveForward = false;
+// var moveBackward = false;
+// var moveLeft = true;
+// var moveRight = false;
+// var velocity ;
+// var direction;
 /**
  * @description 渲染循环
  */
 function animate() {
     canvas.requestAnimationFrame(animate);
-    var time = performance.now();
-    var delta = (time - prevTime) / 10000;
+    // var time = performance.now();
+    // var delta = (time - prevTime) / 10000;
 
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
+    // velocity.x -= velocity.x * 10.0 * delta;
+    // velocity.z -= velocity.z * 10.0 * delta;
 
-    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+    // velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-    direction.z = Number(moveForward) - Number(moveBackward);
-    direction.x = Number(moveRight) - Number(moveLeft);
-    direction.normalize(); // this ensures consistent movements in all directions
+    // direction.z = Number(moveForward) - Number(moveBackward);
+    // direction.x = Number(moveRight) - Number(moveLeft);
+    // direction.normalize(); // this ensures consistent movements in all directions
 
-    if (moveForward || moveBackward)
-        velocity.z -= direction.z * 400.0 * delta;
-    if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+    // if (moveForward || moveBackward)
+    //     velocity.z -= direction.z * 400.0 * delta;
+    // if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
 
-    // if (onObject === true) {
-    // 	velocity.y = Math.max(0, velocity.y);
-    // 	canJump = true;
+    // // if (onObject === true) {
+    // // 	velocity.y = Math.max(0, velocity.y);
+    // // 	canJump = true;
+    // // }
+
+    // // cameraControls.moveRight(-velocity.x * delta);
+    // // cameraControls.moveForward(-velocity.z * delta);
+
+    // cameraControls.getObject().position.y += velocity.y * delta; // new behavior
+
+    // if (cameraControls.getObject().position.y < 10) {
+    //     velocity.y = 0;
+    //     cameraControls.getObject().position.y = 10;
+    //     // canJump = true;
     // }
-
-    cameraControls.moveRight(-velocity.x * delta);
-    cameraControls.moveForward(-velocity.z * delta);
-
-    cameraControls.getObject().position.y += velocity.y * delta; // new behavior
-
-    if (cameraControls.getObject().position.y < 10) {
-        velocity.y = 0;
-        cameraControls.getObject().position.y = 10;
-        // canJump = true;
-    }
-    prevTime = time;
+    // prevTime = time;
     renderer.render(scene, camera);
 }
 export function getScene() {
