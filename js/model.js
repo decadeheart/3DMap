@@ -44,6 +44,7 @@ export function renderModel(canvasDom, Three) {
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
         camera.updateProjectionMatrix();
+        console.log(camera);
 
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
@@ -595,7 +596,7 @@ export function animateCamera(current1, target1, current2, target2) {
         x2: target2.x,
         y2: target2.y,
         z2: target2.z
-    }, 2000);
+    }, 1000);
 
     tween.onUpdate(function () {
         camera.position.x = positionVar.x1;

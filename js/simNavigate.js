@@ -21,6 +21,9 @@ export function autoMoving(path) {
         return;
     }
     var me =app.me
+    var camera = MODEL.getCamera();
+    var controls = MODEL.getControl();
+
     let THREE = app.THREE
     /** 首先从我的当前位置移动到导航路径的起点 */
 
@@ -36,11 +39,13 @@ export function autoMoving(path) {
 
     neTween.start();
 
-    let camera = MODEL.getCamera();
-    let controls = MODEL.getControl();
+
     let newT = { x: path[0].x, y: path[0].y, z: path[0].z };
     let newP = {x: path[0].x, y: path[0].y + 15,z: path[0].z+15};
     MODEL.animateCamera(camera.position, controls.target, newP, newT)
+    let floor = path[0].z / app.map_conf.layerHeight + 1
+    MODEL.onlyDisplayFloor(floor);
+    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor)
 
 
     /**
@@ -50,11 +55,17 @@ export function autoMoving(path) {
      * @returns
      */
     function move(i) {
-        let oldT = {x: path[i-1].x, y: path[i-1].y, z: path[i-1].z +10};
+        if(app.systemControl.state != "navigating") {
+            return;
+        }
+        let oldT = {x: path[i-1].x, y: path[i-1].y, z: path[i-1].z +5};
         let oldP;
         if(i>1){
             oldP = {x: path[i-2].x, y: path[i-2].y , z: path[i-2].z + 10}           
         } else {
+            camera.fov = 90;
+            camera.updateProjectionMatrix();
+            console.log(camera);
             oldP = {x: path[0].x, y: path[0].y , z: path[0].z +80}
         }
         if (path[i].z - path[i - 1].z != 0) {
@@ -62,7 +73,7 @@ export function autoMoving(path) {
             MODEL.onlyDisplayFloor(floor);
             SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor)
         }
-        let newT = { x: path[i].x, y: path[i].y, z: path[i].z +10};
+        let newT = { x: path[i].x, y: path[i].y, z: path[i].z +5};
         let newP = {x: path[i-1].x, y: path[i-1].y ,z: path[i-1].z + 10};
         MODEL.animateCamera(oldP, oldT, newP, newT)
         if( i===path.length) {return;}
@@ -76,7 +87,7 @@ export function autoMoving(path) {
             x: path[i].x,
             y: path[i].y,
             z: path[i].z + app.map_conf.int_userHeight
-        }, 2000)
+        }, 1000)
             .onStart(function () {
 
             }).onComplete(function () {
@@ -141,8 +152,6 @@ export function autoMoving(path) {
                 },
                 Math.abs(me.rotation.z - angle) / Math.PI * 1000
             ).onComplete(function () {
-
-
 
                 move(i+1);
             }).onStart(function () {
