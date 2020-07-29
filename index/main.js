@@ -32,7 +32,6 @@ main.initMap = function (that) {
             app.canvas = canvas;
             app.THREE = THREE;
             MODEL.renderModel(canvas, THREE);
-            MODEL.camerafix();
             MODEL.initPath();
             let renderer = MODEL.getRender();
             let scene = MODEL.getScene();
@@ -91,7 +90,7 @@ main.displayAllFloor = function () {
 };
 main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
-    //SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
+    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
