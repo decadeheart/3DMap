@@ -595,7 +595,7 @@ export function animateCamera(current1, target1, current2, target2) {
         x2: target2.x,
         y2: target2.y,
         z2: target2.z
-    }, 2000);
+    }, 1000);
 
     tween.onUpdate(function () {
         camera.position.x = positionVar.x1;
