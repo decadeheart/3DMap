@@ -117,6 +117,10 @@ export function getRender() {
     return renderer;
 }
 
+export function getControl() {
+    return controls;
+}
+
 export function addUser(x,y,z) {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
@@ -615,7 +619,7 @@ function displayPoi(floor, poi) {
 // target2 新的controls的target
 
 
-function animateCamera(current1, target1, current2, target2) {
+export function animateCamera(current1, target1, current2, target2) {
 
     let positionVar = {
         x1: current1.x,
@@ -635,7 +639,7 @@ function animateCamera(current1, target1, current2, target2) {
         x2: target2.x,
         y2: target2.y,
         z2: target2.z
-    }, 5000);
+    }, 2000);
 
     tween.onUpdate(function () {
         camera.position.x = positionVar.x1;

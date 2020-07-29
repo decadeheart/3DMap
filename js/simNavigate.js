@@ -32,10 +32,15 @@ export function autoMoving(path) {
     dis3(me.position, path[0]) * 10
     )
     neTween.onStop(move(1))
-    //neTween.onComplete(move(1));
+
     neTween.start();
 
-    //userControl.changePosition(path[0].x,path[0].y, me.position.z, "animation");
+    let camera = MODEL.getCamera();
+    let controls = MODEL.getControl();
+    let newT = { x: path[0].x, y: path[0].y, z: path[0].z };
+    let newP = {x: path[0].x, y: path[0].y + 15,z: path[0].z+15};
+    MODEL.animateCamera(camera.position, controls.target, newP, newT)
+
 
     /**
      * @description 在导航路径上图标向前移动
@@ -44,6 +49,17 @@ export function autoMoving(path) {
      * @returns
      */
     function move(i) {
+        let oldT = {x: path[i-1].x, y: path[i-1].y, z: path[i-1].z };
+        let oldP;
+        if(i>1){
+            oldP = {x: path[i-2].x, y: path[i-2].y +80, z: path[i-2].z +80}           
+        } else {
+            oldP = {x: path[0].x, y: path[0].y +80, z: path[0].z +80}
+        }
+
+        let newT = { x: path[i].x, y: path[i].y, z: path[i].z };
+        let newP = {x: path[i-1].x, y: path[i-1].y + 80,z: path[i-1].z+80};
+        MODEL.animateCamera(oldP, oldT, newP, newT)
         if( i===path.length) {return;}
         console.log('移动',i,path[i]);
         // let me = app.me;
