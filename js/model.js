@@ -44,6 +44,7 @@ export function renderModel(canvasDom, Three) {
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
         camera.updateProjectionMatrix();
+        console.log(camera);
 
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
