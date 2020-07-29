@@ -5,7 +5,7 @@ import navigate from "../js/astar";
 import initData from "../js/data";
 import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
-import gps from "../js/gps"
+import gps from "../js/gps";
 import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
@@ -15,7 +15,6 @@ import { showOrientationText } from "../js/directionNotify";
 var app = getApp();
 var main = {};
 main.initMap = function (that) {
-
     //分别获取文字精灵、图片精灵和地图canvas并创建相应处理Threejs实例
     wx.createSelectorQuery()
         .select("#sprite")
@@ -37,28 +36,30 @@ main.initMap = function (that) {
             let renderer = MODEL.getRender();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            //MODEL.navRender(that);
-            //SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
+            MODEL.navRender(that);
+            // SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
             navRender();
             function navRender() {
                 renderer.clear();
-            
+
                 let systemControl = app.systemControl;
-                if(systemControl.state === 'navigating' || systemControl.state === 'previewing') {
+                if (
+                    systemControl.state === "navigating" ||
+                    systemControl.state === "previewing"
+                ) {
                     app.pathControl.textures.forEach(function (item) {
                         item.offset.x -= 0.05;
-                    })
+                    });
                 }
-                if (systemControl.state === 'navigating') {
-            
+                if (systemControl.state === "navigating") {
                     let text = showOrientationText();
-                    if(text) {
+                    if (text) {
                         that.setData({
                             navInformation: text,
                         });
                     }
                 }
-            
+
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();
@@ -80,7 +81,6 @@ main.initMap = function (that) {
             }
         },
     });
-
 };
 
 main.cameraExchange = function (index) {
@@ -105,7 +105,7 @@ main.setEndPoint = function () {
 main.backToMe = function () {
     MODEL.backToMe();
 };
-main.dragCamera = function(ev){
+main.dragCamera = function (ev) {
     // console.log(1,MODEL.getCamera());
     ca.dragCamera(ev);
     // ca.cameraExchange();
@@ -144,49 +144,42 @@ main.startBeaconDiscovery = function () {
     });
 };
 
-// 打开GPS
-main.openGPS=function(){
-    gps.openGPS();
-}
-var gpsInterval;
-//获取当前经纬度坐标
-main.getLngLat=function(){
-    gpsInterval=setInterval(()=>{
-        gps.getLocation().then(res=>{
-            console.log(res)
-        })
-    },1500)
-
-}
+//获取当前经纬度坐标,用完必须关闭
+main.setPoibyLngLat = function () {
+    gps.getLocationChange();
+};
 //关闭GPS并清除定时器
-main.closeGPS=function(){
-    clearInterval(gpsInterval);
+main.closeGPS = function () {
     gps.closeGPS();
-}
+};
 
 /** 步数改变监测 */
 main.stepChange = function (that) {
     accChange(that);
-}
+};
 
 /** 获得起点和终点信息后获得导航路径 */
 main.navigateInit = function () {
-    return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
-}
+    return navigate(
+        app.nodeList,
+        app.routeClass.startPoint,
+        app.routeClass.endPoint
+    );
+};
 /** 当前点设定 */
 main.setCurClick = function (point) {
     MODEL.setCurClick(point);
-}
+};
 
 /** 起点设定 */
 main.startClick = function () {
     MODEL.setStartClick();
-}
+};
 
 /** 终点设定 */
 main.endClick = function () {
     MODEL.setEndClick();
-}
+};
 
 /**
  * @description 通过data.js 向服务器获取数据集、初始化数据
@@ -195,14 +188,14 @@ main.endClick = function () {
  */
 main.getBuildingData = () => {
     return new Promise((resolve, reject) => {
-        initData.then(res => {
+        initData.then((res) => {
             resolve(res);
-        })
-    })
-}
+        });
+    });
+};
 
-main.autoMove = (path)=> {
+main.autoMove = (path) => {
     autoMoving(path);
-} 
+};
 
 export default main;

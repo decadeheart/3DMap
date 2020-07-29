@@ -197,11 +197,12 @@
 /* <!-- 左下角定位 9% --> */
 .myLocation {
     position: absolute;
-    bottom: 13.5%;
+    bottom: 16.5%;
     left: 2%;
-    height: 8%;
-    /* background-color: #fff; */
+    /* background-color: #555; */
     z-index: 10;
+    /* transform: rotate(-45deg); */
+    transition: transform 1s;
 }
 
 /* <!-- 选择的地点提示信息 20% --> */

@@ -36,6 +36,19 @@ const userControl = {
         }
     },
     /**
+     * 初始化用户
+     */
+    initUser: function (x,y,z) {
+        let me = app.me
+        userControl.isInitUser = true;
+        // userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+        userControl.changePosition(x, y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+        // me.name = 'user';
+        me.floor = app.map.curFloor;
+        //userControl.changeRotation(null, null, Math.PI * 2 - (Math.PI / 180) * (app.map.mapOrientation));
+        userControl.changeRotation(null, null, Math.PI / 2);
+    },
+    /**
      * 改变缩放倍数
      * @param {*} scale  倍数
      */
@@ -95,7 +108,7 @@ const userControl = {
             y: (y === null) ? me.position.y : y,
             z: (z === null) ? me.position.z : z
         };
-
+        
         switch (mode) {
             case "direction":
                 me.position.set(nextpoint.x, nextpoint.y, nextpoint.z);
@@ -107,19 +120,6 @@ const userControl = {
                 break;
         }
 
-    },
-    /**
-     * 初始化用户
-     */
-    initUser: function (x,y,z) {
-        let me = app.me
-        userControl.isInitUser = true;
-        // userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
-        userControl.changePosition(x, y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
-        // me.name = 'user';
-        me.floor = app.map.curFloor;
-        //userControl.changeRotation(null, null, Math.PI * 2 - (Math.PI / 180) * (app.map.mapOrientation));
-        userControl.changeRotation(null, null, Math.PI / 2);
     }
 }
 

@@ -1,13 +1,13 @@
 //关于模型的各类操作
 import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
-import registerPoint from "../util/PointerLockControls"; //相机操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as ca from "./camera"; //相机操作
 import { showOrientationText } from "./directionNotify";
 import tts from "./tts";
+import gps from "./gps";
 
 //全局变量，供各个函数调用
 var canvas, THREE;
@@ -58,6 +58,7 @@ export function renderModel(canvasDom, Three) {
         // var axesHelper = new THREE.AxesHelper(5000);
         // axesHelper.material.linewidth = 500;
         // scene.add(axesHelper);
+
         // //正交投影照相机
         // let camera2 = new THREE.OrthographicCamera(-10, 10, 10, -10, 5, 300);
         // renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -72,8 +73,11 @@ export function renderModel(canvasDom, Three) {
 
         //加载文字和图片
         //loadTargetText(scene);
-
-        // addUser();
+        
+        addUser();
+        // gps.getLocation().then(res=>{
+        //     addUser(res[0],res[1]);
+        // })
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -117,7 +121,7 @@ export function getRender() {
     return renderer;
 }
 
-export function addUser(x,y,z) {
+export function addUser(x,y) {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load("../img/me.png", function (texture) {
@@ -129,10 +133,22 @@ export function addUser(x,y,z) {
             opacity: 1,
             depthTest: false,
         });
+        //获取当期位置的GPS坐标并初始化
+        gps.getLocation().then(res=>{
+            userControl.initUser(res[0],res[1],0);
+        })
+        // userControl.initUser(x,y,0);
         app.me = new THREE.Mesh(usergeometry, material);
-        userControl.initUser(x,y,z);
         scene.add(app.me);
     });
+}
+//改变的当前地图上的位置
+export function changePosition(x,y,z) {
+    userControl.changePosition(x,y,z,"animation");
+}
+//改变旋转角度
+export function rotate(x,y,z) {
+    userControl.changeRotation(x,y,z,"animation");
 }
 var caCoord = {};
 /**
@@ -146,12 +162,10 @@ export function cameraExchange(index) {
     if (controls.maxPolarAngle == 0 || index == 3) {
         // console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
-        camera.lookAt(0, 0, 0);
         camera.position.set(caCoord.x, caCoord.y, caCoord.z);
         // camera.po;
     } else {
         // console.log("3D->2D");
-        camera.lookAt(camera.position.x, camera.position.y, 0);
         caCoord.x = camera.position.x;
         caCoord.y = camera.position.y;
         caCoord.z = camera.position.z;
@@ -475,11 +489,11 @@ export function createPathTube(path) {
  */
 export function setCurClick(point) {
     if (point != null) {
-        console.log(point)
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
-        showSprite(app.spriteControl.startSprite, point, "cur");
         selectedPoint = point;
+        showSprite(app.spriteControl.startSprite, point, "cur");
+        console.log(point)
     }
 }
 
@@ -539,7 +553,11 @@ export function backToMe() {
     let me = app.me;
     // changeMe(6, [0, 500, 300])
     // console.log(me);
-    displayPoi(me.floor, me.position);
+    gps.getLocation().then(res=>{
+        // userControl.changePosition(res[0],res[1],0,"direction");
+        displayPoi(me.floor, me.position);
+    })
+    
 }
 
 

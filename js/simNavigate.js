@@ -120,9 +120,6 @@ export function autoMoving(path) {
                 },
                 Math.abs(me.rotation.z - angle) / Math.PI * 1000
             ).onComplete(function () {
-
-
-
                 move(i+1);
             }).onStart(function () {
 

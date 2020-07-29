@@ -49,7 +49,7 @@
 		<image src="{{ allFloorImgUrl }}" class="floor-item" bindtap="allFloor"></image>
 
 		<block wx:key="index" wx:for="{{ floorImgUrl }}">
-			<image src="{{ item }}" class="floor-item" bindtap="selectFloor" data-floor="{{ index }}"></image>
+			<image src="{{item}}" class="floor-item" bindtap="selectFloor" data-floor="{{ index }}"></image>
 		</block>
 		<view class="floor-space"></view>
 	</view>
@@ -58,8 +58,8 @@
 	<view class="compass" bindtap="test">走了 {{step}} 步</view>
 
 	<!-- 左下角定位 9% -->
-	<view class="myLocation" bindtap="getMyLocation">
-		<mp-icon type="field" icon="discover" size="{{ 30 }} " color="rgb(72,131,246)"></mp-icon>
+	<view class="myLocation" bindtap="getMyLocation" style="transform: rotate({{compassAngle}});">
+		<mp-icon type="field" icon="discover" size="{{30}} "  color="rgb(72,131,246)"></mp-icon>
 	</view>
 
 	<!-- 选择的地点提示信息 设置起点终点 20% -->

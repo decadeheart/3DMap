@@ -1,7 +1,5 @@
 import main from "./main";
-import gps from "../js/gps"
-import * as MODEL from "../js/model";
-import tts from "../js/tts";
+import {openCompass} from "../js/compass"
 var app = getApp();
 Page({
     data: {
@@ -39,11 +37,14 @@ Page({
         searchHidden: true,
         floorIndex:0,
         searchTitle: app.map_conf.map_name,
+        compassAngle:"-45deg"
     },
 
     onLoad: function () {
         var that = this;
         main.initMap(that);
+        
+        openCompass(this);
 
         main.getBuildingData().then(buildingDataTmp => {
             // 将其变成一维数组，方便遍历
@@ -65,7 +66,7 @@ Page({
             });
             
         });
-        gps.getLocationChange();
+        
         /** 步数监测 */
         main.stepChange(that);
         //初始化图片url
@@ -86,8 +87,6 @@ Page({
         //     ],
         //     logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
         // });
-
-
     },
 
     /**
@@ -123,6 +122,8 @@ Page({
      */
     allFloor(e) {
         main.displayAllFloor();
+        //测试关闭gps
+        main.closeGPS()
     },
     /**
      * @description 页面点击楼层图片，切换楼层
@@ -164,11 +165,12 @@ Page({
 
     },
     test() {
-        this.setData({
-            navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
-            infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
-        });
+        // this.setData({
+        //     navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
+        //     infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
+        // });
         // console.log(this.data.navFlag, this.data.infoFlag);
+        main.setPoibyLngLat();
     },
 
     /**
@@ -275,7 +277,6 @@ Page({
         });        
     },
     touchTap(e) {
-
         if(! app.navigateFlag) {
             app.curName = main.selectObj(e.touches[0]);
             if (!!!app.curName) app.curName = "室外";
