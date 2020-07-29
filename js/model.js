@@ -489,21 +489,41 @@ export function setCurClick(point) {
  * @date 2020-07-22
  * @export
  */
-export function setStartClick() {
-    scene.remove(app.spriteControl.curSprite);
-    app.spriteControl.curSprite = null;
-    showSprite(app.spriteControl.startSprite, selectedPoint, "start");
-
+export function setStartClick(point) {
+    if(!point){
+        scene.remove(app.spriteControl.curSprite);
+        app.spriteControl.curSprite = null;
+        showSprite(app.spriteControl.startSprite, selectedPoint, "start");
+    }else {
+        scene.remove(app.spriteControl.startSprite);
+        app.spriteControl.startSprite = null;
+        showSprite(app.spriteControl.startSprite, point, "start");
+    }
 }
 /**
  * @description 点击设定终点响应事件
  * @date 2020-07-22
  * @export
  */
-export function setEndClick() {
-    scene.remove(app.spriteControl.curSprite);
-    app.spriteControl.curSprite = null;
-    showSprite(app.spriteControl.endSprite, selectedPoint, "end");
+export function setEndClick(point) {
+    if(!point) {
+        scene.remove(app.spriteControl.curSprite);
+        app.spriteControl.curSprite = null;
+        showSprite(app.spriteControl.endSprite, selectedPoint, "end");
+    }else {
+        scene.remove(app.spriteControl.endSprite);
+        app.spriteControl.endSprite = null;
+        showSprite(app.spriteControl.endSprite, point, "end");        
+    }
+
+}
+
+export function setStartMe() {
+    scene.remove(app.spriteControl.startSprite);
+    app.spriteControl.startSprite = null;
+    console.log('me',app.me.position)
+    showSprite(app.spriteControl.startSprite, app.me.position, "start");
+
 }
 
 /**

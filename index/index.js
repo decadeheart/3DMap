@@ -142,6 +142,13 @@ Page({
             startPointName: this.data.endPointName,
             endPointName: this.data.startPointName,
         });
+        let tmp = app.routeClass.startPoint;
+        app.routeClass.startPoint = app.routeClass.endPoint;
+        app.routeClass.endPoint = tmp;
+        console.log('交换',tmp)
+        main.endClick(app.routeClass.endPoint);
+        main.startClick(app.routeClass.startPoint);
+        let dis = main.navigateInit();
     },
 
     /**
@@ -354,4 +361,22 @@ Page({
             }
         }, 50);
     },
+
+    goThere() {
+        main.endClick();
+        main.startMe();
+        let self = this;
+        setTimeout(function () {
+            if (!!app.spriteControl.startSprite) {
+                let dis = main.navigateInit();
+                self.setData({
+                    navFlag: 2,
+                    infoFlag: 2,
+                    distanceInfo: dis,
+                    endPointName: app.curName,
+                    startPointName: "我的位置"
+                });
+            }
+        }, 50);        
+    }    
 });
