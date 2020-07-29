@@ -575,7 +575,7 @@ function displayPoi(floor, poi) {
  * @param {*} current2 新相机的目标位置
  * @param {*} target2 新的controls的target
  */
-function animateCamera(current1, target1, current2, target2) {
+export function animateCamera(current1, target1, current2, target2) {
 
     let positionVar = {
         x1: current1.x,

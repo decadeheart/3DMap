@@ -71,7 +71,7 @@ export function autoMoving(path) {
             x: path[i].x,
             y: path[i].y,
             z: path[i].z + app.map_conf.int_userHeight
-        }, dis3(path[i - 1], path[i]) * 100)
+        }, 2000)
             .onStart(function () {
 
             }).onComplete(function () {
