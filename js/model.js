@@ -60,10 +60,9 @@ export function renderModel(canvasDom, Three) {
         loadModel(scene);
 
         //加载文字和图片
-        //loadTargetText(scene);
+        // loadTargetText(scene);
 
-        //添加用户
-        addUser();
+        // addUser();
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -79,13 +78,6 @@ export function renderModel(canvasDom, Three) {
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
-
-        // const {PointerLockControls} = registerPoint(THREE);
-        // cameraControls = new PointerLockControls(camera, renderer.domElement);
-        // scene.add(cameraControls.getObject());
-
-        // velocity = new THREE.Vector3();
-        // direction = new THREE.Vector3();
 
     }
 
@@ -104,49 +96,11 @@ export function renderModel(canvasDom, Three) {
         scene.add(cameraHelper);
     }
 }
-// var prevTime = performance.now();
-// var moveForward = false;
-// var moveBackward = false;
-// var moveLeft = true;
-// var moveRight = false;
-// var velocity ;
-// var direction;
+
 /**
  * @description 渲染循环
  */
 function animate() {
-    // var time = performance.now();
-    // var delta = (time - prevTime) / 10000;
-
-    // velocity.x -= velocity.x * 10.0 * delta;
-    // velocity.z -= velocity.z * 10.0 * delta;
-
-    // velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-
-    // direction.z = Number(moveForward) - Number(moveBackward);
-    // direction.x = Number(moveRight) - Number(moveLeft);
-    // direction.normalize(); // this ensures consistent movements in all directions
-
-    // if (moveForward || moveBackward)
-    //     velocity.z -= direction.z * 400.0 * delta;
-    // if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
-
-    // // if (onObject === true) {
-    // // 	velocity.y = Math.max(0, velocity.y);
-    // // 	canJump = true;
-    // // }
-
-    // // cameraControls.moveRight(-velocity.x * delta);
-    // // cameraControls.moveForward(-velocity.z * delta);
-
-    // cameraControls.getObject().position.y += velocity.y * delta; // new behavior
-
-    // if (cameraControls.getObject().position.y < 10) {
-    //     velocity.y = 0;
-    //     cameraControls.getObject().position.y = 10;
-    //     // canJump = true;
-    // }
-    // prevTime = time;
     canvas.requestAnimationFrame(animate);
     renderer.render(scene, camera);
     TWEEN.update();
@@ -168,7 +122,7 @@ export function getRender() {
  * @description 加载用户贴图
  * @export
  */
-export function addUser() {
+export function addUser(x,y,z) {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load("../img/me.png", function (texture) {
@@ -181,7 +135,7 @@ export function addUser() {
             depthTest: false,
         });
         app.me = new THREE.Mesh(usergeometry, material);
-        userControl.initUser();
+        userControl.initUser(x,y,z);
         scene.add(app.me);
     });
 }

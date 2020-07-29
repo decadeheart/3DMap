@@ -1,4 +1,7 @@
 import main from "./main";
+import gps from "../js/gps"
+import * as MODEL from "../js/model";
+import tts from "../js/tts";
 var app = getApp();
 Page({
     data: {
@@ -35,7 +38,6 @@ Page({
         buildingRoomGroup:[],
         searchHidden: true,
         floorIndex:0,
-        // tabSelectStyle:[],
         searchTitle: app.map_conf.map_name,
     },
 
@@ -63,7 +65,7 @@ Page({
             });
             
         });
-
+        gps.getLocationChange();
         /** 步数监测 */
         main.stepChange(that);
         //初始化图片url
@@ -177,22 +179,6 @@ Page({
         this.setData({
             modalFlag: status,
         });
-        // wx.navigateTo({
-        //     url: "../search/search",
-        //     events: {
-        //         // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-        //         acceptDataFromOpenedPage: function (data) {
-        //             console.log(data);
-        //         },
-        //         someEvent: function (data) {
-        //             console.log(data);
-        //         },
-        //     },
-        //     success: function (res) {
-        //         // 通过eventChannel向被打开页面传送数据
-        //         res.eventChannel.emit("acceptDataFromOpenerPage", { data: "test" });
-        //     },
-        // });
     },
     /**
      * @description 模态框搜索
@@ -243,11 +229,8 @@ Page({
      */
     switchTap(e){
         let index=e.target.dataset.tapindex;
-        // let style=[];
-        // style[index]="color: rgb(92,99,231);border-bottom:5rpx solid rgb(92,99,231);"
         this.setData({
-            buildingIndex:index,
-            // tabSelectStyle:style
+            buildingIndex:index
         });
 
     },

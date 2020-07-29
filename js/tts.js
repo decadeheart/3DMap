@@ -31,6 +31,7 @@ var getAudioSrc = (text) => {
 
 /**
  * @description 播放语音
+ * @paras {text} 文字 
  */
 async function tts(text) {
     const innerAudioContext = wx.createInnerAudioContext();
@@ -47,5 +48,7 @@ async function tts(text) {
         console.log(res.errMsg);
         console.log(res.errCode);
     });
+    
+    
 }
 export default tts;

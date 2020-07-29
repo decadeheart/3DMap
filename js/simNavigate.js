@@ -2,9 +2,7 @@ import * as TWEEN from "../util/tween.min"; //动画操作
 import * as MODEL from "../js/model";
 import userControl from "./user"; //用户贴图
 
-
 var app = getApp();
-
 
 /**
  * @description 模拟导航当中的自己转弯和向前移动
