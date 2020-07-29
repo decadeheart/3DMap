@@ -26,6 +26,8 @@ function makeFontSprite(message) {
     canvas.width = width;
     canvas.height = height;
     //在画布上创建字体原型
+    // context.fillStyle = "#FFFFFF";
+    // context.fillRect(0, 0, canvas.width, canvas.height);
     context.fillStyle = fontColor;
     context.font = fontsize + "px " + fontface;
     context.fillText(message, 0, fontsize);
@@ -72,7 +74,7 @@ function makeImgSprite(imageURL) {
     let map_conf = app.map_conf;
     let THREE = app.THREE;
     let texture = new THREE.TextureLoader().load(imageURL);
-    let material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+    let material = new THREE.SpriteMaterial({ map: texture, depthTest: true });
     let sprite = new THREE.Sprite(material);
     sprite.scale.set(map_conf.noTargetSpriteScale / 2, map_conf.noTargetSpriteScale / 2, 1);
     sprite.initScale = {

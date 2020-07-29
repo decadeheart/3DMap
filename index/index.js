@@ -1,5 +1,5 @@
 import main from "./main";
-import {openCompass} from "../js/compass"
+import { openCompass } from "../js/compass";
 var app = getApp();
 Page({
     data: {
@@ -7,7 +7,14 @@ Page({
         dimensionImgUrl: ["../img/2D.png", "../img/3D.png"],
         dimension: 3,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png", "../img/6F.png"],
+        floorImgUrl: [
+            "../img/1F.png",
+            "../img/2F.png",
+            "../img/3F.png",
+            "../img/4F.png",
+            "../img/5F.png",
+            "../img/6F.png",
+        ],
         logoUrl: "",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
@@ -20,12 +27,14 @@ Page({
         infoFlag: 0,
         showBlue: false,
         step: 0,
-        buttons: [{
-            type: "primary",
-            className: "",
-            text: "确认",
-            value: 1,
-        }, ],
+        buttons: [
+            {
+                type: "primary",
+                className: "",
+                text: "确认",
+                value: 1,
+            },
+        ],
         //模态框是否显示,模态框搜索结果
         modalFlag: false,
         searchResult: [],
@@ -33,27 +42,27 @@ Page({
         buildingIndex: 0,
         buildingData: [],
         buildingData1D: [],
-        buildingRoomGroup:[],
+        buildingRoomGroup: [],
         searchHidden: true,
-        floorIndex:0,
+        floorIndex: 0,
         searchTitle: app.map_conf.map_name,
-        compassAngle:"-45deg"
+        compassAngle: "-45deg",
     },
 
     onLoad: function () {
         var that = this;
         main.initMap(that);
-        
+
         openCompass(this);
 
-        main.getBuildingData().then(buildingDataTmp => {
+        main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
-            var eachFloor=[].concat(...buildingDataTmp[1]);
-            eachFloor=[].concat(...eachFloor);  
+            var eachFloor = [].concat(...buildingDataTmp[1]);
+            eachFloor = [].concat(...eachFloor);
             that.setData({
                 buildingList: buildingDataTmp[0],
                 buildingData: buildingDataTmp[1],
-                buildingRoomGroup:buildingDataTmp[2],
+                buildingRoomGroup: buildingDataTmp[2],
                 searchResult: eachFloor,
                 buildingData1D: eachFloor,
                 modalSearch: that.modalSearch.bind(that),
@@ -62,11 +71,9 @@ Page({
             main.startBeaconDiscovery().then((res) => {
                 that.setData({
                     showBlue: res.showBlueStatus,
-                })
+                });
             });
-            
         });
-        
         /** 步数监测 */
         main.stepChange(that);
         //初始化图片url
@@ -123,7 +130,7 @@ Page({
     allFloor(e) {
         main.displayAllFloor();
         //测试关闭gps
-        main.closeGPS()
+        main.closeGPS();
     },
     /**
      * @description 页面点击楼层图片，切换楼层
@@ -132,7 +139,6 @@ Page({
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
         main.onlyDisplayFloor(floor + 1);
-
     },
 
     /**
@@ -143,6 +149,13 @@ Page({
             startPointName: this.data.endPointName,
             endPointName: this.data.startPointName,
         });
+        let tmp = app.routeClass.startPoint;
+        app.routeClass.startPoint = app.routeClass.endPoint;
+        app.routeClass.endPoint = tmp;
+        console.log("交换", tmp);
+        main.endClick(app.routeClass.endPoint);
+        main.startClick(app.routeClass.startPoint);
+        let dis = main.navigateInit();
     },
 
     /**
@@ -162,7 +175,6 @@ Page({
     getMyLocation() {
         console.log("我在这");
         main.backToMe();
-
     },
     test() {
         // this.setData({
@@ -186,26 +198,26 @@ Page({
      * @description 模态框搜索
      */
     modalSearch(e) {
-        let searchInput=e.detail.value;
-        searchInput=searchInput.replace(/\s+/g,'');
-        if (searchInput.length!=0) {
-            let tmp = this.data.buildingData1D.filter(item => {
+        let searchInput = e.detail.value;
+        searchInput = searchInput.replace(/\s+/g, "");
+        if (searchInput.length != 0) {
+            let tmp = this.data.buildingData1D.filter((item) => {
                 var reg = new RegExp(searchInput);
                 return reg.test(item.name) || reg.test(item.name2);
             });
             this.setData({
-                searchResult: tmp
-            })
+                searchResult: tmp,
+            });
         }
-        return new Promise(() => {})
+        return new Promise(() => {});
     },
     /**
      * @description 搜索提示框隐藏和显示
      */
     switchHidden() {
         this.setData({
-            searchHidden: !this.data.searchHidden
-        })
+            searchHidden: !this.data.searchHidden,
+        });
     },
     /**
      * @description 选中搜索结果后触发
@@ -217,38 +229,35 @@ Page({
         this.setData({
             currentPointName: target.name + target.name2,
             modalFlag: false,
-            infoFlag: 1
+            infoFlag: 1,
         });
-        //调用 
-        main.onlyDisplayFloor(parseInt(target.floor))
+        //调用
+        main.onlyDisplayFloor(parseInt(target.floor));
         main.setCurClick(target);
-
     },
     /**
      * @description 搜索栏切换tab
      * @date 2020-07-24
      * @param {*} e 事件
      */
-    switchTap(e){
-        let index=e.target.dataset.tapindex;
+    switchTap(e) {
+        let index = e.target.dataset.tapindex;
         this.setData({
-            buildingIndex:index
+            buildingIndex: index,
         });
-
     },
     /**
      * @description 显示该楼层的具体房间，如果重复选择该层，则隐藏
      * @date 2020-07-24
      * @param {*} e 事件
      */
-    showFloor(e){
-        let index=e.currentTarget.dataset.floorindex;
-        index= index==this.data.floorIndex?-1:index;
+    showFloor(e) {
+        let index = e.currentTarget.dataset.floorindex;
+        index = index == this.data.floorIndex ? -1 : index;
         // console.log(index);
         this.setData({
-            floorIndex:index
-        })
-        
+            floorIndex: index,
+        });
     },
     /**
      * @description 模拟导航
@@ -274,10 +283,10 @@ Page({
         this.setData({
             navFlag: 2,
             infoFlag: 2,
-        });        
+        });
     },
     touchTap(e) {
-        if(! app.navigateFlag) {
+        if (!app.navigateFlag) {
             app.curName = main.selectObj(e.touches[0]);
             if (!!!app.curName) app.curName = "室外";
             this.setData({
@@ -299,7 +308,7 @@ Page({
             type: "touchmove",
         });
         // console.log(e)
-        main.dragCamera(e.touches[0])
+        main.dragCamera(e.touches[0]);
     },
     touchEnd(e) {
         app.canvas.dispatchTouchEvent({
@@ -329,11 +338,10 @@ Page({
                     navFlag: 2,
                     infoFlag: 2,
                     distanceInfo: dis,
-                    startPointName: app.curName
+                    startPointName: app.curName,
                 });
             }
         }, 50);
-
     },
 
     /**
@@ -350,7 +358,25 @@ Page({
                     navFlag: 2,
                     infoFlag: 2,
                     distanceInfo: dis,
-                    endPointName: app.curName
+                    endPointName: app.curName,
+                });
+            }
+        }, 50);
+    },
+
+    goThere() {
+        main.endClick();
+        main.startMe();
+        let self = this;
+        setTimeout(function () {
+            if (!!app.spriteControl.startSprite) {
+                let dis = main.navigateInit();
+                self.setData({
+                    navFlag: 2,
+                    infoFlag: 2,
+                    distanceInfo: dis,
+                    endPointName: app.curName,
+                    startPointName: "我的位置",
                 });
             }
         }, 50);

@@ -31,7 +31,6 @@ main.initMap = function (that) {
             app.canvas = canvas;
             app.THREE = THREE;
             MODEL.renderModel(canvas, THREE);
-            MODEL.camerafix();
             MODEL.initPath();
             let renderer = MODEL.getRender();
             let scene = MODEL.getScene();
@@ -91,7 +90,7 @@ main.displayAllFloor = function () {
 };
 main.onlyDisplayFloor = function (floor) {
     MODEL.onlyDisplayFloor(floor);
-    //SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
+    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
@@ -172,15 +171,19 @@ main.setCurClick = function (point) {
 };
 
 /** 起点设定 */
-main.startClick = function () {
-    MODEL.setStartClick();
+main.startClick = function (point) {
+    MODEL.setStartClick(point);
 };
 
 /** 终点设定 */
-main.endClick = function () {
-    MODEL.setEndClick();
+main.endClick = function (point) {
+    MODEL.setEndClick(point);
 };
 
+/** 起点设定 */
+main.startMe = function () {
+    MODEL.setStartMe();
+};
 /**
  * @description 通过data.js 向服务器获取数据集、初始化数据
  * @date 2020-07-23

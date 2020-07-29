@@ -1,6 +1,7 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as MODEL from "../js/model";
 import userControl from "./user"; //用户贴图
+import * as SPRITE from "./sprite"
 
 var app = getApp();
 
@@ -20,6 +21,9 @@ export function autoMoving(path) {
         return;
     }
     var me =app.me
+    var camera = MODEL.getCamera();
+    var controls = MODEL.getControl();
+
     let THREE = app.THREE
     /** 首先从我的当前位置移动到导航路径的起点 */
 
@@ -29,13 +33,20 @@ export function autoMoving(path) {
         y: path[0].y,
         z: path[0].z + app.map_conf.int_userHeight
     },
-    dis3(me.position, path[0]) * 10
+    1000
     )
     neTween.onStop(move(1))
-    //neTween.onComplete(move(1));
+
     neTween.start();
 
-    //userControl.changePosition(path[0].x,path[0].y, me.position.z, "animation");
+
+    let newT = { x: path[0].x, y: path[0].y, z: path[0].z };
+    let newP = {x: path[0].x, y: path[0].y + 15,z: path[0].z+15};
+    MODEL.animateCamera(camera.position, controls.target, newP, newT)
+    let floor = path[0].z / app.map_conf.layerHeight + 1
+    MODEL.onlyDisplayFloor(floor);
+    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor)
+
 
     /**
      * @description 在导航路径上图标向前移动
@@ -44,6 +55,27 @@ export function autoMoving(path) {
      * @returns
      */
     function move(i) {
+        if(app.systemControl.state != "navigating") {
+            return;
+        }
+        let oldT = {x: path[i-1].x, y: path[i-1].y, z: path[i-1].z +5};
+        let oldP;
+        if(i>1){
+            oldP = {x: path[i-2].x, y: path[i-2].y , z: path[i-2].z + 10}           
+        } else {
+            camera.fov = 90;
+            camera.updateProjectionMatrix();
+            console.log(camera);
+            oldP = {x: path[0].x, y: path[0].y , z: path[0].z +80}
+        }
+        if (path[i].z - path[i - 1].z != 0) {
+            let floor = path[i].z / app.map_conf.layerHeight + 1
+            MODEL.onlyDisplayFloor(floor);
+            SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor)
+        }
+        let newT = { x: path[i].x, y: path[i].y, z: path[i].z +5};
+        let newP = {x: path[i-1].x, y: path[i-1].y ,z: path[i-1].z + 10};
+        MODEL.animateCamera(oldP, oldT, newP, newT)
         if( i===path.length) {return;}
         console.log('移动',i,path[i]);
         // let me = app.me;
@@ -55,7 +87,7 @@ export function autoMoving(path) {
             x: path[i].x,
             y: path[i].y,
             z: path[i].z + app.map_conf.int_userHeight
-        }, dis3(path[i - 1], path[i]) * 100)
+        }, 1000)
             .onStart(function () {
 
             }).onComplete(function () {
