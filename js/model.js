@@ -33,19 +33,18 @@ export function renderModel(canvasDom, Three) {
     function init() {
         //设置场景，背景默认为黑色，通过background设置背景色
         scene = new THREE.Scene();
-
         //将背景设为白色
         scene.background = new THREE.Color(0xffffff);
 
         //设置场景相机位置及注视点
         camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
-        camera.lookAt(new THREE.Vector3(-5, 0, 0));
-        camera.position.set(0, 0, 1000);
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+        camera.position.set(-5, 0, 1000);//将x设为-5会产生相机旋转90度的效果（原理未知）
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
         camera.updateProjectionMatrix();
-        // console.log(camera);
+
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
@@ -54,18 +53,8 @@ export function renderModel(canvasDom, Three) {
         light.position.set(0, 0, 1);
         scene.add(light);
 
-        //辅助坐标轴
-        // var axesHelper = new THREE.AxesHelper(5000);
-        // axesHelper.material.linewidth = 500;
-        // scene.add(axesHelper);
-        // //正交投影照相机
-        // let camera2 = new THREE.OrthographicCamera(-10, 10, 10, -10, 5, 300);
-        // renderer = new THREE.WebGLRenderer({ alpha: true });
-        // camera2.position.set(0, 0, 200);
-        // camera2.lookAt(new THREE.Vector3(0, 0, 0));
-        // //照相机辅助线
-        // let cameraHelper = new THREE.CameraHelper(camera2);
-        // scene.add(cameraHelper);
+        //添加辅助工具
+        // addHelper();
 
         //加载模型
         loadModel(scene);
@@ -73,6 +62,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         //loadTargetText(scene);
 
+        //添加用户
         addUser();
 
         //创建渲染器
@@ -98,6 +88,21 @@ export function renderModel(canvasDom, Three) {
         // direction = new THREE.Vector3();
 
     }
+
+    function addHelper() {
+        //辅助坐标轴
+        var axesHelper = new THREE.AxesHelper(5000);
+        axesHelper.material.linewidth = 500;
+        scene.add(axesHelper);
+        //正交投影照相机
+        let camera2 = new THREE.OrthographicCamera(-10, 10, 10, -10, 5, 300);
+        renderer = new THREE.WebGLRenderer({ alpha: true });
+        camera2.position.set(0, 0, 200);
+        camera2.lookAt(new THREE.Vector3(0, 0, 0));
+        //照相机辅助线
+        let cameraHelper = new THREE.CameraHelper(camera2);
+        scene.add(cameraHelper);
+    }
 }
 // var prevTime = performance.now();
 // var moveForward = false;
@@ -110,7 +115,6 @@ export function renderModel(canvasDom, Three) {
  * @description 渲染循环
  */
 function animate() {
-    canvas.requestAnimationFrame(animate);
     // var time = performance.now();
     // var delta = (time - prevTime) / 10000;
 
@@ -143,26 +147,27 @@ function animate() {
     //     // canJump = true;
     // }
     // prevTime = time;
+    canvas.requestAnimationFrame(animate);
     renderer.render(scene, camera);
     TWEEN.update();
 }
-
-
+//添加场景元素的get方法
 export function getScene() {
     return scene;
 }
 export function getCamera() {
     return camera;
 }
-
 export function getCanvas() {
     return canvas;
 }
-
 export function getRender() {
     return renderer;
 }
-
+/**
+ * @description 加载用户贴图
+ * @export
+ */
 export function addUser() {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
@@ -187,27 +192,20 @@ var caCoord = {};
  * @param {*} canvas 被渲染的canvas位置
  */
 export function cameraExchange(index) {
-    // console.log(camera.position, camera.rotation);
-
     if (controls.maxPolarAngle == 0 || index == 3) {
-        // console.log("2D->3D");
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.lookAt(0, 0, 0);
         camera.position.set(caCoord.x, caCoord.y, caCoord.z);
-        // camera.po;
     } else {
-        // console.log("3D->2D");
         camera.lookAt(camera.position.x, camera.position.y, 0);
         caCoord.x = camera.position.x;
         caCoord.y = camera.position.y;
         caCoord.z = camera.position.z;
         controls.setMaxPolarAngle(0);
-        // camera.position.set(0, 0, cameraRelativeZ);
     }
     camera.updateProjectionMatrix();
     controls.update();
 }
-
 /**
  * @description 显示精灵
  * @export
@@ -257,11 +255,9 @@ export function showSprite(sprite, point, type) {
                 app.spriteControl.endSprite = sprite;
                 routeClass.endPoint = point;
             }
-            // console.log(sprite);
         });
     }
 }
-
 /**
  * @description 三维勾股定理
  * @param {*} nowLi 节点1
@@ -290,7 +286,7 @@ function getNearPOIName(obj) {
             }
         }
     }
-    console.log(list[k]);
+    // console.log(list[k]);
     return list[k].name;
 }
 /**
@@ -406,7 +402,7 @@ export function onlyDisplayFloor(floor) {
             setVisible(obj);
         }
     });
-    console.log(scene.children);
+    // console.log(scene.children);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
@@ -528,7 +524,6 @@ export function setCurClick(point) {
         selectedPoint = point;
     }
 }
-
 /**
  * @description 点击设定起点响应事件
  * @date 2020-07-22
@@ -551,45 +546,19 @@ export function setEndClick() {
     showSprite(app.spriteControl.endSprite, selectedPoint, "end");
 }
 
-export function camerafix() {
-    let cameraControl = ca.cameraControl;
-    let map = app.map;
-    let map_conf = app.map_conf;
-    console.log(camera);
-    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
-    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
-    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-
-    cameraControl.focusPoint.x = -5;
-    cameraControl.focusPoint.y = 0;
-
-
-    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-
-    camera.position.x = -5 + cameraControl.relativeCoordinate.x;
-    camera.position.y = 0 + cameraControl.relativeCoordinate.y;
-
-    camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    console.log(camera);
-    controls.update();
-}
-
-export function changeMe(floor, position) {
-    let me = app.me;
-    me.floor = floor;
-    // console.log(position);
-    me.position.set(position[0], position[1], position[2]);
-}
-
+/**
+ * @description
+ * @export
+ */
 export function backToMe() {
     let me = app.me;
-    // changeMe(6, [0, 500, 300])
-    // console.log(me);
     displayPoi(me.floor, me.position);
 }
-
-
-
+/**
+ * @description
+ * @param {*} floor
+ * @param {*} poi
+ */
 function displayPoi(floor, poi) {
     // let cameraControl = ca.cameraControl;
     // let map = app.map;
@@ -632,35 +601,21 @@ function displayPoi(floor, poi) {
 
     // camera.position.set(-5, 0, 1000);
     // controls.target.set(0, 0, 0)// = new THREE.Vector3(0, 0, 0);
-
     // camera.updateProjectionMatrix();
     // controls.update();
 
     let newP = { x: 400, y: 0, z: 1000 };
     let newT = { x: 0, y: 0, z: 0 };
-    console.log(camera)
-    console.log(controls.target)
-    animateCamera(camera.position, controls.target, newP, controls.target);
-    // let me = app.me;
-    // console.log(me)
-    // new TWEEN.Tween(poi)
-    //     .to({ x: 400, y: 0, z: 100 }, 3000).repeat(Infinity).start();
-
-    // let tween = new TWEEN.Tween(camera.position);
-
-    // tween.to({ x: 100, y: 0, z: 1000 }, 1000);
-    // controls.target = new THREE.Vector3(100, 0, 1000);
-
-    // tween.start();
-
+    animateCamera(camera.position, controls.target, newP, newT);
 
 }
-// current1 相机当前的位置
-// target1 相机的controls的target
-// current2 新相机的目标位置
-// target2 新的controls的target
-
-
+/**
+ * @description
+ * @param {*} current1 相机当前的位置
+ * @param {*} target1 相机的controls的target
+ * @param {*} current2 新相机的目标位置
+ * @param {*} target2 新的controls的target
+ */
 function animateCamera(current1, target1, current2, target2) {
 
     let positionVar = {
@@ -691,7 +646,6 @@ function animateCamera(current1, target1, current2, target2) {
         controls.target.y = positionVar.y2;
         controls.target.z = positionVar.z2;
         controls.update();
-        // console.log(positionVar);
     })
 
     tween.onComplete(function () {
@@ -699,48 +653,6 @@ function animateCamera(current1, target1, current2, target2) {
         controls.enabled = true;
     })
 
-    tween.easing(TWEEN.Easing.Cubic.InOut);
-    tween.start();
-}
-
-// oldP  相机原来的位置
-// oldT  target原来的位置
-// newP  相机新的位置
-// newT  target新的位置
-// callBack  动画结束时的回调函数
-function animateCamera2(oldP, oldT, newP, newT, callBack) {
-    var tween = new TWEEN.Tween({
-        x1: oldP.x, // 相机x
-        y1: oldP.y, // 相机y
-        z1: oldP.z, // 相机z
-        x2: oldT.x, // 控制点的中心点x
-        y2: oldT.y, // 控制点的中心点y
-        z2: oldT.z  // 控制点的中心点z
-    });
-    tween.to({
-        x1: newP.x,
-        y1: newP.y,
-        z1: newP.z,
-        x2: newT.x,
-        y2: newT.y,
-        z2: newT.z
-    }, 1000);
-
-    tween.onUpdate(function (object) {
-        console.log(object)
-        camera.position.x = object.x1;
-        camera.position.y = object.y1;
-        camera.position.z = object.z1;
-        controls.target.x = object.x2;
-        controls.target.y = object.y2;
-        controls.target.z = object.z2;
-
-        controls.update();
-    })
-    tween.onComplete(function () {
-        controls.enabled = true;
-        callBack && callBack()
-    })
     tween.easing(TWEEN.Easing.Cubic.InOut);
     tween.start();
 }
