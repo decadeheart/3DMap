@@ -65,7 +65,7 @@ Page({
             });
             
         });
-        gps.getLocationChange();
+        // gps.getLocationChange();
         /** 步数监测 */
         main.stepChange(that);
         //初始化图片url

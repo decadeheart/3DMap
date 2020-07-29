@@ -62,7 +62,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         // loadTargetText(scene);
 
-        // addUser();
+        addUser();
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({

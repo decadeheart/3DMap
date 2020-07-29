@@ -1,7 +1,7 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
-import * as MODEL from "../js/model";
-import * as SPRITE from "../js/sprite";
+import * as MODEL from "./model";
 import userControl from "./user"; //用户贴图
+import * as SPRITE from "./sprite";
 
 var app = getApp();
 
@@ -45,24 +45,22 @@ export function autoMoving(path) {
      * @returns
      */
     function move(i) {
-
+        let oldT = { x: path[i - 1].x, y: path[i - 1].y, z: path[i - 1].z };
+        let oldP;
         if (i > 1) {
-            let oldT = { x: path[i - 1].x, y: path[i - 1].y, z: path[i - 1].z };
-            let oldP = { x: path[i - 2].x, y: path[i - 2].y, z: path[i - 2].z + 200 }
-            let newT = { x: path[i].x, y: path[i].y, z: path[i].z };
-            let newP = { x: path[i - 1].x, y: path[i - 1].y, z: path[i - 1].z + 200 };
-            if (path[i].z - path[i - 1].z != 0) {
-                let floor = path[i].z / app.map_conf.layerHeight + 1
-                MODEL.onlyDisplayFloor(floor);
-                SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
-            }
-            MODEL.animateCamera(oldP, oldT, newP, newT)
+            oldP = { x: 10 * path[i - 2].x - 9 * path[i - 1].x, y: 10 * path[i - 2].y - 9 * path[i - 1].y, z: path[i - 2].z + 300 }
         } else {
-            // oldP = { x: path[0].x, y: path[0].y, z: path[0].z + 200 }
-
+            oldP = { x: path[0].x, y: path[0].y, z: path[0].z + 80 }
+        }
+        if (path[i].z - path[i - 1].z != 0) {
+            let floor = path[i].z / app.map_conf.layerHeight + 1
+            MODEL.onlyDisplayFloor(floor);
+            SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor)
         }
 
-
+        let newT = { x: path[i].x, y: path[i].y, z: path[i].z };
+        let newP = { x: 10 * path[i - 1].x - 9 * path[i].x, y: 10 * path[i - 1].y - 9 * path[i].y, z: path[i - 1].z + 300 };
+        MODEL.animateCamera(oldP, oldT, newP, newT)
         if (i === path.length) { return; }
         console.log('移动', i, path[i]);
         // let me = app.me;
