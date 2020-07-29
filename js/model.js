@@ -63,7 +63,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         // loadTargetText(scene);
 
-        // addUser();
+        addUser();
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -540,53 +540,46 @@ export function backToMe() {
  * @param {*} poi
  */
 function displayPoi(floor, poi) {
-    // let cameraControl = ca.cameraControl;
-    // let map = app.map;
-    // let map_conf = app.map_conf;
-    // if (typeof floor != 'number') {
-    //     floor = parseInt(floor);
-    // }
-    // cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
-    // cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
-    // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-    // if (poi != null) {
-    //     cameraControl.focusPoint.x = poi.x;
-    //     cameraControl.focusPoint.y = poi.y;
-    // }
-    // //设置物体可见性
-    // scene.children.forEach(function (obj, i) {
-    //     if (typeof obj.floor != 'undefined') {
-    //         let floorOfObj = obj.floor;
-    //         if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
-    //             obj.visible = true;
-    //         } else {
-    //             obj.visible = false;
-    //         }
-    //     }
-    //     if (obj.name == 'path') {
-    //         if (obj.type == 'Group') {
-    //             obj.children.forEach(function (o) {
-    //                 parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
-    //             });
-    //         }
-    //     }
-    // });
-    // map.curFloor = floor;
-    // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
+    let cameraControl = ca.cameraControl;
+    let map = app.map;
+    let map_conf = app.map_conf;
+    if (typeof floor != 'number') {
+        floor = parseInt(floor);
+    }
+    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
+    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
+    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
+    if (poi != null) {
+        cameraControl.focusPoint.x = poi.x;
+        cameraControl.focusPoint.y = poi.y;
+    }
+    //设置物体可见性
+    scene.children.forEach(function (obj, i) {
+        if (typeof obj.floor != 'undefined') {
+            let floorOfObj = obj.floor;
+            if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
+                obj.visible = true;
+            } else {
+                obj.visible = false;
+            }
+        }
+        if (obj.name == 'path') {
+            if (obj.type == 'Group') {
+                obj.children.forEach(function (o) {
+                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
+                });
+            }
+        }
+    });
+    map.curFloor = floor;
+    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
 
-    // camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    // camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
-    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-
-
-    // camera.position.set(-5, 0, 1000);
-    // controls.target.set(0, 0, 0)// = new THREE.Vector3(0, 0, 0);
-    // camera.updateProjectionMatrix();
-    // controls.update();
+    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
+    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;    
 
     let newP = { x: 400, y: 0, z: 1000 };
-    let newT = { x: 0, y: 0, z: 0 };
-    animateCamera(camera.position, controls.target, newP, newT);
+    
+    animateCamera(camera.position, controls.target, newP, poi);
 
 }
 /**

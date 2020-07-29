@@ -33,7 +33,7 @@ export function autoMoving(path) {
         y: path[0].y,
         z: path[0].z + app.map_conf.int_userHeight
     },
-    dis3(me.position, path[0]) * 10
+    1000
     )
     neTween.onStop(move(1))
 
