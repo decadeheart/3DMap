@@ -307,8 +307,6 @@ Page({
             ...e,
             type: "touchmove",
         });
-        // console.log(e)
-        main.dragCamera(e.touches[0]);
     },
     touchEnd(e) {
         app.canvas.dispatchTouchEvent({
