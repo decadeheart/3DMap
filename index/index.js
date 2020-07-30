@@ -285,7 +285,7 @@ Page({
             infoFlag: 1,
         });
         main.stopNav();
-        main.backToMe();
+        main.backToMe(app.meBeforNav);
     },
     touchTap(e) {
         if (!app.navigateFlag) {
@@ -309,8 +309,7 @@ Page({
             ...e,
             type: "touchmove",
         });
-        // console.log(e)
-        main.dragCamera(e.touches[0]);
+
     },
     touchEnd(e) {
         app.canvas.dispatchTouchEvent({

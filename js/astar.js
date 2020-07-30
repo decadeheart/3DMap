@@ -263,7 +263,7 @@ function navigation(nodeList) {
  */
 function navigate(nodeList, start, end) {
 
-    app.meBeforNav = app.me.position;
+    app.meBeforNav = app.me;
     console.log(app.meBeforNav);
     let startNode = findnearest2(start, nodeList);
     let endNode = findnearest2(end, nodeList);

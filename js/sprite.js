@@ -117,7 +117,6 @@ export function loadTargetTextByFloor(scene, floor) {
     spriteGroup.name = "floor" + floor;
     scene.add(spriteGroup);
     spriteGroup = null;
-    // spriteControl.targetSprites.push(spriteGroup);
 }
 //暂时未用到下面的函数
 /**
