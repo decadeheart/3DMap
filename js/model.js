@@ -42,7 +42,6 @@ export function renderModel(canvasDom, Three) {
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
         camera.updateProjectionMatrix();
-        console.log(camera);
 
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
@@ -207,7 +206,7 @@ export function showSprite(sprite, point, type) {
                 z: 1,
             };
             sprite.name = type + "Sprite";
-            app.scaleInvariableGroup.push(sprite);
+
             sprite.center = new THREE.Vector2(0.5, 0.5);
             sprite.position.set(point.x, point.y, point.z + 5);
             sprite.floor = point.floor;
@@ -534,18 +533,9 @@ export function backToMe() {
  * @param {*} poi
  */
 function displayPoi(floor, poi) {
-    let cameraControl = ca.cameraControl;
     let map = app.map;
-    let map_conf = app.map_conf;
     if (typeof floor != 'number') {
         floor = parseInt(floor);
-    }
-    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
-    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
-    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-    if (poi != null) {
-        cameraControl.focusPoint.x = poi.x;
-        cameraControl.focusPoint.y = poi.y;
     }
     //设置物体可见性
     scene.children.forEach(function (obj, i) {
@@ -566,9 +556,6 @@ function displayPoi(floor, poi) {
         }
     });
     map.curFloor = floor;
-    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
 
     let newP = { x: 400, y: 0, z: 1000 };
     animateCamera(camera.position, controls.target, newP, poi);
