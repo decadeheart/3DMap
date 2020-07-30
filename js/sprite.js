@@ -25,9 +25,10 @@ function makeFontSprite(message) {
     //设置canvas宽高（调整大小后canvas内容被清除）
     canvas.width = width;
     canvas.height = height;
-    //在画布上创建字体原型
+    //添加白色背景
     // context.fillStyle = "#FFFFFF";
     // context.fillRect(0, 0, canvas.width, canvas.height);
+    //在画布上创建字体原型
     context.fillStyle = fontColor;
     context.font = fontsize + "px " + fontface;
     context.fillText(message, 0, fontsize);
