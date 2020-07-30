@@ -106,8 +106,8 @@ main.setStartPoint = function () {
 main.setEndPoint = function () {
     MODEL.showSprite(app.spriteControl.sprite.position, "end");
 };
-main.backToMe = function () {
-    MODEL.backToMe();
+main.backToMe = function (me) {
+    MODEL.backToMe(me);
 };
 
 /** ibeacon 打开测试 */
@@ -201,5 +201,10 @@ main.getBuildingData = () => {
 main.autoMove = (path) => {
     autoMoving(path);
 };
+
+main.stopNav = () => {
+    MODEL.stopNav();
+}
+
 
 export default main;

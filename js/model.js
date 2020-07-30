@@ -145,7 +145,7 @@ export function addUser(x, y, z) {
         // })
 
         app.me = new THREE.Mesh(usergeometry, material);
-        userControl.initUser(5,0,0);
+        userControl.initUser(5, 0, 0);
         scene.add(app.me);
     });
 }
@@ -526,11 +526,19 @@ export function setStartMe() {
  * @description
  * @export
  */
-export function backToMe() {
-    let me = app.me;
-    gps.getLocation().then(res => {
-        displayPoi(me.floor, me.position);
-    })
+export function backToMe(me) {
+    // let tween = new TWEEN.Tween(app.me.position);
+    TWEEN.removeAll();
+    // TWEEN.Tween.removeTweens(app.me.position);
+    if (!me) {
+        me = app.me;
+    }
+    console.log('danghangqian', me)
+    // canvas.cancelAnimationFrame();
+    // animate();
+
+    displayPoi(me.floor, me.position);
+
 }
 /**
  * @description
@@ -542,6 +550,7 @@ function displayPoi(floor, poi) {
     if (typeof floor != 'number') {
         floor = parseInt(floor);
     }
+    console.log("导航钱楼层", floor, poi)
     //设置物体可见性
     scene.children.forEach(function (obj, i) {
         if (typeof obj.floor != 'undefined') {
@@ -611,4 +620,12 @@ export function animateCamera(current1, target1, current2, target2) {
 
     tween.easing(TWEEN.Easing.Cubic.InOut);
     tween.start();
+}
+
+export function stopNav() {
+    scene.remove(app.pathControl.pathGroup);
+    scene.remove(app.spriteControl.endSprite);
+    scene.remove(app.spriteControl.startSprite);
+    app.routeClass.startPoint = {};
+    app.routeClass.endPoint = {};
 }
