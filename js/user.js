@@ -1,20 +1,7 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
-var app = getApp();
+import * as util from "../util/util"
 
-/**
- * @description 勾股定理计算距离
- * @date 2020-07-16
- * @param {*} nowLi 当前角度
- * @param {*} nowLi2 目标角度
- * @returns
- */
-function dis3(nowLi, nowLi2) {
-    //勾股定理
-    let a = nowLi.x - nowLi2.x;
-    let b = nowLi.y - nowLi2.y;
-    let c = nowLi.z - nowLi2.z;
-    return Math.sqrt(a * a + b * b + c * c);
-}
+var app = getApp();
 
 const userControl = {
     isInitUser: false,
@@ -41,11 +28,11 @@ const userControl = {
     initUser: function (x,y,z) {
         let me = app.me
         userControl.isInitUser = true;
-        // userControl.changePosition(userControl.userDefaultPosition.x, userControl.userDefaultPosition.y, (app.map.curFloor - 1) * app.map_conf.layerHeight + app.map_conf.int_userHeight, 'direction');
+ 
         userControl.changePosition(x, y, z, 'direction');
-        // me.name = 'user';
+
         me.floor = app.map.curFloor;
-        //userControl.changeRotation(null, null, Math.PI * 2 - (Math.PI / 180) * (app.map.mapOrientation));
+
         userControl.changeRotation(null, null, Math.PI / 2);
     },
     /**
@@ -73,7 +60,7 @@ const userControl = {
             z = (z === null) ? me.rotation.z : z;
             if (mode === "animation") {
                 //tweenjs类库主要用来调整和动画html5和js
-                new TWEEN.Tween(me.rotation).to({ x: x, y: y, z: z }, dis3(me.rotation, {
+                new TWEEN.Tween(me.rotation).to({ x: x, y: y, z: z }, util.dis3(me.rotation, {
                     x: x,
                     y: y,
                     z: z
@@ -114,9 +101,8 @@ const userControl = {
                 me.position.set(nextpoint.x, nextpoint.y, nextpoint.z);
                 break;
             case "animation":
-                let meTween = new TWEEN.Tween(me.position).to(nextpoint, dis3(me.position, nextpoint) * 100);
+                let meTween = new TWEEN.Tween(me.position).to(nextpoint, util.dis3(me.position, nextpoint) * 100);
                 meTween.start();
-                //meTween.update();
                 break;
         }
 
