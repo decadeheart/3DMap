@@ -54,7 +54,6 @@ Page({
         main.initMap(that);
         openCompass(this);
         
-        // startDeviceMotion();
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
             var eachFloor = [].concat(...buildingDataTmp[1]);
@@ -76,24 +75,6 @@ Page({
         });
         /** 步数监测 */
         main.stepChange(that);
-        //初始化图片url
-        // this.setData({
-        //     modalSearch: this.modalSearch.bind(this),
-        //     dimensionImgUrl: [
-        //         this.data.baseUrl + "ui_img/2D.png",
-        //         this.data.baseUrl + "ui_img/3D.png",
-        //     ],
-        //     allFloorImgUrl: this.data.baseUrl + "ui_img/more.png",
-        //     floorImgUrl: [
-        //         this.data.baseUrl + "ui_img/1F.png",
-        //         this.data.baseUrl + "ui_img/2F.png",
-        //         this.data.baseUrl + "ui_img/3F.png",
-        //         this.data.baseUrl + "ui_img/4F.png",
-        //         this.data.baseUrl + "ui_img/5F.png",
-        //         this.data.baseUrl + "ui_img/6F.png",
-        //     ],
-        //     logoUrl: this.data.baseUrl + "ui_img/LOGO_500.png",
-        // });
     },
 
     /**
@@ -153,7 +134,7 @@ Page({
         console.log("交换", tmp);
         main.endClick(app.routeClass.endPoint);
         main.startClick(app.routeClass.startPoint);
-        let dis = main.navigateInit();
+        main.navigateInit();
     },
 
     /**
@@ -172,6 +153,7 @@ Page({
      */
     getMyLocation() {
         console.log("我在这");
+
         main.backToMe();
     },
     test() {
@@ -207,7 +189,7 @@ Page({
                 searchResult: tmp,
             });
         }
-        return new Promise(() => {});
+        return new Promise(() => { });
     },
     /**
      * @description 搜索提示框隐藏和显示
@@ -253,7 +235,6 @@ Page({
     showFloor(e) {
         let index = e.currentTarget.dataset.floorindex;
         index = index == this.data.floorIndex ? -1 : index;
-        // console.log(index);
         this.setData({
             floorIndex: index,
         });
@@ -267,7 +248,6 @@ Page({
         // console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
-        app.map.FloorChangeCheckTime = 1000;
         main.autoMove(app.resultParent);
         app.navigateFlag = 1;
         this.setData({
@@ -280,18 +260,20 @@ Page({
         app.systemControl.realMode = true;
         app.navigateFlag = 0;
         this.setData({
-            navFlag: 2,
-            infoFlag: 2,
+            navFlag: 1,
+            infoFlag: 1,
         });
+        main.stopNav();
+
+        main.backToMe();
     },
     touchTap(e) {
         if (!app.navigateFlag) {
-            app.curName = main.selectObj(e.touches[0]);
-            if (!!!app.curName) app.curName = "室外";
+            let tmp = main.selectObj(e.touches[0])
             this.setData({
                 navFlag: 1,
                 infoFlag: 1,
-                currentPointName: app.curName,
+                currentPointName: tmp,
             });
         }
     },
@@ -306,8 +288,6 @@ Page({
             ...e,
             type: "touchmove",
         });
-        // console.log(e)
-        main.dragCamera(e.touches[0]);
     },
     touchEnd(e) {
         app.canvas.dispatchTouchEvent({
@@ -337,7 +317,7 @@ Page({
                     navFlag: 2,
                     infoFlag: 2,
                     distanceInfo: dis,
-                    startPointName: app.curName,
+                    startPointName: self.data.currentPointName,
                 });
             }
         }, 50);
@@ -357,12 +337,14 @@ Page({
                     navFlag: 2,
                     infoFlag: 2,
                     distanceInfo: dis,
-                    endPointName: app.curName,
+                    endPointName: self.data.currentPointName,
                 });
             }
         }, 50);
     },
-
+    /**
+     * @description 按钮“到这里去”的点击事件
+     */
     goThere() {
         main.endClick();
         main.startMe();

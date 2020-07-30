@@ -1,18 +1,28 @@
 //配置文件参数   
 App({
-    onLaunch: function () { }, 
-    canvasFont: null,
-    canvasImg: null,
+    onLaunch: function () { },
     THREE: null,
-    curSpriteGroup: null,
+    canvasSprite: null,
     beaconCoordinate: [],
     navigateFlag: 0,
     me: [],
     arrow: [],
-    scaleInvariableGroup: [],
     POItarget: [],
     resultParent: [],
-    curName: '',
+    meBeforNav: [],
+    map: {
+        int_totalLayerNums: 9,
+        int_loadedLayerNums: 0,
+        bool_isMapModelReady: false,
+        stepCount: 0,
+        preStep: 0,
+        curFloor: 1,
+        mapOrientation: null,
+        deviceOrientation: 0,
+        groundMeshes: [],
+        compassRotation: 0,
+     
+    },
     map_conf: {
         map_id: "jxqzf",
         map_name: "江夏区政府",
@@ -52,7 +62,7 @@ App({
     ],
     localization: {
         lastBluePosition: { x: null, y: null, z: null, floor: null },
-        lastBluePosition: 1,
+        nowBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
         isWXReady: false,
         GPSOpen: 0,
         BluetoothOpen: 1,
@@ -77,7 +87,7 @@ App({
             }
         },
         getBlue: function (x, y, z, floor) {
-            this.lastBluePosition = { x: x, y: y, z: z, floor: floor };
+            this.nowBluePosition = { x: x, y: y, z: z, floor: floor };
             if (this.BluetoothOpen === 1) {
                 this.setModel("BLUE");
                 this.Counter = 0;
@@ -88,19 +98,6 @@ App({
                 // }
             }
         },
-    },
-    map: {
-        int_totalLayerNums: 9,
-        int_loadedLayerNums: 0,
-        bool_isMapModelReady: false,
-        stepCount: 0,
-        preStep: 0,
-        curFloor: 1,
-        mapOrientation: null,
-        deviceOrientation: 0,
-        groundMeshes: [],
-        compassRotation: 0,
-        FloorChangeCheckTime: 5000,
     },
     systemControl: {
         state: 'normal',
@@ -115,15 +112,6 @@ App({
         preLocationTween: null,
         autoMoveTween: [],
         cameraTween: null
-    },
-    systemControl: {
-        state: 'normal',
-        realMode: true,
-        navPriorityCode: 1,//1电梯 -1楼梯
-        touching: false,
-        isStimulation: function () {
-            return systemControl.state === "navigating" && !systemControl.realMode
-        }
     },
     spriteControl: {
         endSprite: null,

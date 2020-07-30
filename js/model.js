@@ -2,17 +2,16 @@
 import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
+import * as SPRITE from "./sprite";
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
-import * as ca from "./camera"; //相机操作
-import { showOrientationText } from "./directionNotify";
-import tts from "./tts";
-import gps from "./gps";
+import * as util from "../util/util";
+
+var app = getApp();
 
 //全局变量，供各个函数调用
-var canvas, THREE;
 var camera, scene, renderer, controls;
-var app = getApp();
+var canvas, THREE;
 var selectedPoint = {};
 
 /**
@@ -37,14 +36,18 @@ export function renderModel(canvasDom, Three) {
         scene.background = new THREE.Color(0xffffff);
 
         //设置场景相机位置及注视点
-        camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
+        camera = new THREE.PerspectiveCamera(
+            45,
+            canvas.width / canvas.height,
+            1,
+            5000
+        );
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(-5, 0, 1000);//将x设为-5会产生相机旋转90度的效果（原理未知）
+        camera.position.set(-5, 0, 1000); //将x设为-5会产生相机旋转90度的效果（原理未知）
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
         camera.updateProjectionMatrix();
-        console.log(camera);
 
         //设置灯光，当前为白色环境光
         var light = new THREE.AmbientLight(0xffffff);
@@ -63,6 +66,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         // loadTargetText(scene);
 
+        //添加用户贴图
         addUser();
 
         //创建渲染器
@@ -79,7 +83,6 @@ export function renderModel(canvasDom, Three) {
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
-
     }
 
     function addHelper() {
@@ -106,20 +109,19 @@ function animate() {
     renderer.render(scene, camera);
     TWEEN.update();
 }
-//添加场景元素的get方法
+//场景元素的get方法
+export function getCanvas() {
+    return canvas;
+}
 export function getScene() {
     return scene;
 }
 export function getCamera() {
     return camera;
 }
-export function getCanvas() {
-    return canvas;
-}
-export function getRender() {
+export function getRenderer() {
     return renderer;
 }
-
 export function getControl() {
     return controls;
 }
@@ -142,19 +144,23 @@ export function addUser() {
         });
         app.me = new THREE.Mesh(usergeometry, material);
         //获取当期位置的GPS坐标并初始化
-        gps.getLocation().then(res=>{
-            userControl.initUser(res[0],res[1],0);
-        })
+        // gps.getLocation().then(res=>{
+        //     //userControl.initUser(res[0],res[1],0);
+        //     userControl.initUser(20,3,0);
+        // })
+
+        app.me = new THREE.Mesh(usergeometry, material);
+        userControl.initUser(5, 0, 0);
         scene.add(app.me);
     });
 }
 //改变的当前地图上的位置
-export function changePosition(x,y,z) {
-    userControl.changePosition(x,y,z,"animation");
+export function changePosition(x, y, z) {
+    userControl.changePosition(x, y, z, "animation");
 }
 //改变旋转角度
-export function rotate(x,y,z) {
-    userControl.changeRotation(x,y,z,"animation");
+export function rotate(x, y, z) {
+    userControl.changeRotation(x, y, z, "animation");
 }
 var caCoord = {};
 /**
@@ -167,7 +173,6 @@ export function cameraExchange(index) {
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.position.set(caCoord.x, caCoord.y, caCoord.z);
     } else {
-        // console.log("3D->2D");
         caCoord.x = camera.position.x;
         caCoord.y = camera.position.y;
         caCoord.z = camera.position.z;
@@ -197,25 +202,30 @@ export function showSprite(sprite, point, type) {
     } else {
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
-        // textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
                 map: texture,
-                depthTest: false
+                depthTest: false,
             });
             sprite = new THREE.Sprite(material);
-            sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
+            sprite.scale.set(
+                map_conf.noTargetSpriteScale,
+                map_conf.noTargetSpriteScale,
+                1
+            );
             sprite.initScale = {
                 x: map_conf.noTargetSpriteScale,
                 y: map_conf.noTargetSpriteScale,
                 z: 1,
             };
             sprite.name = type + "Sprite";
-            app.scaleInvariableGroup.push(sprite);
+
             sprite.center = new THREE.Vector2(0.5, 0.5);
             sprite.position.set(point.x, point.y, point.z + 5);
             sprite.floor = point.floor;
             scene.add(sprite);
+
             if (type == "cur") {
                 app.spriteControl.curSprite = sprite;
             } else if (type == "start") {
@@ -228,19 +238,7 @@ export function showSprite(sprite, point, type) {
         });
     }
 }
-/**
- * @description 三维勾股定理
- * @param {*} nowLi 节点1
- * @param {*} nowLi2 节点2
- * @returns 
- */
-function dis3(nowLi, nowLi2) {
-    //勾股定理
-    let a = nowLi.x - nowLi2.x;
-    let b = nowLi.y - nowLi2.y;
-    let c = nowLi.z - nowLi2.z;
-    return Math.sqrt(a * a + b * b + c * c);
-}
+
 /**
  * @description 获取最近POI名称
  * @param {*} obj 被选中的物体
@@ -251,7 +249,7 @@ function getNearPOIName(obj) {
     let list = app.POItarget;
     for (let i = 0; i < list.length; i++) {
         if (list[i].floor === obj.floor) {
-            if (dis3(list[i], obj) < dis3(list[k], obj)) {
+            if (util.dis3(list[i], obj) < util.dis3(list[k], obj)) {
                 k = i;
             }
         }
@@ -259,34 +257,7 @@ function getNearPOIName(obj) {
     // console.log(list[k]);
     return list[k].name;
 }
-/**
- * @description 复制一个对象到另一个对象
- * @date 2020-07-14
- * @param {*} oldObj
- * @returns
- */
-function cloneObj(oldObj) {
-    if (typeof oldObj != "object") return oldObj;
-    if (oldObj == null) return oldObj;
-    var newObj = new Object();
-    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
-    return newObj;
-}
-/**
- * @description 扩展对象
- * @date 2020-07-14
- */
-function extendObj() {
-    var args = arguments;
-    if (args.length < 2) return;
-    var temp = cloneObj(args[0]); //调用复制对象方法
-    for (var n = 1; n < args.length; n++) {
-        for (var i in args[n]) {
-            temp[i] = args[n][i];
-        }
-    }
-    return temp;
-}
+
 /**
  * @description 根据屏幕坐标在场景中显示当前位置的图片精灵
  * @export
@@ -317,7 +288,7 @@ export function selectObj(index) {
         let obj = intersects[0].object;
         if (me != null) {
             //在点击位置显示贴图精灵并返回最近POI地点名称
-            selectedPoint = extendObj(selectedPoint, point);
+            selectedPoint = util.extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
             showSprite(app.spriteControl.curSprite, selectedPoint, "cur");
@@ -342,7 +313,9 @@ export function displayAllFloor() {
      */
     function setVisible(obj) {
         obj.visible = true;
-        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
+        obj.name === "path" || obj.name === "text"
+            ? (obj.visible = true)
+            : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
             return;
@@ -359,29 +332,27 @@ export function displayAllFloor() {
  * @param {*} floor 楼层
  */
 export function onlyDisplayFloor(floor) {
-    // if (pathControl.pathGroup !== null) {
-    //     // console.log(pathControl.pathGroup.children)
-    // }
     let map = app.map;
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
-    // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
             setVisible(obj);
         }
     });
-    // console.log(scene.children);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
      * @returns
      */
     function setVisible(obj) {
-
-        parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
-        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
+        parseInt(obj.floor) === floor
+            ? (obj.visible = true)
+            : (obj.visible = false);
+        obj.name === "path" || obj.name === "text"
+            ? (obj.visible = true)
+            : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
             return;
@@ -390,17 +361,11 @@ export function onlyDisplayFloor(floor) {
                 setVisible(child);
             });
         }
-        if (obj.name === 'user') {
+        if (obj.name === "user") {
             obj.visible = true;
         }
     }
     map.curFloor = floor;
-    // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-    // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
-    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    // console.log(scene);
-    // scene.remove(app.me);
-    // addUser();
 }
 
 /**
@@ -427,7 +392,6 @@ export function createPathTube(path) {
     let floorlist = [];
     let map_conf = app.map_conf;
     let pathControl = app.pathControl;
-    //scene.remove(arrowList);
     scene.remove(pathControl.pathGroup);
 
     pathControl.pathGroup = new THREE.Group();
@@ -435,7 +399,13 @@ export function createPathTube(path) {
     if (path.length < 2) {
         return;
     }
-    pointlist.push([new THREE.Vector3(path[0].x, path[0].y, path[0].z + map_conf.lineHeight)]);
+    pointlist.push([
+        new THREE.Vector3(
+            path[0].x,
+            path[0].y,
+            path[0].z + map_conf.lineHeight
+        ),
+    ]);
     floorlist.push(path[0].floor);
     for (let i = 1; i < path.length; i++) {
         if (path[i].floor !== path[i - 1].floor) {
@@ -445,29 +415,48 @@ export function createPathTube(path) {
                     path[i - 1].y,
                     path[i - 1].z + map_conf.lineHeight
                 ),
-                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight),
+                new THREE.Vector3(
+                    path[i].x,
+                    path[i].y,
+                    path[i].z + map_conf.lineHeight
+                ),
             ]);
             floorlist.push(path[i - 1].floor);
             let line = [];
-            line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+            line.push(
+                new THREE.Vector3(
+                    path[i].x,
+                    path[i].y,
+                    path[i].z + map_conf.lineHeight
+                )
+            );
             pointlist.push(line);
             floorlist.push(path[i].floor);
         } else {
             pointlist[pointlist.length - 1].push(
-                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)
+                new THREE.Vector3(
+                    path[i].x,
+                    path[i].y,
+                    path[i].z + map_conf.lineHeight
+                )
             );
         }
     }
     pointlist.forEach(function (line, i) {
         if (line.length > 1) {
             console.log(line.length);
-            let curve = new THREE.CatmullRomCurve3(line, false, "catmullrom", 0.01);
+            let curve = new THREE.CatmullRomCurve3(
+                line,
+                false,
+                "catmullrom",
+                0.01
+            );
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
             console.log("tex", tex);
             let material = new THREE.MeshBasicMaterial({
-                map: tex
+                map: tex,
             });
             material.map.repeat.x = curve.getLength() * 0.2;
             material.map.needsUpdate = true;
@@ -490,8 +479,7 @@ export function setCurClick(point) {
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
         selectedPoint = point;
-        showSprite(app.spriteControl.startSprite, point, "cur");
-        console.log(point)
+        showSprite(app.spriteControl.curSprite, point, "cur");
     }
 }
 /**
@@ -500,11 +488,11 @@ export function setCurClick(point) {
  * @export
  */
 export function setStartClick(point) {
-    if(!point){
+    if (!point) {
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
         showSprite(app.spriteControl.startSprite, selectedPoint, "start");
-    }else {
+    } else {
         scene.remove(app.spriteControl.startSprite);
         app.spriteControl.startSprite = null;
         showSprite(app.spriteControl.startSprite, point, "start");
@@ -516,87 +504,48 @@ export function setStartClick(point) {
  * @export
  */
 export function setEndClick(point) {
-    if(!point) {
+    if (!point) {
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
         showSprite(app.spriteControl.endSprite, selectedPoint, "end");
-    }else {
+    } else {
         scene.remove(app.spriteControl.endSprite);
         app.spriteControl.endSprite = null;
-        showSprite(app.spriteControl.endSprite, point, "end");        
+        showSprite(app.spriteControl.endSprite, point, "end");
     }
-
 }
 
 export function setStartMe() {
     scene.remove(app.spriteControl.startSprite);
     app.spriteControl.startSprite = null;
-    console.log('me',app.me.position)
-    showSprite(app.spriteControl.startSprite, app.me.position, "start");
 
+    showSprite(app.spriteControl.startSprite, app.me.position, "start");
 }
 
 /**
- * @description
+ * @description 回到当前位置
  * @export
  */
 export function backToMe() {
-    let me = app.me;
-    // changeMe(6, [0, 500, 300])
-    // console.log(me);
-    gps.getLocation().then(res=>{
-        // userControl.changePosition(res[0],res[1],0,"direction");
-        displayPoi(me.floor, me.position);
-    })
-    
-}
-/**
- * @description
- * @param {*} floor
- * @param {*} poi
- */
-function displayPoi(floor, poi) {
-    let cameraControl = ca.cameraControl;
+    let point = app.localization.nowBluePosition;
+    let floor = point.floor;
+    let poi = { x: point.x, y: point.y, z: point.z };
+
+    // TWEEN.removeAll();
     let map = app.map;
-    let map_conf = app.map_conf;
-    if (typeof floor != 'number') {
+    if (typeof floor != "number") {
         floor = parseInt(floor);
     }
-    cameraControl.relativeCoordinate.x = camera.position.x - cameraControl.focusPoint.x;
-    cameraControl.relativeCoordinate.y = camera.position.y - cameraControl.focusPoint.y;
-    cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
-    if (poi != null) {
-        cameraControl.focusPoint.x = poi.x;
-        cameraControl.focusPoint.y = poi.y;
-    }
+    console.log("导航钱楼层", floor, poi);
     //设置物体可见性
-    scene.children.forEach(function (obj, i) {
-        if (typeof obj.floor != 'undefined') {
-            let floorOfObj = obj.floor;
-            if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
-                obj.visible = true;
-            } else {
-                obj.visible = false;
-            }
-        }
-        if (obj.name == 'path') {
-            if (obj.type == 'Group') {
-                obj.children.forEach(function (o) {
-                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
-                });
-            }
-        }
-    });
+    onlyDisplayFloor(floor);
+    SPRITE.loadTargetTextByFloor(scene, floor);
+
     map.curFloor = floor;
-    cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-
-    camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;    
-
-    let newP = { x: 400, y: 0, z: 1000 };
-    
+    camera.fov = 30;
+    camera.updateProjectionMatrix();
+    let newP = { x: 300, y: poi.y, z: 200 };
     animateCamera(camera.position, controls.target, newP, poi);
-
 }
 /**
  * @description
@@ -606,26 +555,28 @@ function displayPoi(floor, poi) {
  * @param {*} target2 新的controls的target
  */
 export function animateCamera(current1, target1, current2, target2) {
-
     let positionVar = {
         x1: current1.x,
         y1: current1.y,
         z1: current1.z,
         x2: target1.x,
         y2: target1.y,
-        z2: target1.z
+        z2: target1.z,
     };
     //关闭控制器
     controls.enabled = false;
     var tween = new TWEEN.Tween(positionVar);
-    tween.to({
-        x1: current2.x,
-        y1: current2.y,
-        z1: current2.z,
-        x2: target2.x,
-        y2: target2.y,
-        z2: target2.z
-    }, 1000);
+    tween.to(
+        {
+            x1: current2.x,
+            y1: current2.y,
+            z1: current2.z,
+            x2: target2.x,
+            y2: target2.y,
+            z2: target2.z,
+        },
+        1000
+    );
 
     tween.onUpdate(function () {
         camera.position.x = positionVar.x1;
@@ -635,13 +586,23 @@ export function animateCamera(current1, target1, current2, target2) {
         controls.target.y = positionVar.y2;
         controls.target.z = positionVar.z2;
         controls.update();
-    })
+    });
 
     tween.onComplete(function () {
         ///开启控制器
         controls.enabled = true;
-    })
+    });
 
     tween.easing(TWEEN.Easing.Cubic.InOut);
     tween.start();
+}
+
+export function stopNav() {
+    scene.remove(app.pathControl.pathGroup);
+    scene.remove(app.spriteControl.endSprite);
+    scene.remove(app.spriteControl.startSprite);
+    app.spriteControl.endSprite = null;
+    app.spriteControl.startSprite = null;
+    app.routeClass.startPoint = {};
+    app.routeClass.endPoint = {};
 }

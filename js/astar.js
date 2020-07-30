@@ -1,4 +1,5 @@
 import * as MODEL from "../js/model";
+import * as util from "../util/util"
 var app = getApp();
 /**
  * @description 导航算法
@@ -35,7 +36,6 @@ function getObj(id, nodeList) {
             return nodeList[i];
         }
     }
-    alert("null" + ":" + id);
     return null;
 }
 
@@ -51,41 +51,6 @@ function setBeginAndEndNode(begin, end, nodeList) {
     endLi = getObj(end, nodeList);
 }
 
-/**
- * @description 在三维空间中用勾股定理计算两个节点之间的距离
- * @date 2020-07-10
- * @param {*} node1 节点一
- * @param {*} node2 节点二
- * @returns
- */
-function CalculateNodeDis(node1, node2) {
-    //勾股定理
-    let a = node1.x - node2.x;
-    let b = node1.y - node2.y;
-    let c = node1.z - node2.z;
-    let d = Math.sqrt(a * a + b * b + c * c);
-    return d;
-}
-
-/**
- * @description 根据距离排序，算出离当前位置最近的节点
- * @date 2020-07-10
- * @param {*} vector3 当前节点
- * @param {*} nodeList 节点组
- * @returns
- */
-function findnearest2(vector3, nodeList) {
-    if (nodeList.length == 0) {
-        alert(" no node ");
-        return;
-    }
-
-    nodeList.sort(function (a, b) {
-        return CalculateNodeDis(a, vector3) - CalculateNodeDis(b, vector3);
-    });
-    let nearnode = nodeList[0];
-    return nearnode;
-}
 /**
  * @description 初始化
  * @date 2020-07-10
@@ -168,7 +133,7 @@ function now2End(nowLi) {
  * @returns
  */
 function fn(nowLi, fathernode) {
-    return fathernode.gn + CalculateNodeDis(nowLi, fathernode) + now2End(nowLi);
+    return fathernode.gn + util.CalculateNodeDis(nowLi, fathernode) + now2End(nowLi);
 }
 
 /**
@@ -182,7 +147,7 @@ function findLi(nodeLi, nodeList) {
 
         if(filter(curnode, nodeLi)) {
             curnode.num = fn(curnode, nodeLi);
-            curnode.gn = nodeLi.gn + CalculateNodeDis(curnode, nodeLi);
+            curnode.gn = nodeLi.gn + util.CalculateNodeDis(curnode, nodeLi);
             curnode.parent = nodeLi;
             openArr.push(curnode);
         }
@@ -208,8 +173,8 @@ function filter(nodeLi, prenode) {
     /** 判断是否存在于开放队列，若存在比对GN值，更新当前代价 */
     for(var i = 0; i < openArr.length; i++){
         if(nodeLi === openArr[i]){
-            if(prenode.gn + CalculateNodeDis(nodeLi,prenode) < nodeLi.gn){
-                nodeLi.gn = prenode.gn + CalculateNodeDis(nodeLi, prenode);
+            if(prenode.gn + util.CalculateNodeDis(nodeLi,prenode) < nodeLi.gn){
+                nodeLi.gn = prenode.gn + util.CalculateNodeDis(nodeLi, prenode);
                 nodeLi.parent = prenode;
             }
             return false;
@@ -263,8 +228,10 @@ function navigation(nodeList) {
  */
 function navigate(nodeList, start, end) {
 
-    let startNode = findnearest2(start, nodeList);
-    let endNode = findnearest2(end, nodeList);
+    app.meBeforNav = app.me;
+    console.log(app.meBeforNav);
+    let startNode = util.findnearest2(start, nodeList);
+    let endNode = util.findnearest2(end, nodeList);
 
 
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);

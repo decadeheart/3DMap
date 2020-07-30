@@ -1,11 +1,8 @@
-import {figureVectorAngle} from "./simNavigate"
 import tts from "./tts";
-
+import * as util from "../util/util"
 
 let OrientationNotification = ["直行", "右前方直行", "右拐", "右后方直行", "后方直行", "左后方直行", "左拐", "左前方直行"];
 let app = getApp();
-
-
 
 function getDirectionText(index) {
     let text;
@@ -14,7 +11,7 @@ function getDirectionText(index) {
     if (!!resultParent[index - 1]) {
         if(!!resultParent[index + 1]) {
             if(resultParent[index + 1].floor - resultParent[index].floor === 0&&resultParent[index].floor === resultParent[index - 1].floor) {
-                let curtmpIndex = angleToDirection(figureVectorAngle(new THREE.Vector2(resultParent[index + 1].x - resultParent[index].x, resultParent[index + 1].y - resultParent[index].y),
+                let curtmpIndex = angleToDirection(util.figureVectorAngle(new THREE.Vector2(resultParent[index + 1].x - resultParent[index].x, resultParent[index + 1].y - resultParent[index].y),
                 new THREE.Vector2(resultParent[index].x - resultParent[index - 1].x, resultParent[index].y - resultParent[index - 1].y)));
                 text = OrientationNotification[curtmpIndex];
 
@@ -76,7 +73,7 @@ let preNearestNode;
 let preText = '';
 
 export function showOrientationText() {
-    let nearestNode = findnearest2(app.me.position, app.nodeList);
+    let nearestNode = util.findnearest2(app.me.position, app.nodeList);
     if(preNearestNode === nearestNode) {
         return;
     }
@@ -97,7 +94,7 @@ export function showOrientationText() {
             if(currtext === '已到达') {
                 text = currtext;
             } else if(nexttext === '已到达') {
-                text = currtext + '前方已到达';
+                text = currtext + '，前方即将到达';
             } else {
                 text = currtext;
             }
@@ -117,40 +114,4 @@ export function showOrientationText() {
             return text;
         }
     }
-}
-
-/**
- * @description 找到距离我的当前位置最近的节点
- * @date 2020-07-28
- * @param {*} vector3
- * @param {*} nodeList 节点组
- * @returns
- */
-function findnearest2(vector3, nodeList) {
-    if (nodeList.length == 0) {
-        alert(" no node ");
-        return;
-    }
-
-    nodeList.sort(function (a, b) {
-        return CalculateNodeDis(a, vector3) - CalculateNodeDis(b, vector3);
-    });
-    let nearnode = nodeList[0];
-    return nearnode;
-}
-
-/**
- * @description 计算代价
- * @date 2020-07-28
- * @param {*} node1 两个节点
- * @param {*} node2
- * @returns
- */
-function CalculateNodeDis(node1, node2) {
-    //勾股定理
-    let a = node1.x - node2.x;
-    let b = node1.y - node2.y;
-    let c = node1.z - node2.z;
-    let d = Math.sqrt(a * a + b * b + c * c);
-    return d;
 }
