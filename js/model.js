@@ -625,3 +625,11 @@ export function animateCamera(current1, target1, current2, target2) {
     tween.easing(TWEEN.Easing.Cubic.InOut);
     tween.start();
 }
+
+export function stopNav() {
+    scene.remove(app.pathControl.pathGroup);
+    scene.remove(app.spriteControl.endSprite);
+    scene.remove(app.spriteControl.startSprite);
+    app.routeClass.startPoint = {};
+    app.routeClass.endPoint = {};    
+}

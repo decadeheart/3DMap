@@ -13,6 +13,7 @@ App({
     POItarget: [],
     resultParent: [],
     curName: '',
+    meBeforNav: {},
     map_conf: {
         map_id: "jxqzf",
         map_name: "江夏区政府",
@@ -78,7 +79,6 @@ App({
         },
         getBlue: function (x, y, z, floor) {
             this.nowBluePosition = { x: x, y: y, z: z, floor: floor };
-            console.log("蓝牙定位",this.lastBluePosition)
             if (this.BluetoothOpen === 1) {
                 this.setModel("BLUE");
                 this.Counter = 0;

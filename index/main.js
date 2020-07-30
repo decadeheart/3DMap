@@ -202,4 +202,9 @@ main.autoMove = (path) => {
     autoMoving(path);
 };
 
+main.stopNav = () => {
+    MODEL.stopNav();
+}
+
+
 export default main;

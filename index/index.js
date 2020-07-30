@@ -281,9 +281,11 @@ Page({
         app.systemControl.realMode = true;
         app.navigateFlag = 0;
         this.setData({
-            navFlag: 2,
-            infoFlag: 2,
+            navFlag: 1,
+            infoFlag: 1,
         });
+        main.stopNav();
+        main.backToMe();
     },
     touchTap(e) {
         if (!app.navigateFlag) {
