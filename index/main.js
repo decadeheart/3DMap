@@ -3,7 +3,6 @@ import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
 import initData from "../js/data";
-import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
@@ -35,9 +34,10 @@ main.initMap = function (that) {
             let renderer = MODEL.getRender();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            MODEL.navRender(that);
-            // SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
+            /*MODEL.navRender(that);
+            SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);*/
             navRender();
+            
             function navRender() {
                 renderer.clear();
 

@@ -46,15 +46,15 @@ Page({
         searchHidden: true,
         floorIndex: 0,
         searchTitle: app.map_conf.map_name,
-        compassAngle: "-45deg",
+        compassAngle: "",
     },
 
     onLoad: function () {
         var that = this;
         main.initMap(that);
-
         openCompass(this);
-
+        
+        // startDeviceMotion();
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
             var eachFloor = [].concat(...buildingDataTmp[1]);
@@ -129,8 +129,6 @@ Page({
      */
     allFloor(e) {
         main.displayAllFloor();
-        //测试关闭gps
-        main.closeGPS();
     },
     /**
      * @description 页面点击楼层图片，切换楼层
@@ -177,12 +175,12 @@ Page({
         main.backToMe();
     },
     test() {
-        // this.setData({
-        //     navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
-        //     infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
-        // });
+        this.setData({
+            navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
+            infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
+        });
+        
         // console.log(this.data.navFlag, this.data.infoFlag);
-        main.setPoibyLngLat();
     },
 
     /**
@@ -234,6 +232,7 @@ Page({
         //调用
         main.onlyDisplayFloor(parseInt(target.floor));
         main.setCurClick(target);
+
     },
     /**
      * @description 搜索栏切换tab

@@ -11,7 +11,7 @@ import gps from "./gps";
 
 //全局变量，供各个函数调用
 var canvas, THREE;
-var camera, scene, renderer, controls, cameraControls;
+var camera, scene, renderer, controls;
 var app = getApp();
 var selectedPoint = {};
 
@@ -128,7 +128,7 @@ export function getControl() {
  * @description 加载用户贴图
  * @export
  */
-export function addUser(x,y,z) {
+export function addUser() {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load("../img/me.png", function (texture) {
@@ -140,12 +140,11 @@ export function addUser(x,y,z) {
             opacity: 1,
             depthTest: false,
         });
+        app.me = new THREE.Mesh(usergeometry, material);
         //获取当期位置的GPS坐标并初始化
         gps.getLocation().then(res=>{
             userControl.initUser(res[0],res[1],0);
         })
-        // userControl.initUser(x,y,0);
-        app.me = new THREE.Mesh(usergeometry, material);
         scene.add(app.me);
     });
 }
