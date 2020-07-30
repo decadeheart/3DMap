@@ -3,13 +3,11 @@ import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
 import initData from "../js/data";
-import tts from "../js/tts";
 import beaconUpdate from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import * as ca from "../js/camera"; //相机操作
 import { showOrientationText } from "../js/directionNotify";
 import userControl from "../js/user";
 
@@ -33,14 +31,15 @@ main.initMap = function (that) {
             app.THREE = THREE;
             MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
-            let renderer = MODEL.getRender();
+            let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            MODEL.addUser();
+
             navRender();
             function navRender() {
                 renderer.clear();
-
+                let nowPoint = app.localization.nowBluePosition;
+                let lastPoint = app.localization.lastBluePosition;
                 let systemControl = app.systemControl;
                 if (
                     systemControl.state === "navigating" ||
@@ -57,13 +56,14 @@ main.initMap = function (that) {
                             navInformation: text,
                         });
                     }
+                }else {
+                    if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
+                        userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z) 
+                        lastPoint = nowPoint;
+                    }
                 }
-                let nowPoint = app.localization.nowBluePosition;
-                let lastPoint = app.localization.lastBluePosition;
-                if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
-                    userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z) 
-                    lastPoint = nowPoint;
-                }
+
+
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();
@@ -109,11 +109,7 @@ main.setEndPoint = function () {
 main.backToMe = function () {
     MODEL.backToMe();
 };
-main.dragCamera = function (ev) {
-    // console.log(1,MODEL.getCamera());
-    ca.dragCamera(ev);
-    // ca.cameraExchange();
-};
+
 /** ibeacon 打开测试 */
 main.startBeaconDiscovery = function () {
     return new Promise((resolve, reject) => {

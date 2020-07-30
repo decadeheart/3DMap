@@ -4,15 +4,13 @@ import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
-import * as ca from "./camera"; //相机操作
-import { showOrientationText } from "./directionNotify";
-import tts from "./tts";
 import gps from "./gps";
 
-//全局变量，供各个函数调用
-var canvas, THREE;
-var camera, scene, renderer, controls, cameraControls;
 var app = getApp();
+
+//全局变量，供各个函数调用
+var camera, scene, renderer, controls;
+var canvas, THREE;
 var selectedPoint = {};
 
 /**
@@ -63,7 +61,8 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         // loadTargetText(scene);
 
-
+        //添加用户贴图
+        addUser();
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -107,20 +106,19 @@ function animate() {
     renderer.render(scene, camera);
     TWEEN.update();
 }
-//添加场景元素的get方法
+//场景元素的get方法
+export function getCanvas() {
+    return canvas;
+}
 export function getScene() {
     return scene;
 }
 export function getCamera() {
     return camera;
 }
-export function getCanvas() {
-    return canvas;
-}
-export function getRender() {
+export function getRenderer() {
     return renderer;
 }
-
 export function getControl() {
     return controls;
 }
@@ -129,7 +127,7 @@ export function getControl() {
  * @description 加载用户贴图
  * @export
  */
-export function addUser(x,y,z) {
+export function addUser(x, y, z) {
     //加载用户贴图
     let textureLoader = new THREE.TextureLoader();
     textureLoader.load("../img/me.png", function (texture) {
@@ -153,12 +151,12 @@ export function addUser(x,y,z) {
     });
 }
 //改变的当前地图上的位置
-export function changePosition(x,y,z) {
-    userControl.changePosition(x,y,z,"animation");
+export function changePosition(x, y, z) {
+    userControl.changePosition(x, y, z, "animation");
 }
 //改变旋转角度
-export function rotate(x,y,z) {
-    userControl.changeRotation(x,y,z,"animation");
+export function rotate(x, y, z) {
+    userControl.changeRotation(x, y, z, "animation");
 }
 var caCoord = {};
 /**
@@ -171,7 +169,6 @@ export function cameraExchange(index) {
         controls.setMaxPolarAngle(Math.PI / 2);
         camera.position.set(caCoord.x, caCoord.y, caCoord.z);
     } else {
-        // console.log("3D->2D");
         caCoord.x = camera.position.x;
         caCoord.y = camera.position.y;
         caCoord.z = camera.position.z;
@@ -363,27 +360,21 @@ export function displayAllFloor() {
  * @param {*} floor 楼层
  */
 export function onlyDisplayFloor(floor) {
-    // if (pathControl.pathGroup !== null) {
-    //     // console.log(pathControl.pathGroup.children)
-    // }
     let map = app.map;
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
-    // cameraControl.relativeCoordinate.z = camera.position.z - cameraControl.focusPoint.z;
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
             setVisible(obj);
         }
     });
-    // console.log(scene.children);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
      * @returns
      */
     function setVisible(obj) {
-
         parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
@@ -399,11 +390,6 @@ export function onlyDisplayFloor(floor) {
         }
     }
     map.curFloor = floor;
-    // cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-    // camera.position.z = cameraControl.focusPoint.z + cameraControl.relativeCoordinate.z;
-    // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
-    // console.log(scene);
-    // scene.remove(app.me);
 }
 
 /**
@@ -430,7 +416,6 @@ export function createPathTube(path) {
     let floorlist = [];
     let map_conf = app.map_conf;
     let pathControl = app.pathControl;
-    //scene.remove(arrowList);
     scene.remove(pathControl.pathGroup);
 
     pathControl.pathGroup = new THREE.Group();
@@ -503,11 +488,11 @@ export function setCurClick(point) {
  * @export
  */
 export function setStartClick(point) {
-    if(!point){
+    if (!point) {
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
         showSprite(app.spriteControl.startSprite, selectedPoint, "start");
-    }else {
+    } else {
         scene.remove(app.spriteControl.startSprite);
         app.spriteControl.startSprite = null;
         showSprite(app.spriteControl.startSprite, point, "start");
@@ -519,14 +504,14 @@ export function setStartClick(point) {
  * @export
  */
 export function setEndClick(point) {
-    if(!point) {
+    if (!point) {
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
         showSprite(app.spriteControl.endSprite, selectedPoint, "end");
-    }else {
+    } else {
         scene.remove(app.spriteControl.endSprite);
         app.spriteControl.endSprite = null;
-        showSprite(app.spriteControl.endSprite, point, "end");        
+        showSprite(app.spriteControl.endSprite, point, "end");
     }
 
 }
@@ -534,9 +519,8 @@ export function setEndClick(point) {
 export function setStartMe() {
     scene.remove(app.spriteControl.startSprite);
     app.spriteControl.startSprite = null;
-    console.log('me',app.me.position)
+    console.log('me', app.me.position)
     showSprite(app.spriteControl.startSprite, app.me.position, "start");
-
 }
 
 /**
@@ -545,13 +529,9 @@ export function setStartMe() {
  */
 export function backToMe() {
     let me = app.me;
-    // changeMe(6, [0, 500, 300])
-    // console.log(me);
-    gps.getLocation().then(res=>{
-        // userControl.changePosition(res[0],res[1],0,"direction");
+    gps.getLocation().then(res => {
         displayPoi(me.floor, me.position);
     })
-    
 }
 /**
  * @description
@@ -592,14 +572,11 @@ function displayPoi(floor, poi) {
     });
     map.curFloor = floor;
     cameraControl.focusPoint.z = (map.curFloor - 1) * map_conf.layerHeight;
-
     camera.position.x = poi.x + cameraControl.relativeCoordinate.x;
-    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;    
+    camera.position.y = poi.y + cameraControl.relativeCoordinate.y;
 
     let newP = { x: 400, y: 0, z: 1000 };
-    
     animateCamera(camera.position, controls.target, newP, poi);
-
 }
 /**
  * @description

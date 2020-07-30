@@ -1,11 +1,8 @@
 import {figureVectorAngle} from "./simNavigate"
 import tts from "./tts";
 
-
 let OrientationNotification = ["直行", "右前方直行", "右拐", "右后方直行", "后方直行", "左后方直行", "左拐", "左前方直行"];
 let app = getApp();
-
-
 
 function getDirectionText(index) {
     let text;
@@ -97,7 +94,7 @@ export function showOrientationText() {
             if(currtext === '已到达') {
                 text = currtext;
             } else if(nexttext === '已到达') {
-                text = currtext + '前方已到达';
+                text = currtext + '，前方即将到达';
             } else {
                 text = currtext;
             }
@@ -128,10 +125,8 @@ export function showOrientationText() {
  */
 function findnearest2(vector3, nodeList) {
     if (nodeList.length == 0) {
-        alert(" no node ");
         return;
     }
-
     nodeList.sort(function (a, b) {
         return CalculateNodeDis(a, vector3) - CalculateNodeDis(b, vector3);
     });
