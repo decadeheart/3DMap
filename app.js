@@ -52,7 +52,7 @@ App({
     ],
     localization: {
         lastBluePosition: { x: null, y: null, z: null, floor: null },
-        lastBluePosition: 1,
+        nowBluePosition: { x: null, y: null, z: null, floor: null },
         isWXReady: false,
         GPSOpen: 0,
         BluetoothOpen: 1,
@@ -77,7 +77,8 @@ App({
             }
         },
         getBlue: function (x, y, z, floor) {
-            this.lastBluePosition = { x: x, y: y, z: z, floor: floor };
+            this.nowBluePosition = { x: x, y: y, z: z, floor: floor };
+            console.log("蓝牙定位",this.lastBluePosition)
             if (this.BluetoothOpen === 1) {
                 this.setModel("BLUE");
                 this.Counter = 0;

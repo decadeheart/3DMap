@@ -63,7 +63,7 @@ export function renderModel(canvasDom, Three) {
         //加载文字和图片
         // loadTargetText(scene);
 
-        addUser();
+
 
         //创建渲染器
         renderer = new THREE.WebGLRenderer({
@@ -79,6 +79,7 @@ export function renderModel(canvasDom, Three) {
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
+        //addUser();
 
     }
 
@@ -141,11 +142,13 @@ export function addUser(x,y,z) {
             depthTest: false,
         });
         //获取当期位置的GPS坐标并初始化
-        gps.getLocation().then(res=>{
-            userControl.initUser(res[0],res[1],0);
-        })
-        // userControl.initUser(x,y,0);
+        // gps.getLocation().then(res=>{
+        //     //userControl.initUser(res[0],res[1],0);
+        //     userControl.initUser(20,3,0);
+        // })
+
         app.me = new THREE.Mesh(usergeometry, material);
+        userControl.initUser(5,0,0);
         scene.add(app.me);
     });
 }
@@ -401,7 +404,6 @@ export function onlyDisplayFloor(floor) {
     // camera.lookAt(new THREE.Vector3(cameraControl.focusPoint.x, cameraControl.focusPoint.y, cameraControl.focusPoint.z));
     // console.log(scene);
     // scene.remove(app.me);
-    // addUser();
 }
 
 /**

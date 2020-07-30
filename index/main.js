@@ -11,6 +11,7 @@ import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as ca from "../js/camera"; //相机操作
 import { showOrientationText } from "../js/directionNotify";
+import userControl from "../js/user";
 
 var app = getApp();
 var main = {};
@@ -35,8 +36,7 @@ main.initMap = function (that) {
             let renderer = MODEL.getRender();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            MODEL.navRender(that);
-            // SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
+            MODEL.addUser();
             navRender();
             function navRender() {
                 renderer.clear();
@@ -58,7 +58,12 @@ main.initMap = function (that) {
                         });
                     }
                 }
-
+                let nowPoint = app.localization.nowBluePosition;
+                let lastPoint = app.localization.lastBluePosition;
+                if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
+                    userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z) 
+                    lastPoint = nowPoint;
+                }
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();

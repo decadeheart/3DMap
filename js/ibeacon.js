@@ -1,3 +1,5 @@
+import { addUser } from "./model";
+
 var blueConfig = {
     blueConfig: [],
     maxBufferLength: 5,
@@ -22,7 +24,6 @@ function beaconUpdate() {
                 }
             }
         }
-
         if (blueConfig.beaconInfo.length >= blueConfig.maxBufferLength) {
             //移除第一个元素
             blueConfig.beaconInfo.shift();
@@ -42,18 +43,7 @@ function beaconUpdate() {
         }
 
         app.localization.getBlue(result.x, result.y, result.z, result.floor);
-        // 超时停止扫描
-        setTimeout(function () {
-            wx.stopBeaconDiscovery({
-                success: function () {},
-                //     wx.showToast({
-                //       title: '停止扫描设备！',
-                //       icon:'success',
-                //       duration:500
-                //     })
-                //   }
-            });
-        }, 1 * 1500);
+
     });
 }
 /**
