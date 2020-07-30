@@ -2,6 +2,7 @@ import * as TWEEN from "../util/tween.min"; //动画操作
 import * as MODEL from "../js/model";
 import userControl from "./user"; //用户贴图
 import * as SPRITE from "./sprite"
+import * as util from "../util/util"
 
 var app = getApp();
 
@@ -65,7 +66,7 @@ export function autoMoving(path) {
         } else {
             camera.fov = 90;
             camera.updateProjectionMatrix();
-            console.log(camera);
+
             oldP = { x: path[0].x, y: path[0].y, z: path[0].z + 80 }
         }
         if (path[i].z - path[i - 1].z != 0) {
@@ -73,13 +74,13 @@ export function autoMoving(path) {
             MODEL.onlyDisplayFloor(floor);
             SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor)
         }
+
         let newT = { x: path[i].x, y: path[i].y, z: path[i].z + 5 };
         let newP = { x: path[i - 1].x, y: path[i - 1].y, z: path[i - 1].z + 10 };
         MODEL.animateCamera(oldP, oldT, newP, newT)
+
         if (i === path.length) { return; }
-        console.log('移动', i, path[i]);
-        // let me = app.me;
-        //userControl.changePosition(path[0].x,path[0].y, path[0].z, "direction");
+
         me.position.x = path[i - 1].x;
         me.position.y = path[i - 1].y;
         me.position.z = path[i - 1].z + app.map_conf.int_userHeight;
@@ -106,9 +107,9 @@ export function autoMoving(path) {
 
         if (i === path.length - 1) { return; }
 
-        let angle = figureVectorAngle(new THREE.Vector2(0, 1), new THREE.Vector2(path[i + 1].x - path[i].x,
+        let angle = util.figureVectorAngle(new THREE.Vector2(0, 1), new THREE.Vector2(path[i + 1].x - path[i].x,
             path[i + 1].y - path[i].y));
-        console.log('角度', angle)
+   
         if (angle < 0) {
             angle += Math.PI * 2;
         }
@@ -172,32 +173,4 @@ export function autoMoving(path) {
 }
 
 
-/**
- * @description 三维勾股定理
- * @param {*} nowLi 节点1
- * @param {*} nowLi2 节点2
- * @returns 
- */
-function dis3(nowLi, nowLi2) {
-    //勾股定理
-    let a = nowLi.x - nowLi2.x;
-    let b = nowLi.y - nowLi2.y;
-    let c = nowLi.z - nowLi2.z;
-    return Math.sqrt(a * a + b * b + c * c);
-}
 
-
-/**
- * @description 计算两个向量之间的夹角，确定旋转的角度
- * @date 2020-07-24
- * @param {*} v1
- * @param {*} v2
- * @returns
- */
-export function figureVectorAngle(v1, v2) {
-    //v1,v2 must be Three.Vector2
-    if (v1.length() === 0 || v2.length() === 0) { return 0; }
-    let res = Math.acos(v1.dot(v2) / (v1.length() * v2.length()));
-    //若结果为正，则向量v2在v1的逆时针方向 返回值为弧度
-    return v1.cross(v2) > 0 ? res : -res;
-}

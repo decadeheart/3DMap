@@ -4,7 +4,8 @@ import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
-import gps from "./gps";
+import * as util from "../util/util"
+
 
 var app = getApp();
 
@@ -77,7 +78,6 @@ export function renderModel(canvasDom, Three) {
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
-        //addUser();
 
     }
 
@@ -197,7 +197,7 @@ export function showSprite(sprite, point, type) {
     } else {
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
-        // textureLoader.load(map_conf.src_dir + "image/" + type + ".png", function (texture) {
+
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
                 map: texture,
@@ -216,6 +216,7 @@ export function showSprite(sprite, point, type) {
             sprite.position.set(point.x, point.y, point.z + 5);
             sprite.floor = point.floor;
             scene.add(sprite);
+
             if (type == "cur") {
                 app.spriteControl.curSprite = sprite;
             } else if (type == "start") {
@@ -228,19 +229,7 @@ export function showSprite(sprite, point, type) {
         });
     }
 }
-/**
- * @description 三维勾股定理
- * @param {*} nowLi 节点1
- * @param {*} nowLi2 节点2
- * @returns 
- */
-function dis3(nowLi, nowLi2) {
-    //勾股定理
-    let a = nowLi.x - nowLi2.x;
-    let b = nowLi.y - nowLi2.y;
-    let c = nowLi.z - nowLi2.z;
-    return Math.sqrt(a * a + b * b + c * c);
-}
+
 /**
  * @description 获取最近POI名称
  * @param {*} obj 被选中的物体
@@ -251,7 +240,7 @@ function getNearPOIName(obj) {
     let list = app.POItarget;
     for (let i = 0; i < list.length; i++) {
         if (list[i].floor === obj.floor) {
-            if (dis3(list[i], obj) < dis3(list[k], obj)) {
+            if (util.dis3(list[i], obj) < util.dis3(list[k], obj)) {
                 k = i;
             }
         }
@@ -259,34 +248,7 @@ function getNearPOIName(obj) {
     // console.log(list[k]);
     return list[k].name;
 }
-/**
- * @description 复制一个对象到另一个对象
- * @date 2020-07-14
- * @param {*} oldObj
- * @returns
- */
-function cloneObj(oldObj) {
-    if (typeof oldObj != "object") return oldObj;
-    if (oldObj == null) return oldObj;
-    var newObj = new Object();
-    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
-    return newObj;
-}
-/**
- * @description 扩展对象
- * @date 2020-07-14
- */
-function extendObj() {
-    var args = arguments;
-    if (args.length < 2) return;
-    var temp = cloneObj(args[0]); //调用复制对象方法
-    for (var n = 1; n < args.length; n++) {
-        for (var i in args[n]) {
-            temp[i] = args[n][i];
-        }
-    }
-    return temp;
-}
+
 /**
  * @description 根据屏幕坐标在场景中显示当前位置的图片精灵
  * @export
@@ -317,7 +279,7 @@ export function selectObj(index) {
         let obj = intersects[0].object;
         if (me != null) {
             //在点击位置显示贴图精灵并返回最近POI地点名称
-            selectedPoint = extendObj(selectedPoint, point);
+            selectedPoint = util.extendObj(selectedPoint, point);
             selectedPoint.floor = obj.floor;
             selectedPoint.nearTAGname = getNearPOIName(selectedPoint);
             showSprite(app.spriteControl.curSprite, selectedPoint, "cur");
@@ -478,7 +440,7 @@ export function setCurClick(point) {
         app.spriteControl.curSprite = null;
         selectedPoint = point;
         showSprite(app.spriteControl.startSprite, point, "cur");
-        console.log(point)
+
     }
 }
 /**
@@ -518,7 +480,7 @@ export function setEndClick(point) {
 export function setStartMe() {
     scene.remove(app.spriteControl.startSprite);
     app.spriteControl.startSprite = null;
-    console.log('me', app.me.position)
+
     showSprite(app.spriteControl.startSprite, app.me.position, "start");
 }
 

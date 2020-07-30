@@ -1,4 +1,5 @@
 import { addUser } from "./model";
+import * as util from "../util/util"
 
 var blueConfig = {
     blueConfig: [],
@@ -60,41 +61,11 @@ function matchRecord(obj) {
         ) {
             //rssi表示设备的信号强度
             let beaCor = { rssi: obj.rssi };
-            let ret = extendObj(beaCor, app.beaconCoordinate[i]);
+            let ret = util.extendObj(beaCor, app.beaconCoordinate[i]);
             return ret;
         }
     }
     return null;
-}
-
-/**
- * @description 复制一个对象到另一个对象
- * @date 2020-07-14
- * @param {*} oldObj
- * @returns
- */
-function cloneObj(oldObj) {
-    if (typeof oldObj != "object") return oldObj;
-    if (oldObj == null) return oldObj;
-    var newObj = new Object();
-    for (var i in oldObj) newObj[i] = cloneObj(oldObj[i]);
-    return newObj;
-}
-
-/**
- * @description 扩展对象
- * @date 2020-07-14
- */
-function extendObj() {
-    var args = arguments;
-    if (args.length < 2) return;
-    var temp = cloneObj(args[0]); //调用复制对象方法
-    for (var n = 1; n < args.length; n++) {
-        for (var i in args[n]) {
-            temp[i] = args[n][i];
-        }
-    }
-    return temp;
 }
 
 /**

@@ -13,7 +13,7 @@ export function loadModel(scene) {
     let building_conf = app.building_conf;
     let THREE = app.THREE;
     let loader = new THREE.GLTFLoader();
-    // loader.load('../gltf/jxqzf.gltf', function (glb) { //后期可以考虑使用gltf格式文件代替glb文件
+
     loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '.glb', function (glb) {
         //添加地面到场景里
         let ground = glb.scene;
@@ -29,7 +29,7 @@ export function loadModel(scene) {
     });
     building_conf.forEach(function (building) {
         for (let i = 1; i <= building.layer_nums; i++) {
-            // loader.load('../gltf/' + map_conf.map_id + '_' + building.building_id + '_' + i + '.gltf', function (glb) { //后期可以考虑使用gltf格式文件代替glb文件
+
             loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '_' + building.building_id + '_' + i + '.glb', function (glb) {
                 //添加建筑物到场景里
                 let building = glb.scene;
@@ -56,5 +56,5 @@ export function loadModel(scene) {
             setFloor(child, f);
         })
     }
-    // loadTargetText();
+
 }
