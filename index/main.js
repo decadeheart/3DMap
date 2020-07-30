@@ -9,6 +9,7 @@ import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { showOrientationText } from "../js/directionNotify";
+import userControl from "../js/user";
 
 var app = getApp();
 var main = {};
@@ -33,12 +34,12 @@ main.initMap = function (that) {
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            // MODEL.navRender(that);
-            // SPRITE.loadTargetTextByFloor(MODEL.getScene(), app.map.curFloor);
+
             navRender();
             function navRender() {
                 renderer.clear();
-
+                let nowPoint = app.localization.nowBluePosition;
+                let lastPoint = app.localization.lastBluePosition;
                 let systemControl = app.systemControl;
                 if (
                     systemControl.state === "navigating" ||
@@ -55,7 +56,13 @@ main.initMap = function (that) {
                             navInformation: text,
                         });
                     }
+                }else {
+                    if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
+                        userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z) 
+                        lastPoint = nowPoint;
+                    }
                 }
+
 
                 TWEEN.update();
                 renderer.render(scene, camera);

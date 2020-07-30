@@ -77,6 +77,8 @@ export function renderModel(canvasDom, Three) {
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
+        //addUser();
+
     }
 
     function addHelper() {
@@ -136,11 +138,14 @@ export function addUser(x, y, z) {
             opacity: 1,
             depthTest: false,
         });
-        //获取当前位置的GPS坐标并初始化
-        gps.getLocation().then(res => {
-            userControl.initUser(res[0], res[1], 0);
-        })
+        //获取当期位置的GPS坐标并初始化
+        // gps.getLocation().then(res=>{
+        //     //userControl.initUser(res[0],res[1],0);
+        //     userControl.initUser(20,3,0);
+        // })
+
         app.me = new THREE.Mesh(usergeometry, material);
+        userControl.initUser(5,0,0);
         scene.add(app.me);
     });
 }
