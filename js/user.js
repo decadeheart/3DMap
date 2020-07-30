@@ -33,7 +33,7 @@ const userControl = {
 
         me.floor = app.map.curFloor;
 
-        userControl.changeRotation(null, null, Math.PI / 2);
+        userControl.changeRotation(null, null, 0);
     },
     /**
      * 改变缩放倍数

@@ -36,7 +36,6 @@ function getObj(id, nodeList) {
             return nodeList[i];
         }
     }
-    alert("null" + ":" + id);
     return null;
 }
 

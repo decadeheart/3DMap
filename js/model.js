@@ -2,6 +2,7 @@
 import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
+import * as SPRITE from "./sprite";
 import { loadModel } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as util from "../util/util"
@@ -439,8 +440,7 @@ export function setCurClick(point) {
         scene.remove(app.spriteControl.curSprite);
         app.spriteControl.curSprite = null;
         selectedPoint = point;
-        showSprite(app.spriteControl.startSprite, point, "cur");
-
+        showSprite(app.spriteControl.curSprite, point, "cur");
     }
 }
 /**
@@ -485,56 +485,30 @@ export function setStartMe() {
 }
 
 /**
- * @description
+ * @description 回到当前位置
  * @export
  */
-export function backToMe(me) {
-    // let tween = new TWEEN.Tween(app.me.position);
-    TWEEN.removeAll();
-    // TWEEN.Tween.removeTweens(app.me.position);
-    if (!me) {
-        me = app.me;
-    }
-    console.log('danghangqian', me)
-    // canvas.cancelAnimationFrame();
-    // animate();
+export function backToMe() {
+    let point = app.localization.nowBluePosition;
+    let floor = point.floor;
+    let poi = { x: point.x, y: point.y, z: point.z };
 
-    displayPoi(me.floor, me.position);
-
-}
-/**
- * @description
- * @param {*} floor
- * @param {*} poi
- */
-function displayPoi(floor, poi) {
+    // TWEEN.removeAll();
     let map = app.map;
     if (typeof floor != 'number') {
         floor = parseInt(floor);
     }
     console.log("导航钱楼层", floor, poi)
     //设置物体可见性
-    scene.children.forEach(function (obj, i) {
-        if (typeof obj.floor != 'undefined') {
-            let floorOfObj = obj.floor;
-            if (parseInt(floorOfObj) == floor || parseInt(floorOfObj) == 0) {
-                obj.visible = true;
-            } else {
-                obj.visible = false;
-            }
-        }
-        if (obj.name == 'path') {
-            if (obj.type == 'Group') {
-                obj.children.forEach(function (o) {
-                    parseInt(o.floor) == floor ? o.visible = true : o.visible = false;
-                });
-            }
-        }
-    });
-    map.curFloor = floor;
+    onlyDisplayFloor(floor);
+    SPRITE.loadTargetTextByFloor(scene, floor);
 
-    let newP = { x: 400, y: 0, z: 1000 };
+    map.curFloor = floor;
+    camera.fov = 30;
+    camera.updateProjectionMatrix();
+    let newP = { x: 300, y: poi.y, z: 200 };
     animateCamera(camera.position, controls.target, newP, poi);
+
 }
 /**
  * @description
@@ -588,6 +562,8 @@ export function stopNav() {
     scene.remove(app.pathControl.pathGroup);
     scene.remove(app.spriteControl.endSprite);
     scene.remove(app.spriteControl.startSprite);
+    app.spriteControl.endSprite = null;
+    app.spriteControl.startSprite = null;
     app.routeClass.startPoint = {};
     app.routeClass.endPoint = {};
 }

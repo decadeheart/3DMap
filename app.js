@@ -9,7 +9,6 @@ App({
     arrow: [],
     POItarget: [],
     resultParent: [],
-    curName: '',
     meBeforNav: [],
     map: {
         int_totalLayerNums: 9,
@@ -22,7 +21,7 @@ App({
         deviceOrientation: 0,
         groundMeshes: [],
         compassRotation: 0,
-        FloorChangeCheckTime: 5000,
+     
     },
     map_conf: {
         map_id: "jxqzf",
@@ -63,7 +62,7 @@ App({
     ],
     localization: {
         lastBluePosition: { x: null, y: null, z: null, floor: null },
-        nowBluePosition: { x: null, y: null, z: null, floor: null },
+        nowBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
         isWXReady: false,
         GPSOpen: 0,
         BluetoothOpen: 1,

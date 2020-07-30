@@ -31,10 +31,10 @@ main.initMap = function (that) {
             app.THREE = THREE;
             MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
+
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-
             navRender();
             function navRender() {
                 renderer.clear();
