@@ -36,6 +36,7 @@ main.initMap = function (that) {
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
             navRender();
+            
             function navRender() {
                 renderer.clear();
                 let nowPoint = app.localization.nowBluePosition;

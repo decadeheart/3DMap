@@ -5,7 +5,6 @@
     box-sizing: border-box;
     z-index: 10;
 }
-
 /* <!-- 地图容器 --> */
 #map {
     position: fixed;
@@ -54,11 +53,14 @@
 .navigator {
     display: flex;
     position: absolute;
+    left: 50%;
+    transform: translate(-50%);
     top: 68rpx;
     padding-top: 1rpx;
-    width: 100%;
+    width: 95%;
     height: 12%;
-    background-color: rgba(255, 255, 255, 0.9);
+    /* background-color: rgba(43, 54, 73, 0.5); */
+    background-color: rgba(255, 255, 255, 0.8);
     z-index: 10;
     /* opacity: 90%; */
 }
@@ -68,14 +70,14 @@
     height: 98%;
     width: 88%;
     margin-bottom: 1%;
-    background-color: rgb(254, 255, 255);
+    /* background-color: rgb(254, 255, 255); */
 }
 
 .point-box {
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: rgb(254, 255, 255);
+    /* background-color: rgb(254, 255, 255); */
     border-radius: 15rpx;
     overflow: hidden;
 }
@@ -85,7 +87,7 @@
     display: flex;
     align-items: center;
     height: 50%;
-    background-color: rgb(246, 247, 248);
+    /* background-color: rgb(246, 247, 248); */
 }
 
 .startPoint {
@@ -118,9 +120,9 @@
     width: 12%;
 }
 
-.switch {
-    background-color: rgb(246, 247, 248);
-}
+/* .switch {
+    background-color: rgb(246, 247, 248); 
+} */
 
 .switch .weui-icon {
     transform: rotate(90deg);
@@ -187,22 +189,42 @@
 /* <!-- 左上角指南针 10%--> */
 .compass {
     position: absolute;
-    bottom: 13%;
-    left: 10%;
-    height: 8%;
+    /* top: 15%; */
+    /* left: 3%; */
+    bottom: 16.5%;
+    right: 5%;
     /* background-color: turquoise; */
+    transition: transform 0.5s;
     z-index: 10;
 }
+.compass span{    
+    color:#000; 
+    font-size:100rpx;
+    /* box-shadow:  1rpx 1rpx 1rpx rgb(98,165,220); */
+    /* border: 1rpx solid rgb(98,165,220); */
+    border-radius:  50%;
+}
 
-/* <!-- 左下角定位 9% --> */
+/* <!-- 左下角定位  --> */
 .myLocation {
     position: absolute;
-    bottom: 16.5%;
-    left: 2%;
-    /* background-color: #555; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 19%;
+    left: 3%;
+    box-sizing: border-box;
+    width: 80rpx;
+    height: 80rpx;
+    color:rgb(98,165,220);
+    background-color:rgba(254, 254, 255, 0.9);
+    border-radius: 10rpx;
+    padding: 10rpx;
+    box-shadow: 1rpx 1rpx 1rpx 1rpx #ccc;
     z-index: 10;
-    /* transform: rotate(-45deg); */
-    transition: transform 1s;
+}
+.myLocation span{
+    font-size:50rpx;
 }
 
 /* <!-- 选择的地点提示信息 20% --> */

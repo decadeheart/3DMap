@@ -89,16 +89,16 @@ function gcj02tobd09(lng, lat) {
     return [bd_lng, bd_lat]
 }
 function getXY(marsLng,marsLat){
-	console.log(marsLng,marsLat)
+	// console.log(marsLng,marsLat)
 	let [lng,lat]=gcj02tobd09(marsLng,marsLat);
-	// console.log(lng,lat)
+	// console.log(lng,lat)  
 	let x = app.map_conf.coor_p1.x + (lng - app.map_conf.bd_p1.x)*scaleX ;
 	let y = app.map_conf.coor_p1.y + (lat - app.map_conf.bd_p1.y)*scaleY ;
 	// if (Math.min(Math.abs(x - app.map_conf.coor_p1.x), Math.abs(x - app.map_conf.coor_p2.x)) > (app.map_conf.coor_p2.x - app.map_conf.coor_p1.x) * 1.5 ||
 	// 	y > app.map_conf.coor_p2.y + (app.map_conf.coor_p2.y - app.map_conf.coor_p1.y) * 1.5 || y < app.map_conf.coor_p1.y - (app.map_conf.coor_p2.y - app.map_conf.coor_p1.y) * 1.5) {
 	// 	return;
 	// }
-	console.log(x,y)
+	// console.log(x,y)
 	return [x,y];
 }
 export default gps;

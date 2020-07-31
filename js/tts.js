@@ -42,7 +42,7 @@ async function tts(text) {
     innerAudioContext.autoplay = true;
     innerAudioContext.src = encodeURI(await getAudioSrc(text));
     innerAudioContext.onPlay(() => {
-        console.log("开始播放");
+        // console.log("开始播放");
     });
     innerAudioContext.onError((res) => {
         console.log(res.errMsg);
