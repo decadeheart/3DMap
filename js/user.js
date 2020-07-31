@@ -25,10 +25,10 @@ const userControl = {
     /**
      * 初始化用户
      */
-    initUser: function (x,y,z) {
+    initUser: function (x, y, z) {
         let me = app.me
         userControl.isInitUser = true;
- 
+
         userControl.changePosition(x, y, z, 'direction');
 
         me.floor = app.map.curFloor;
@@ -47,13 +47,13 @@ const userControl = {
     },
     /**
      * 用户改变旋转方向
-     * @param {*} x 
+      * @param {*} x 
      * @param {*} y 
      * @param {*} z 
-     * @param {*} mode 
+     * @param {*} mode   
      */
     changeRotation: function (x, y, z, mode) {
-        let me = app.me
+        let me = app.me;
         if (userControl.isInitUser) {
             x = (x === null) ? me.rotation.x : x;
             y = (y === null) ? me.rotation.y : y;
@@ -95,7 +95,7 @@ const userControl = {
             y: (y === null) ? me.position.y : y,
             z: (z === null) ? me.position.z : z
         };
-        
+
         switch (mode) {
             case "direction":
                 me.position.set(nextpoint.x, nextpoint.y, nextpoint.z);
