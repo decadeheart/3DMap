@@ -310,6 +310,9 @@ Page({
     setStartPoint() {
         main.startClick();
         let self = this;
+        this.setData({
+            startPointName: this.data.currentPointName,
+        })
         setTimeout(function () {
             if (!!app.spriteControl.endSprite) {
                 let dis = main.navigateInit();
@@ -317,7 +320,6 @@ Page({
                     navFlag: 2,
                     infoFlag: 2,
                     distanceInfo: dis,
-                    startPointName: self.data.currentPointName,
                 });
             }
         }, 50);
@@ -330,6 +332,9 @@ Page({
     setEndPoint() {
         main.endClick();
         let self = this;
+        this.setData({
+            endPointName: this.data.currentPointName,
+        })
         setTimeout(function () {
             if (!!app.spriteControl.startSprite) {
                 let dis = main.navigateInit();
@@ -337,7 +342,6 @@ Page({
                     navFlag: 2,
                     infoFlag: 2,
                     distanceInfo: dis,
-                    endPointName: self.data.currentPointName,
                 });
             }
         }, 50);

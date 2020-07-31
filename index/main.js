@@ -35,8 +35,13 @@ main.initMap = function (that) {
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
+
+
             navRender();
-            
+            /**
+             * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
+             * @date 2020-07-31
+             */
             function navRender() {
                 renderer.clear();
                 let nowPoint = app.localization.nowBluePosition;
