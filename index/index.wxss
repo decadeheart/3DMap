@@ -186,7 +186,7 @@
     height: 15rpx;
 }
 
-/* <!-- 左上角指南针 10%--> */
+/* <!-- 右下角指南针 > */
 .compass {
     position: absolute;
     /* top: 15%; */

@@ -32,10 +32,10 @@ main.initMap = function (that) {
             MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
 
-            let renderer = MODEL.getRenderer();
-            let scene = MODEL.getScene();
-            let camera = MODEL.getCamera();
-            navRender();
+            // let renderer = MODEL.getRenderer();
+            // let scene = MODEL.getScene();
+            // let camera = MODEL.getCamera();
+            // navRender();
             
             function navRender() {
                 renderer.clear();

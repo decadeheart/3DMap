@@ -1,5 +1,5 @@
 import main from "./main";
-import { openCompass } from "../js/compass";
+import { openCompass,start,stop } from "../js/compass";
 var app = getApp();
 Page({
     data: {
@@ -15,7 +15,7 @@ Page({
             "../img/5F.png",
             "../img/6F.png",
         ],
-        logoUrl: "",
+        logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
         startPointName: "我的位置",
@@ -153,7 +153,7 @@ Page({
      */
     getMyLocation() {
         console.log("我在这");
-
+        // stop();
         main.backToMe();
     },
     test() {
@@ -161,7 +161,7 @@ Page({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
-        
+        // start()
         // console.log(this.data.navFlag, this.data.infoFlag);
     },
 
