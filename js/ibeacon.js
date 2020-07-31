@@ -61,7 +61,9 @@ function matchRecord(obj) {
         ) {
             //rssi表示设备的信号强度
             let beaCor = { rssi: obj.rssi };
+
             let ret = util.extendObj(beaCor, app.beaconCoordinate[i]);
+
             return ret;
         }
     }

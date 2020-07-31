@@ -356,7 +356,7 @@ Page({
                     navFlag: 2,
                     infoFlag: 2,
                     distanceInfo: dis,
-                    endPointName: app.curName,
+                    endPointName: self.data.currentPointName,
                     startPointName: "我的位置",
                 });
             }
