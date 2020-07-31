@@ -15,7 +15,7 @@ Page({
             "../img/5F.png",
             "../img/6F.png",
         ],
-        logoUrl: "",
+        logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
         startPointName: "我的位置",
@@ -319,6 +319,7 @@ Page({
                     distanceInfo: dis,
                     startPointName: self.data.currentPointName,
                 });
+                main.displayAllFloor();
             }
         }, 50);
     },
@@ -339,6 +340,7 @@ Page({
                     distanceInfo: dis,
                     endPointName: self.data.currentPointName,
                 });
+                main.displayAllFloor();
             }
         }, 50);
     },

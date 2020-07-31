@@ -86,7 +86,7 @@ function makeImgSprite(imageURL) {
     return sprite;
 }
 /**
- * @description 加载所有地点名称及图标精灵并显示在scene中
+ * @description 加载指定层名称及图标精灵并显示在scene中
  * @export
  * @param {*} scene 场景
  * @param {*} floor 楼层
@@ -115,6 +115,38 @@ export function loadTargetTextByFloor(scene, floor) {
         }
     });
     spriteGroup.name = "floor" + floor;
+    scene.add(spriteGroup);
+    spriteGroup = null;
+}
+//为了提高加载性能，暂不使用该函数
+/**
+ * @description 加载所有地点名称及图标精灵并显示在scene中
+ * @export
+ * @param {*} scene 场景
+ * @param {*} floor 楼层
+ */
+export function loadAllTargetText(scene) {
+    //为全局变量改名
+    let POItarget = app.POItarget;
+    let THREE = app.THREE;
+    //创建精灵组
+    let spriteGroup = new THREE.Group();
+    let sprite;
+    //添加精灵到精灵组
+    POItarget.forEach(function (item) {
+        if (item.img) {
+            sprite = makeImgSprite(app.map_conf.img_dir + item.img);
+        } else {
+            sprite = makeFontSprite(item.name);
+        }
+        //设置参数
+        sprite.level = item.level;
+        sprite.position.set(item.x, item.y, item.z + 5);
+        sprite.floor = item.floor;
+        sprite.center = new THREE.Vector2(0.5, 0.5);
+        spriteGroup.add(sprite);
+    });
+    spriteGroup.name = "allFloor";
     scene.add(spriteGroup);
     spriteGroup = null;
 }
