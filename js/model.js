@@ -530,13 +530,13 @@ export function backToMe() {
     let point = app.localization.nowBluePosition;
     let floor = point.floor;
     let poi = { x: point.x, y: point.y, z: point.z };
-
+    let L = 200;//相机与用户（me）之间的距离
+    let me = app.me;
     // TWEEN.removeAll();
     let map = app.map;
     if (typeof floor != "number") {
         floor = parseInt(floor);
     }
-    console.log("导航钱楼层", floor, poi);
     //设置物体可见性
     onlyDisplayFloor(floor);
     SPRITE.loadTargetTextByFloor(scene, floor);
@@ -544,7 +544,9 @@ export function backToMe() {
     map.curFloor = floor;
     camera.fov = 30;
     camera.updateProjectionMatrix();
-    let newP = { x: 300, y: poi.y, z: 200 };
+    console.log(me);
+    let newP = { x: poi.x - L * Math.sin(me.radian), y: poi.y - L * Math.cos(me.radian), z: 200 };
+    console.log(newP);
     animateCamera(camera.position, controls.target, newP, poi);
 }
 /**
@@ -603,6 +605,7 @@ export function stopNav() {
     scene.remove(app.spriteControl.startSprite);
     app.spriteControl.endSprite = null;
     app.spriteControl.startSprite = null;
+    app.spriteControl.curSprite = null;
     app.routeClass.startPoint = {};
     app.routeClass.endPoint = {};
 }

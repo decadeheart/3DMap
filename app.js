@@ -21,7 +21,7 @@ App({
         deviceOrientation: 0,
         groundMeshes: [],
         compassRotation: 0,
-     
+
     },
     map_conf: {
         map_id: "jxqzf",
