@@ -62,7 +62,7 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
-
+        console.log(scene)
         //加载文字和图片
         // loadTargetText(scene);
 
@@ -306,6 +306,8 @@ export function displayAllFloor() {
             setVisible(obj);
         }
     });
+    //为了提高加载性能，暂不使用该函数
+    // SPRITE.loadAllTargetText(scene);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体

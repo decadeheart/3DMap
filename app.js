@@ -61,7 +61,7 @@ App({
         },
     ],
     localization: {
-        lastBluePosition: { x: null, y: null, z: null, floor: null },
+        lastBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
         nowBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
         isWXReady: false,
         GPSOpen: 0,
