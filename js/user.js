@@ -47,7 +47,7 @@ const userControl = {
     },
     /**
      * 用户改变旋转方向
-      * @param {*} x 
+     * @param {*} x 
      * @param {*} y 
      * @param {*} z 
      * @param {*} mode   

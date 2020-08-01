@@ -1,4 +1,5 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
+import * as MODEL from "./model"
 var app = getApp();
 /**
  * @description 打开罗盘，转动指南针
@@ -28,23 +29,22 @@ export function openCompass(that) {
             if (cnt > 0) {
                 rotate(radian);
                 app.me.radian = radian;
-                console.log(app.me);
+
             } else {
                 setTimeout(() => {
                     rotate(radian);
                     app.me.radian = radian;
-                    console.log(app.me);
+
                 }, 2000);
                 cnt++;
             }
         }
     });
 }
-let a;
 //旋转当前在地图上的朝向
 function rotate(angle) {
     let me = app.me;
-    console.log(me);
+    // console.log(me);
     let a = new TWEEN.Tween(me.rotation).to({
         x: me.rotation.x,
         y: me.rotation.y,
@@ -52,11 +52,3 @@ function rotate(angle) {
     });
     a.start();
 }
-function stop() {
-    a.setPaused("true");
-}
-function start() {
-    a.setPaused("false");
-}
-
-export { start, stop };

@@ -32,12 +32,13 @@ main.initMap = function (that) {
             MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
 
-            // let renderer = MODEL.getRenderer();
-            // let scene = MODEL.getScene();
-            // let camera = MODEL.getCamera();
-            // navRender();
+            let renderer = MODEL.getRenderer();
+            let scene = MODEL.getScene();
+            let camera = MODEL.getCamera();
+            navRender();
             
             function navRender() {
+                
                 renderer.clear();
                 let nowPoint = app.localization.nowBluePosition;
                 let lastPoint = app.localization.lastBluePosition;
@@ -63,7 +64,6 @@ main.initMap = function (that) {
                         lastPoint = nowPoint;
                     }
                 }
-
 
                 TWEEN.update();
                 renderer.render(scene, camera);
@@ -107,8 +107,8 @@ main.setStartPoint = function () {
 main.setEndPoint = function () {
     MODEL.showSprite(app.spriteControl.sprite.position, "end");
 };
-main.backToMe = function (me) {
-    MODEL.backToMe(me);
+main.backToMe = function () {
+    MODEL.backToMe();
 };
 
 /** ibeacon 打开测试 */

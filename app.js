@@ -87,6 +87,7 @@ App({
             }
         },
         getBlue: function (x, y, z, floor) {
+            // this.lastBluePosition=this.nowBluePosition;
             this.nowBluePosition = { x: x, y: y, z: z, floor: floor };
             if (this.BluetoothOpen === 1) {
                 this.setModel("BLUE");

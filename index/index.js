@@ -1,5 +1,5 @@
 import main from "./main";
-import { openCompass,start,stop } from "../js/compass";
+import { openCompass} from "../js/compass";
 var app = getApp();
 Page({
     data: {
@@ -131,7 +131,7 @@ Page({
         let tmp = app.routeClass.startPoint;
         app.routeClass.startPoint = app.routeClass.endPoint;
         app.routeClass.endPoint = tmp;
-        console.log("交换", tmp);
+        // console.log("交换", tmp);
         main.endClick(app.routeClass.endPoint);
         main.startClick(app.routeClass.startPoint);
         main.navigateInit();
@@ -187,6 +187,8 @@ Page({
             });
             this.setData({
                 searchResult: tmp,
+                searchHidden:false
+
             });
         }
         return new Promise(() => { });
