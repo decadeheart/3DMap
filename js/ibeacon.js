@@ -18,7 +18,7 @@ function beaconUpdate() {
         let data = [];
 
         for (let i = 0; i < res.beacons.length; i++) {
-            if (res.beacons[i].rssi !== "0") {
+            if (res.beacons[i].rssi !== 0) {
                 let temp = matchRecord(res.beacons[i]);
                 if (temp != null && data.length < 6) {
                     data.push(temp);
@@ -36,7 +36,8 @@ function beaconUpdate() {
                 return parseFloat(num2.rssi) - parseFloat(num1.rssi);
             })
         );
-
+        console.log(data);
+        // console.log("蓝牙信标", blueConfig.beaconInfo);
         let result = getMaxPossiblePoint();
 
         if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {

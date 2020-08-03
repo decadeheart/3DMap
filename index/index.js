@@ -224,6 +224,7 @@ Page({
      * @param {*} e 事件
      */
     switchTap(e) {
+        // wx.vibrateShort({});
         let index = e.target.dataset.tapindex;
         this.setData({
             buildingIndex: index,
