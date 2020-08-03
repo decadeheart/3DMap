@@ -73,8 +73,6 @@ Page({
                 });
             });
         });
-        /** 步数监测 */
-        main.stepChange(that);
     },
 
     /**
@@ -258,6 +256,30 @@ Page({
             infoFlag: 3,
         });
     },
+    startNavigate(e) {
+        let self = this;
+        app.systemControl.state = "navigating";
+        app.systemControl.realMode = true;
+        if(self.startPointName != "我的位置") {
+        main.startMe();
+
+        setTimeout(function () {
+                let dis = main.navigateInit();
+                self.setData({
+                    navFlag: 3,
+                    infoFlag: 3,
+                    distanceInfo: dis,
+                    startPointName: "我的位置",
+                });
+        }, 50);
+     }
+    },
+
+    /**
+     * @description 结束导航
+     * @date 2020-08-03
+     * @param {*} e
+     */
     stopNavigate(e) {
         app.systemControl.state = "normal";
         app.systemControl.realMode = true;

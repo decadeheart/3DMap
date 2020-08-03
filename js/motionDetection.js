@@ -1,5 +1,4 @@
-import userControl from "./user";
-
+import userControl from "./user"
 //存放三轴数据
 let oriValues = [];
 //当前传感器的值
@@ -7,7 +6,7 @@ let gravityNew = 0;
 
 var app = getApp();
 
-function accChange(that) {
+function accChange() {
     wx.onAccelerometerChange((res) => {
         oriValues[0] = res.x;
         oriValues[1] = res.y;
@@ -16,9 +15,6 @@ function accChange(that) {
             oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]
         );
         detectorNewStep(gravityNew);
-        // that.setData({
-        //     step: app.map.stepCount,
-        // });
     });
 }
 
@@ -35,7 +31,7 @@ let timeOfNow = 0;
 //波峰值
 let peakOfWave = 0;
 //初始阈值
-let ThreadValue = 0.3;
+let ThreadValue = 0.1;
 //动态阈值需要动态的数据，这个值用于这些动态数据的阈值
 let InitialValue = 0.2;
 let timeOfLastStep;

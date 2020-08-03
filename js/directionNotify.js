@@ -94,7 +94,7 @@ export function showOrientationText() {
             if(currtext === '已到达') {
                 text = currtext;
             } else if(nexttext === '已到达') {
-                text = currtext + '，前方即将到达';
+                text = currtext + '，即将到达';
             } else {
                 text = currtext;
             }

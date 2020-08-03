@@ -3,7 +3,7 @@ import * as util from "../util/util"
 
 var blueConfig = {
     blueConfig: [],
-    maxBufferLength: 5,
+    maxBufferLength: 8,
     minValidRssi: -90,
     beaconInfo: [],
 };
@@ -25,9 +25,12 @@ function beaconUpdate() {
                 }
             }
         }
+
         if (blueConfig.beaconInfo.length >= blueConfig.maxBufferLength) {
             //移除第一个元素
+
             blueConfig.beaconInfo.shift();
+
         }
 
         //根据信号强度来排序
@@ -77,33 +80,32 @@ function matchRecord(obj) {
  * @returns
  */
 function getMaxPossiblePoint() {
-    let temp = [];
-    //提取字符串
-    let buffer = blueConfig.beaconInfo.slice(0);
 
+    let temp = [];
+    let buffer = blueConfig.beaconInfo.slice(0);
     for (let k = 0; k < buffer.length; k++) {
+
         let list = buffer[k];
         for (let j = 0; j < list.length; j++) {
             let i = 0;
+
             for (i; i < temp.length; i++) {
+
                 if (temp[i].major === list[j].major && temp[i].minor === list[j].minor) {
-                    temp[i].count =
-                        temp[i].count +
-                        blueConfig.maxBufferLength * k +
-                        (blueConfig.maxBufferLength - j * 2);
+                    temp[i].count +=  blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
                     break;
                 }
             }
 
             if (i === temp.length) {
-                list[j].count =
-                    blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
+                // list[j].count = 0;
+
+                list[j].count =  blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
 
                 temp.push(list[j]);
             }
         }
     }
-
     temp.sort(function (mem1, mem2) {
         return mem2.count - mem1.count;
     });

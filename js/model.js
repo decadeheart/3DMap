@@ -104,7 +104,7 @@ export function renderModel(canvasDom, Three) {
 /**
  * @description 渲染循环
  */
-function animate() {
+export function animate() {
     canvas.requestAnimationFrame(animate);
     renderer.render(scene, camera);
     TWEEN.update();
