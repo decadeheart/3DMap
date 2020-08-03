@@ -1,5 +1,6 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as util from "../util/util"
+import * as MODEL from "../js/model";
 
 var app = getApp();
 
@@ -12,13 +13,14 @@ const userControl = {
         let me = app.me
         map.stepCount += 1;
         if (map.stepCount - map.preStep > 0) {
-            let distance = app.map_conf.float_mapProportion * (map.stepCount - map.preStep) * 0.5;
-            let x = me.position.x + Math.sin(map.mapOrientation * Math.PI / 180) * distance;
-            let y = me.position.y + Math.cos(map.mapOrientation * Math.PI / 180) * distance;
-            // if (! app.systemControl.isStimulation() ) {
-            //     userControl.changePosition(x, y, null, "animation");
-            // }
-            userControl.changePosition(x, y, null, "animation");
+            let distance = app.map_conf.float_mapProportion * (map.stepCount - map.preStep) * 5;
+            let x = me.position.x + Math.cos(map.mapOrientation * Math.PI / 180) * distance;
+            let y = me.position.y + Math.sin(map.mapOrientation * Math.PI / 180) * distance;
+            if (! (app.systemControl.state === "navigating" && !app.systemControl.realMode) ) {
+                userControl.changePosition(x, y, null, "direction");
+                console.log('x,y',x,y);
+                
+            }
             map.preStep = map.stepCount;
         }
     },
@@ -103,6 +105,11 @@ const userControl = {
             case "animation":
                 let meTween = new TWEEN.Tween(me.position).to(nextpoint, util.dis3(me.position, nextpoint) * 100);
                 meTween.start();
+                meTween.onUpdate(function(){
+                    console.log("往前走");
+                })
+                MODEL.animate()
+                MODEL.getControl().update();
                 break;
         }
 

@@ -38,6 +38,7 @@ main.initMap = function (that) {
 
 
             navRender();
+            accChange();
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
              * @date 2020-07-31
@@ -45,6 +46,7 @@ main.initMap = function (that) {
             function navRender() {
                 
                 renderer.clear();
+
                 let nowPoint = app.localization.nowBluePosition;
                 let lastPoint = app.localization.lastBluePosition;
                 let systemControl = app.systemControl;
@@ -63,10 +65,16 @@ main.initMap = function (that) {
                             navInformation: text,
                         });
                     }
-                }else {
+                }
+                //console.log("状态",app.systemControl.realMode)
+                if(app.systemControl.realMode) {
                     if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
-                        userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z) 
-                        lastPoint = nowPoint;
+                        console.log('蓝牙',nowPoint,lastPoint)
+                        userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z, "direction") 
+                        //main.backToMe();
+                        lastPoint.x = nowPoint.x;
+                        lastPoint.y = nowPoint.y;
+                        lastPoint.z = nowPoint.z;
                     }
                 }
 
@@ -159,10 +167,9 @@ main.closeGPS = function () {
     gps.closeGPS();
 };
 
-/** 步数改变监测 */
-main.stepChange = function (that) {
-    accChange(that);
-};
+
+
+
 
 /** 获得起点和终点信息后获得导航路径 */
 main.navigateInit = function () {
