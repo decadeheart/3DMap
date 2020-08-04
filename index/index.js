@@ -265,13 +265,14 @@ Page({
         main.startMe();
 
         setTimeout(function () {
-            let dis = main.navigateInit();
-            self.setData({
-                navFlag: 3,
-                infoFlag: 3,
-                distanceInfo: dis,
-                startPointName: "我的位置",
-            });
+                let dis = main.navigateInit();
+                main.backToMe();
+                self.setData({
+                    navFlag: 3,
+                    infoFlag: 3,
+                    distanceInfo: dis,
+                    startPointName: "我的位置",
+                });
         }, 50);
      }
     },

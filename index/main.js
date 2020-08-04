@@ -67,16 +67,22 @@ main.initMap = function (that) {
                     }
                 }
                 //console.log("状态",app.systemControl.realMode)
+
                 let floor=match2getFloor(nowPoint);
                 if(floor!=null) MODEL.onlyDisplayFloor(floor);
+
                 if(app.systemControl.realMode) {
-                    if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
-                        // console.log('蓝牙',nowPoint,lastPoint)
-                        userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z, "direction") 
-                        //main.backToMe();
+                    if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z || nowPoint.floor != lastPoint.floor) {
+                        console.log('蓝牙',nowPoint,lastPoint)
+                        userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z, "animation") 
+                        if(lastPoint.x!=0 && lastPoint.y !=0 && lastPoint.z != 0) {
+                            main.backToMe();
+                        }
+
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
                         lastPoint.z = nowPoint.z;
+                        lastPoint.floor = nowPoint.floor;
                     }
                 }
 

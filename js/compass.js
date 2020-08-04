@@ -26,6 +26,7 @@ export function openCompass(that) {
             });
             preAngle = curAngle;
             let radian = (curAngle / 360) * 2 * Math.PI;
+            
             if (cnt > 0) {
                 rotate(radian);
                 app.me.radian = radian;

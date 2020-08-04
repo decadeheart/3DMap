@@ -17,7 +17,12 @@ function beaconUpdate() {
         let data = [];
 
         for (let i = 0; i < res.beacons.length; i++) {
+<<<<<<< HEAD
             if (parseInt(res.beacons[i].rssi) != 0) {
+=======
+            if (res.beacons[i].rssi !== 0) {
+                //将搜索到的蓝牙信号和数据库中蓝牙信号比对匹配
+>>>>>>> 1ad74fac7f6f9a0d3d49ec202d4e4068377a4dab
                 let temp = matchRecord(res.beacons[i]);
                 if (temp != null && data.length < 6) {
                     data.push(temp);
@@ -26,25 +31,34 @@ function beaconUpdate() {
         }
 
         if (blueConfig.beaconInfo.length >= blueConfig.maxBufferLength) {
-            //移除第一个元素
-
+            //移除第一个元素,beaconInfo是一个缓冲区，每次读第一个，放入新的元素到最后，满的时候删除第一个
             blueConfig.beaconInfo.shift();
 
         }
 
         //根据信号强度来排序
         blueConfig.beaconInfo.push(
+            //data就是蓝牙信标数组
             data.sort(function (num1, num2) {
                 return parseFloat(num2.rssi) - parseFloat(num1.rssi);
             })
         );
+<<<<<<< HEAD
         // console.log("蓝牙信标", blueConfig.beaconInfo);
         let result = getMaxPossiblePoint();
 
         if (parseFloat(result.rssi) < parseFloat(blueConfig.minValidRssi)) {
+=======
+
+        let result = getMaxPossiblePoint();
+
+        //minValidRssi表示最小有效的信号强度，小于这个强度的信号可以忽视
+        if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
+>>>>>>> 1ad74fac7f6f9a0d3d49ec202d4e4068377a4dab
             return;
         }
 
+        //获得有效的蓝牙位置，就可以定位移动图标
         app.localization.getBlue(result.x, result.y, result.z, result.floor);
 
     });
@@ -79,6 +93,8 @@ function matchRecord(obj) {
 function getMaxPossiblePoint() {
 
     let temp = [];
+
+    //每次都是选择缓冲区的最前端来得到最大点，一个beaconInfo中有多组搜索到的蓝牙信标数组
     let buffer = blueConfig.beaconInfo.slice(0);
     for (let k = 0; k < buffer.length; k++) {
 
@@ -89,13 +105,14 @@ function getMaxPossiblePoint() {
             for (i; i < temp.length; i++) {
 
                 if (temp[i].major === list[j].major && temp[i].minor === list[j].minor) {
+
+                    //算法获得每一个信标的加权进行判断
                     temp[i].count +=  blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
                     break;
                 }
             }
 
             if (i === temp.length) {
-                // list[j].count = 0;
 
                 list[j].count =  blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
 
@@ -123,10 +140,11 @@ function match2getFloor(point){
         let [cur]=app.nodeList.filter(item=>{
             return point.x==item.x && point.y==item.y && item.floor== point.floor;
          })
-         if(cur==undefined || cur==null ||cur.priority==undefined) return null;
+         if(cur==undefined || cur==null ||cur.priority==undefined || app.localization.lastBluePosition.floor == point.floor) return null;
          console.log(cur.id,cur.floor,cur.priority);
          return cur.floor;
     }
+    
 
 }
 
