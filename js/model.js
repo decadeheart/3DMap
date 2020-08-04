@@ -62,7 +62,7 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
-        console.log(scene)
+        // console.log(scene)
         //加载文字和图片
         // loadTargetText(scene);
 

@@ -3,12 +3,11 @@ import * as util from "../util/util"
 
 var blueConfig = {
     blueConfig: [],
-    maxBufferLength: 5,
+    maxBufferLength: 4,
     minValidRssi: -90,
     beaconInfo: [],
 };
 var app = getApp();
-
 /**
  * @description 监听ibeacon更新状态
  * @date 2020-07-13
@@ -18,7 +17,7 @@ function beaconUpdate() {
         let data = [];
 
         for (let i = 0; i < res.beacons.length; i++) {
-            if (res.beacons[i].rssi !== "0") {
+            if (parseInt(res.beacons[i].rssi) != 0) {
                 let temp = matchRecord(res.beacons[i]);
                 if (temp != null && data.length < 6) {
                     data.push(temp);
@@ -39,7 +38,7 @@ function beaconUpdate() {
 
         let result = getMaxPossiblePoint();
 
-        if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
+        if (parseFloat(result.rssi) < parseFloat(blueConfig.minValidRssi)) {
             return;
         }
 
@@ -61,7 +60,6 @@ function matchRecord(obj) {
         ) {
             //rssi表示设备的信号强度
             let beaCor = { rssi: obj.rssi };
-
             let ret = util.extendObj(beaCor, app.beaconCoordinate[i]);
 
             return ret;

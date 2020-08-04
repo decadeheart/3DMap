@@ -5,22 +5,32 @@ var app = getApp();
  * @date 2020-07-10
  */
 const initData = new Promise((resolve, reject) => {
-	wx.request({
-		url: 'https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json',
-		data: {},
-		header: {
-			'content-type': 'application/json'
-		},
-		method: 'GET',
-		dataType: 'json',
-		responseType: 'text',
-		success: res => {
-			resolve(dataPreProcess(res));
-		},
-		fail: err => {
-			reject(err)
-		},
-	})
+	let value = wx.getStorageSync('nodeData');
+	if (value) {
+		resolve(value);
+	} 
+	else {
+		wx.request({
+			url: 'https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json',
+			data: {},
+			header: {'content-type': 'application/json'},
+			method: 'GET',
+			dataType: 'json',
+			responseType: 'text',
+			success: res => {
+				let data = dataPreProcess(res);
+				wx.setStorage({
+					data: data,
+					key: 'nodeData',
+				})
+				resolve(data);
+			},
+			fail: err => {
+				reject(err)
+			}
+		})
+	}
+
 })
 export default initData;
 
@@ -43,6 +53,7 @@ var dataPreProcess = (res) => {
 
 	app.nodeList = nodeList;
 
+	console.log(target)
 	for (let build in target) {
 		for (let floor in target[build]) {
 			target[build][floor].forEach(function (item) {
@@ -79,29 +90,29 @@ var dataPreProcess = (res) => {
 				rooms: []
 			};
 			floor.forEach(room => {
-				if(!eachFloor.some(item => item.expend == room.expend)){
-					if(room.expend!==group.expend){
+				if (!eachFloor.some(item => item.expend == room.expend)) {
+					if (room.expend !== group.expend) {
 						eachFloor.push({
-							expend:room.expend,
-							rooms:[]
+							expend: room.expend,
+							rooms: []
 						});
 					}
 				}
-				eachFloor.forEach(item=>{
-					if(item.expend==room.expend){
+				eachFloor.forEach(item => {
+					if (item.expend == room.expend) {
 						item.rooms.push(room);
 					}
 				})
-				if(room.expend==group.expend){
+				if (room.expend == group.expend) {
 					// console.log(item);
 					group.rooms.push(room);
 				}
 			})
-			
+
 			eachFloor.push(group);
 			//按照办公室号排序
-			eachFloor.forEach(item=>{
-				item.rooms.sort((a,b)=>  parseInt(a.name)-parseInt(b.name));
+			eachFloor.forEach(item => {
+				item.rooms.sort((a, b) => parseInt(a.name) - parseInt(b.name));
 			})
 			// console.log(eachFloor)
 			eachBuilding.push(eachFloor);
@@ -109,5 +120,5 @@ var dataPreProcess = (res) => {
 		buildingRoomGroup.push(eachBuilding);
 	})
 
-	return [buildingList, buildingData,buildingRoomGroup];
+	return [buildingList, buildingData, buildingRoomGroup];
 }
