@@ -43,7 +43,7 @@ export function renderModel(canvasDom, Three) {
             5000
         );
         camera.lookAt(new THREE.Vector3(0, 0, 0));
-        camera.position.set(-5, 0, 1000); //将x设为-5会产生相机旋转90度的效果（原理未知）
+        camera.position.set(0, -300, 500); //将x设为-5会产生相机旋转90度的效果（原理未知）
         //调整相机主轴及放大倍数
         camera.up.set(0, 0, 1);
         camera.zoom = 3;
