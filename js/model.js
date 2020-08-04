@@ -324,6 +324,7 @@ export function displayAllFloor() {
  */
 export function onlyDisplayFloor(floor) {
     let map = app.map;
+    // if (floor == map.curFloor) return;
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
@@ -507,7 +508,7 @@ export function backToMe() {
     camera.fov = 30;
     camera.updateProjectionMatrix();
     console.log(me);
-    let newP = { x: poi.x - L * Math.sin(me.radian), y: poi.y - L * Math.cos(me.radian), z: 200 };
+    let newP = { x: poi.x - L * Math.sin(me.radian), y: poi.y - L * Math.cos(me.radian), z: 300 };
     console.log(newP);
     animateCamera(camera.position, controls.target, newP, poi);
 }

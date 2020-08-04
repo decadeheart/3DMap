@@ -1,5 +1,5 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
-import * as MODEL from "./model"
+import * as MODEL from "./model";
 var app = getApp();
 /**
  * @description 打开罗盘，转动指南针
@@ -25,25 +25,22 @@ export function openCompass(that) {
                 compassAngle: 45 - curAngle + "deg",
             });
             preAngle = curAngle;
-            
-            if(curAngle>45 && curAngle<=135) curAngle=90;
-            else if(curAngle>135 && curAngle<=225) curAngle=180;
-            else if(curAngle>225 && curAngle<=315) curAngle=270;
-            else curAngle=0;
+            if (curAngle > 45 && curAngle <= 135) curAngle = 90;
+            else if (curAngle > 135 && curAngle <= 225) curAngle = 180;
+            else if (curAngle > 225 && curAngle <= 315) curAngle = 270;
+            else curAngle = 0;
 
             let radian = (curAngle / 360) * 2 * Math.PI;
-            
+
             if (cnt > 0) {
                 rotate(radian);
                 app.me.radian = radian;
-
             } else {
                 setTimeout(() => {
                     rotate(radian);
                     app.me.radian = radian;
-
                 }, 2000);
-                cnt=1;
+                cnt = 1;
             }
         }
     });
