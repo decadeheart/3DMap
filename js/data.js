@@ -6,7 +6,9 @@ var app = getApp();
  */
 const initData = new Promise((resolve, reject) => {
 	let value = wx.getStorageSync('nodeData');
+	value=false;
 	if (value) {
+		console.log(value,typeof value)
 		resolve(value);
 	} 
 	else {
@@ -53,7 +55,7 @@ var dataPreProcess = (res) => {
 
 	app.nodeList = nodeList;
 
-	console.log(target)
+	// console.log(target)
 	for (let build in target) {
 		for (let floor in target[build]) {
 			target[build][floor].forEach(function (item) {
