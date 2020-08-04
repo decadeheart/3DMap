@@ -265,6 +265,7 @@ Page({
 
         setTimeout(function () {
                 let dis = main.navigateInit();
+                main.backToMe();
                 self.setData({
                     navFlag: 3,
                     infoFlag: 3,

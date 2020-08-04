@@ -71,7 +71,10 @@ main.initMap = function (that) {
                     if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
                         console.log('蓝牙',nowPoint,lastPoint)
                         userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z, "direction") 
-                        //main.backToMe();
+                        if(lastPoint.x!=0 && lastPoint.y !=0 && lastPoint.z != 0) {
+                            main.backToMe();
+                        }
+
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
                         lastPoint.z = nowPoint.z;

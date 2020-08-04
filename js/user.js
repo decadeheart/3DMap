@@ -13,9 +13,13 @@ const userControl = {
         let me = app.me
         map.stepCount += 1;
         if (map.stepCount - map.preStep > 0) {
-            let distance = app.map_conf.float_mapProportion * (map.stepCount - map.preStep) * 5;
-            let x = me.position.x + Math.cos(map.mapOrientation * Math.PI / 180) * distance;
-            let y = me.position.y + Math.sin(map.mapOrientation * Math.PI / 180) * distance;
+            let distance = app.map_conf.float_mapProportion * (map.stepCount - map.preStep) * 1.5;
+            if(me.radian*180/Math.PI < 20) {
+                me.radian = 0;
+            }
+            let x = me.position.x + Math.sin(me.radian) * distance;
+            let y = me.position.y + Math.cos(me.radian) * distance;
+            console.log(me.radian)
             if (! (app.systemControl.state === "navigating" && !app.systemControl.realMode) ) {
                 userControl.changePosition(x, y, null, "direction");
                 console.log('x,y',x,y);
