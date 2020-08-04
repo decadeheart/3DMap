@@ -13,12 +13,9 @@ export function loadModel(scene) {
     let building_conf = app.building_conf;
     let THREE = app.THREE;
     let loader = new THREE.GLTFLoader();
-
-    let glb = wx.getStorageSync('groundGlb')
-    glb=false;
-	if (glb) {
-        let ground = glb;             
-
+    loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '.glb', function (glb) {
+        //添加地面到场景里
+        let ground = glb.scene;
         scene.add(ground);
         //设置物体参数
         ground.name = map_conf.map_id + "_" + "outside";
@@ -28,26 +25,7 @@ export function loadModel(scene) {
         map.int_loadedLayerNums === map.int_totalLayerNums ? (function () {
             map.bool_isMapModelReady = true;
         })() : null;
-    }
-    else{
-        loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '.glb', function (glb) {
-            // wx.setStorage({
-            //     data: glb.scene,
-            //     key: 'groundGlb',
-            // })
-            //添加地面到场景里
-            let ground = glb.scene;
-            scene.add(ground);
-            //设置物体参数
-            ground.name = map_conf.map_id + "_" + "outside";
-            setFloor(ground, 0);
-            //修改已加载楼层数并判断是否加载完毕
-            map.int_loadedLayerNums += 1;
-            map.int_loadedLayerNums === map.int_totalLayerNums ? (function () {
-                map.bool_isMapModelReady = true;
-            })() : null;
-        });
-    }
+    });
     
     building_conf.forEach(function (building) {
         for (let i = 1; i <= building.layer_nums; i++) {

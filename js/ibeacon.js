@@ -17,12 +17,8 @@ function beaconUpdate() {
         let data = [];
 
         for (let i = 0; i < res.beacons.length; i++) {
-<<<<<<< HEAD
-            if (parseInt(res.beacons[i].rssi) != 0) {
-=======
             if (res.beacons[i].rssi !== 0) {
                 //将搜索到的蓝牙信号和数据库中蓝牙信号比对匹配
->>>>>>> 1ad74fac7f6f9a0d3d49ec202d4e4068377a4dab
                 let temp = matchRecord(res.beacons[i]);
                 if (temp != null && data.length < 6) {
                     data.push(temp);
@@ -43,18 +39,11 @@ function beaconUpdate() {
                 return parseFloat(num2.rssi) - parseFloat(num1.rssi);
             })
         );
-<<<<<<< HEAD
-        // console.log("蓝牙信标", blueConfig.beaconInfo);
-        let result = getMaxPossiblePoint();
-
-        if (parseFloat(result.rssi) < parseFloat(blueConfig.minValidRssi)) {
-=======
 
         let result = getMaxPossiblePoint();
 
         //minValidRssi表示最小有效的信号强度，小于这个强度的信号可以忽视
         if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
->>>>>>> 1ad74fac7f6f9a0d3d49ec202d4e4068377a4dab
             return;
         }
 
@@ -133,7 +122,7 @@ function getMaxPossiblePoint() {
  * @returns int:floor
  */
 var rooms=[]; //所有房间的数据
-function match2getFloor(point){
+function match2getFloor(point){ 
     //找到当前的蓝牙点以及楼层
     // console.log(point);
     if(app.nodeList!=undefined){

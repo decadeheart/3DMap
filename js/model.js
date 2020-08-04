@@ -36,12 +36,7 @@ export function renderModel(canvasDom, Three) {
         scene.background = new THREE.Color(0xffffff);
 
         //设置场景相机位置及注视点
-        camera = new THREE.PerspectiveCamera(
-            45,
-            canvas.width / canvas.height,
-            1,
-            5000
-        );
+        camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 1, 5000);
         camera.lookAt(new THREE.Vector3(0, 0, 0));
         camera.position.set(0, -300, 500); //将x设为-5会产生相机旋转90度的效果（原理未知）
         //调整相机主轴及放大倍数
@@ -209,11 +204,7 @@ export function showSprite(sprite, point, type) {
                 depthTest: false,
             });
             sprite = new THREE.Sprite(material);
-            sprite.scale.set(
-                map_conf.noTargetSpriteScale,
-                map_conf.noTargetSpriteScale,
-                1
-            );
+            sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
             sprite.initScale = {
                 x: map_conf.noTargetSpriteScale,
                 y: map_conf.noTargetSpriteScale,
@@ -315,9 +306,7 @@ export function displayAllFloor() {
      */
     function setVisible(obj) {
         obj.visible = true;
-        obj.name === "path" || obj.name === "text"
-            ? (obj.visible = true)
-            : null;
+        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
             return;
@@ -349,12 +338,8 @@ export function onlyDisplayFloor(floor) {
      * @returns
      */
     function setVisible(obj) {
-        parseInt(obj.floor) === floor
-            ? (obj.visible = true)
-            : (obj.visible = false);
-        obj.name === "path" || obj.name === "text"
-            ? (obj.visible = true)
-            : null;
+        parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
+        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
             return;
@@ -401,13 +386,7 @@ export function createPathTube(path) {
     if (path.length < 2) {
         return;
     }
-    pointlist.push([
-        new THREE.Vector3(
-            path[0].x,
-            path[0].y,
-            path[0].z + map_conf.lineHeight
-        ),
-    ]);
+    pointlist.push([new THREE.Vector3(path[0].x, path[0].y, path[0].z + map_conf.lineHeight)]);
     floorlist.push(path[0].floor);
     for (let i = 1; i < path.length; i++) {
         if (path[i].floor !== path[i - 1].floor) {
@@ -417,42 +396,23 @@ export function createPathTube(path) {
                     path[i - 1].y,
                     path[i - 1].z + map_conf.lineHeight
                 ),
-                new THREE.Vector3(
-                    path[i].x,
-                    path[i].y,
-                    path[i].z + map_conf.lineHeight
-                ),
+                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight),
             ]);
             floorlist.push(path[i - 1].floor);
             let line = [];
-            line.push(
-                new THREE.Vector3(
-                    path[i].x,
-                    path[i].y,
-                    path[i].z + map_conf.lineHeight
-                )
-            );
+            line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
             pointlist.push(line);
             floorlist.push(path[i].floor);
         } else {
             pointlist[pointlist.length - 1].push(
-                new THREE.Vector3(
-                    path[i].x,
-                    path[i].y,
-                    path[i].z + map_conf.lineHeight
-                )
+                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)
             );
         }
     }
     pointlist.forEach(function (line, i) {
         if (line.length > 1) {
             // console.log(line.length);
-            let curve = new THREE.CatmullRomCurve3(
-                line,
-                false,
-                "catmullrom",
-                0.01
-            );
+            let curve = new THREE.CatmullRomCurve3(line, false, "catmullrom", 0.01);
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
@@ -532,7 +492,7 @@ export function backToMe() {
     let point = app.localization.nowBluePosition;
     let floor = point.floor;
     let poi = { x: point.x, y: point.y, z: point.z };
-    let L = 200;//相机与用户（me）之间的距离
+    let L = 200; //相机与用户（me）之间的距离
     let me = app.me;
     // TWEEN.removeAll();
     let map = app.map;

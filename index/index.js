@@ -1,5 +1,6 @@
 import main from "./main";
 import { openCompass} from "../js/compass";
+import { backToMe } from "../js/model";
 var app = getApp();
 Page({
     data: {
@@ -54,7 +55,6 @@ Page({
         main.initMap(that);
         openCompass(this);
         
-
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
             var eachFloor = [].concat(...buildingDataTmp[1]);
