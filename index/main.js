@@ -85,13 +85,20 @@ main.initMap = function (that) {
                 if (app.systemControl.realMode) {
                     if (nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z || nowPoint.floor != lastPoint.floor) {
                         console.log('蓝牙', nowPoint, lastPoint)
-                        userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation")
+
+                        if(lastPoint.x ==0 && lastPoint.y ==0 && lastPoint.z == 0) {
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction")
+                            MODEL.onlyDisplayFloor(nowPoint.floor);
+                        }else {
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation")
+                        }
+
 
                         let L = 200; //相机与用户（me）之间的距离
                         let newP = {
                             x: nowPoint.x - L * Math.sin(me.radian),
                             y: nowPoint.y - L * Math.cos(me.radian),
-                            z: 200
+                            z: 300
                         };
                         let newT = {
                             x: nowPoint.x,
