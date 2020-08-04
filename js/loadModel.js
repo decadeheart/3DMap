@@ -31,10 +31,10 @@ export function loadModel(scene) {
     }
     else{
         loader.load(map_conf.src_dir + 'data/' + map_conf.map_id + '.glb', function (glb) {
-            wx.setStorage({
-                data: glb.scene,
-                key: 'groundGlb',
-            })
+            // wx.setStorage({
+            //     data: glb.scene,
+            //     key: 'groundGlb',
+            // })
             //添加地面到场景里
             let ground = glb.scene;
             scene.add(ground);

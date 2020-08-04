@@ -8,7 +8,7 @@ const initData = new Promise((resolve, reject) => {
 	let value = wx.getStorageSync('nodeData');
 	value=false;
 	if (value) {
-		console.log(value,typeof value)
+		// console.log(value,typeof value)
 		resolve(value);
 	} 
 	else {
@@ -21,10 +21,10 @@ const initData = new Promise((resolve, reject) => {
 			responseType: 'text',
 			success: res => {
 				let data = dataPreProcess(res);
-				wx.setStorage({
-					data: data,
-					key: 'nodeData',
-				})
+				// wx.setStorage({
+				// 	data: data,
+				// 	key: 'nodeData',
+				// })
 				resolve(data);
 			},
 			fail: err => {
@@ -52,8 +52,9 @@ var dataPreProcess = (res) => {
 
 	let target = data.target;
 	app.beaconCoordinate = data.beaconCoordinate;
-
+	// console.log(app.beaconCoordinate)
 	app.nodeList = nodeList;
+	app.target=target;
 
 	// console.log(target)
 	for (let build in target) {
@@ -121,6 +122,5 @@ var dataPreProcess = (res) => {
 		})
 		buildingRoomGroup.push(eachBuilding);
 	})
-
 	return [buildingList, buildingData, buildingRoomGroup];
 }

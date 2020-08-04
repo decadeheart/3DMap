@@ -4,6 +4,7 @@ App({
     THREE: null,
     canvasSprite: null,
     beaconCoordinate: [],
+    target:[],
     navigateFlag: 0,
     me: [],
     arrow: [],

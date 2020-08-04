@@ -446,7 +446,7 @@ export function createPathTube(path) {
     }
     pointlist.forEach(function (line, i) {
         if (line.length > 1) {
-            console.log(line.length);
+            // console.log(line.length);
             let curve = new THREE.CatmullRomCurve3(
                 line,
                 false,
@@ -456,7 +456,7 @@ export function createPathTube(path) {
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
-            console.log("tex", tex);
+            // console.log("tex", tex);
             let material = new THREE.MeshBasicMaterial({
                 map: tex,
             });

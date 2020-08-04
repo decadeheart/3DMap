@@ -18,7 +18,7 @@ const userControl = {
             let y = me.position.y + Math.sin(map.mapOrientation * Math.PI / 180) * distance;
             if (! (app.systemControl.state === "navigating" && !app.systemControl.realMode) ) {
                 userControl.changePosition(x, y, null, "direction");
-                console.log('x,y',x,y);
+                // console.log('x,y',x,y);
                 
             }
             map.preStep = map.stepCount;
@@ -106,7 +106,7 @@ const userControl = {
                 let meTween = new TWEEN.Tween(me.position).to(nextpoint, util.dis3(me.position, nextpoint) * 100);
                 meTween.start();
                 meTween.onUpdate(function(){
-                    console.log("往前走");
+                    // console.log("往前走");
                 })
                 MODEL.animate()
                 MODEL.getControl().update();

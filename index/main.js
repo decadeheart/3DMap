@@ -3,7 +3,7 @@ import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
 import initData from "../js/data";
-import beaconUpdate from "../js/ibeacon";
+import {beaconUpdate,match2getFloor} from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
@@ -67,9 +67,11 @@ main.initMap = function (that) {
                     }
                 }
                 //console.log("状态",app.systemControl.realMode)
+                let floor=match2getFloor(nowPoint);
+                if(floor!=null) MODEL.onlyDisplayFloor(floor);
                 if(app.systemControl.realMode) {
                     if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z) {
-                        console.log('蓝牙',nowPoint,lastPoint)
+                        // console.log('蓝牙',nowPoint,lastPoint)
                         userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z, "direction") 
                         //main.backToMe();
                         lastPoint.x = nowPoint.x;

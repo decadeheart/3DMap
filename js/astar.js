@@ -229,14 +229,14 @@ function navigation(nodeList) {
 function navigate(nodeList, start, end) {
 
     app.meBeforNav = app.me;
-    console.log(app.meBeforNav);
+    // console.log(app.meBeforNav);
     let startNode = util.findnearest2(start, nodeList);
     let endNode = util.findnearest2(end, nodeList);
 
 
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
     navigation(nodeList);
-    console.log("结果: ", resultParent);
+    // console.log("结果: ", resultParent);
     app.resultParent = resultParent;
 
     MODEL.createPathTube(resultParent);

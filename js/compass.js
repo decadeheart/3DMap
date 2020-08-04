@@ -17,7 +17,7 @@ export function openCompass(that) {
     let preAngle = 0;
     let cnt = 0;
     wx.onCompassChange((result) => {
-        //direction:方向度数，0表示北方 90表示东  accuracy：精度
+        //direction:方向度数，0表示北 90表示东  accuracy：精度
         let curAngle = Math.round(result.direction);
         if (Math.abs(preAngle - curAngle) >= 20) {
             // console.log(preAngle,curAngle)
@@ -36,7 +36,7 @@ export function openCompass(that) {
                     app.me.radian = radian;
 
                 }, 2000);
-                cnt++;
+                cnt=1;
             }
         }
     });

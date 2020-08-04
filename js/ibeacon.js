@@ -38,7 +38,6 @@ function beaconUpdate() {
                 return parseFloat(num2.rssi) - parseFloat(num1.rssi);
             })
         );
-        console.log(data);
         // console.log("蓝牙信标", blueConfig.beaconInfo);
         let result = getMaxPossiblePoint();
 
@@ -111,4 +110,24 @@ function getMaxPossiblePoint() {
     return temp[0];
 }
 
-export default beaconUpdate;
+/**
+ * @description 比对蓝牙，判断当前是否电梯、楼梯，准备切换楼层
+ * @param {*} point
+ * @returns int:floor
+ */
+var rooms=[]; //所有房间的数据
+function match2getFloor(point){
+    //找到当前的蓝牙点以及楼层
+    // console.log(point);
+    if(app.nodeList!=undefined){
+        let [cur]=app.nodeList.filter(item=>{
+            return point.x==item.x && point.y==item.y && item.floor== point.floor;
+         })
+         if(cur==undefined || cur==null ||cur.priority==undefined) return null;
+         console.log(cur.id,cur.floor,cur.priority);
+         return cur.floor;
+    }
+
+}
+
+export {beaconUpdate,match2getFloor};
