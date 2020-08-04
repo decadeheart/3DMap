@@ -335,6 +335,7 @@ export function displayAllFloor() {
  */
 export function onlyDisplayFloor(floor) {
     let map = app.map;
+    // if (floor == map.curFloor) return;
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
