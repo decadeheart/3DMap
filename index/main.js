@@ -1,14 +1,23 @@
-import { createScopedThreejs } from "../util/three";
+import {
+    createScopedThreejs
+} from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
 import initData from "../js/data";
-import {beaconUpdate,match2getFloor} from "../js/ibeacon";
+import {
+    beaconUpdate,
+    match2getFloor
+} from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
-import { autoMoving } from "../js/simNavigate";
+import {
+    autoMoving
+} from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import { showOrientationText } from "../js/directionNotify";
+import {
+    showOrientationText
+} from "../js/directionNotify";
 import userControl from "../js/user";
 
 var app = getApp();
@@ -35,6 +44,7 @@ main.initMap = function (that) {
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
+            let controls = MODEL.getControl();
 
 
             navRender();
@@ -44,12 +54,13 @@ main.initMap = function (that) {
              * @date 2020-07-31
              */
             function navRender() {
-                
+
                 renderer.clear();
 
                 let nowPoint = app.localization.nowBluePosition;
                 let lastPoint = app.localization.lastBluePosition;
                 let systemControl = app.systemControl;
+                let me = app.me;
                 if (
                     systemControl.state === "navigating" ||
                     systemControl.state === "previewing"
@@ -68,16 +79,34 @@ main.initMap = function (that) {
                 }
                 //console.log("状态",app.systemControl.realMode)
 
-                let floor=match2getFloor(nowPoint);
-                if(floor!=null) MODEL.onlyDisplayFloor(floor);
+                let floor = match2getFloor(nowPoint);
+                if (floor != null) MODEL.onlyDisplayFloor(floor);
 
-                if(app.systemControl.realMode) {
-                    if( nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z || nowPoint.floor != lastPoint.floor) {
-                        console.log('蓝牙',nowPoint,lastPoint)
-                        userControl.changePosition(nowPoint.x ,nowPoint.y ,nowPoint.z, "animation") 
-                        if(lastPoint.x!=0 && lastPoint.y !=0 && lastPoint.z != 0) {
-                            main.backToMe();
+                if (app.systemControl.realMode) {
+                    if (nowPoint.x != lastPoint.x || nowPoint.y != lastPoint.y || nowPoint.z != lastPoint.z || nowPoint.floor != lastPoint.floor) {
+                        console.log('蓝牙', nowPoint, lastPoint)
+
+                        if(lastPoint.x ==0 && lastPoint.y ==0 && lastPoint.z == 0) {
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction")
+                            MODEL.onlyDisplayFloor(nowPoint.floor);
+                        }else {
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation")
                         }
+
+
+                        let L = 200; //相机与用户（me）之间的距离
+                        let newP = {
+                            x: nowPoint.x - L * Math.sin(me.radian),
+                            y: nowPoint.y - L * Math.cos(me.radian),
+                            z: 300
+                        };
+                        let newT = {
+                            x: nowPoint.x,
+                            y: nowPoint.y,
+                            z: nowPoint.z
+                        };
+                        //console.log('视角')
+                        MODEL.animateCamera(camera.position, controls.target, newP, newT);
 
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;

@@ -25,6 +25,12 @@ export function openCompass(that) {
                 compassAngle: 45 - curAngle + "deg",
             });
             preAngle = curAngle;
+
+            if(curAngle>45 && curAngle<=135) curAngle=90;
+            else if(curAngle>135 && curAngle<=225) curAngle=180;
+            else if(curAngle>225 && curAngle<=315) curAngle=270;
+            else curAngle=0;
+            
             let radian = (curAngle / 360) * 2 * Math.PI;
             
             if (cnt > 0) {

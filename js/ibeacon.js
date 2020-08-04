@@ -16,7 +16,7 @@ var app = getApp();
 function beaconUpdate() {
     wx.onBeaconUpdate((res) => {
         let data = [];
-
+        if(!res.beacons.length) return;
         for (let i = 0; i < res.beacons.length; i++) {
             if (res.beacons[i].rssi !== 0) {
                 //将搜索到的蓝牙信号和数据库中蓝牙信号比对匹配
