@@ -64,11 +64,23 @@ main.initMap = function (that) {
                     }
                 }
                 //console.log("状态",app.systemControl.realMode)
+                if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0) {
+                    userControl.changePosition(
+                        nowPoint.x,
+                        nowPoint.y,
+                        nowPoint.z,
+                        "direction"
+                    );
+                    MODEL.onlyDisplayFloor(nowPoint.floor);
+
+                }
+                
 
                 let floor = match2getFloor(nowPoint);
+                // console.log(floor);
                 if (floor != null) MODEL.onlyDisplayFloor(floor);
 
-                if (app.systemControl.realMode) {
+                if (app.systemControl.realMode && me.radian) {
                     if (
                         nowPoint.x != lastPoint.x ||
                         nowPoint.y != lastPoint.y ||
@@ -77,22 +89,13 @@ main.initMap = function (that) {
                     ) {
                         console.log("蓝牙", nowPoint, lastPoint);
 
-                        if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0) {
-                            userControl.changePosition(
-                                nowPoint.x,
-                                nowPoint.y,
-                                nowPoint.z,
-                                "direction"
-                            );
-                            MODEL.onlyDisplayFloor(nowPoint.floor);
-                        } else {
-                            userControl.changePosition(
-                                nowPoint.x,
-                                nowPoint.y,
-                                nowPoint.z,
-                                "animation"
-                            );
-                        }
+                        userControl.changePosition(
+                            nowPoint.x,
+                            nowPoint.y,
+                            nowPoint.z,
+                            "animation"
+                        );
+
 
                         let L = 200; //相机与用户（me）之间的距离
                         let newP = {
@@ -106,6 +109,7 @@ main.initMap = function (that) {
                             z: nowPoint.z,
                         };
                         //console.log('视角')
+                        console.log(camera.position, controls.target, newP, newT);
                         MODEL.animateCamera(camera.position, controls.target, newP, newT);
 
                         lastPoint.x = nowPoint.x;
