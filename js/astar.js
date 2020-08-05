@@ -74,7 +74,7 @@ function initnode(nodeList) {
  * @date 2020-07-13
  * @returns
  */
-function openFn(nodeList){
+function openFn(nodeList) {
     /** nodeLi表示当前open队列中的元素，也就是说先去除第一个起始节点
      * shift把数组中第一个元素删除，并且返回这个被删除元素
      */
@@ -82,7 +82,7 @@ function openFn(nodeList){
     if (nodeLi === null) alert("没有目标点");
 
     //如果nodeLi和endLi一样了，那么证明已经走到目标点了，这时候需要停止调用
-    if(nodeLi === endLi) {
+    if (nodeLi === endLi) {
         return;
     }
 
@@ -122,11 +122,11 @@ function now2End(nowLi) {
     let a = nowLi.x - endLi.x;
     let b = nowLi.y - endLi.y;
     let c = nowLi.z - endLi.z;
-    return Math.sqrt(a * a + b * b + c * c);    
+    return Math.sqrt(a * a + b * b + c * c);
 }
 
 /**
- * @description 股价函数
+ * @description 估价函数
  * @date 2020-07-13
  * @param {*} nowLi
  * @param {*} fathernode
@@ -142,10 +142,10 @@ function fn(nowLi, fathernode) {
  * @param {*} nodeLi
  */
 function findLi(nodeLi, nodeList) {
-    for (var i = 0; i < nodeLi.path.length; i++){
+    for (var i = 0; i < nodeLi.path.length; i++) {
         var curnode = getObj(nodeLi.path[i], nodeList);
 
-        if(filter(curnode, nodeLi)) {
+        if (filter(curnode, nodeLi)) {
             curnode.num = fn(curnode, nodeLi);
             curnode.gn = nodeLi.gn + util.CalculateNodeDis(curnode, nodeLi);
             curnode.parent = nodeLi;
@@ -164,16 +164,16 @@ function findLi(nodeLi, nodeList) {
 function filter(nodeLi, prenode) {
 
     /** 循环close队列中的所有元素，与传过来的节点进行比对 如果比对成功返回false */
-    for(var i = 0; i<closeArr.length; i++){
-        if(nodeLi === closeArr[i]) {
+    for (var i = 0; i < closeArr.length; i++) {
+        if (nodeLi === closeArr[i]) {
             return false;
         }
     }
 
     /** 判断是否存在于开放队列，若存在比对GN值，更新当前代价 */
-    for(var i = 0; i < openArr.length; i++){
-        if(nodeLi === openArr[i]){
-            if(prenode.gn + util.CalculateNodeDis(nodeLi,prenode) < nodeLi.gn){
+    for (var i = 0; i < openArr.length; i++) {
+        if (nodeLi === openArr[i]) {
+            if (prenode.gn + util.CalculateNodeDis(nodeLi, prenode) < nodeLi.gn) {
                 nodeLi.gn = prenode.gn + util.CalculateNodeDis(nodeLi, prenode);
                 nodeLi.parent = prenode;
             }
@@ -206,7 +206,7 @@ function findParent(li) {
 function navigation(nodeList) {
     initnode(nodeList);
 
-    if (beginLi.id === endLi.id){
+    if (beginLi.id === endLi.id) {
         resultParent.push(endLi);
         return;
     }
@@ -228,22 +228,22 @@ function navigation(nodeList) {
  */
 function navigate(nodeList, start, end) {
 
-    app.meBeforNav = app.me;
-    // console.log(app.meBeforNav);
     let startNode = util.findnearest2(start, nodeList);
     let endNode = util.findnearest2(end, nodeList);
 
-
+    //设置开始节点和目标节点
     setBeginAndEndNode(startNode.id, endNode.id, nodeList);
+    //得到导航节点数组
     navigation(nodeList);
-    // console.log("结果: ", resultParent);
-    app.resultParent = resultParent;
 
+    app.resultParent = resultParent;
+    //根据数组绘制导航路径
     MODEL.createPathTube(resultParent);
 
+    //计算距离，并返回显示文字
     let distance = (resultParent[resultParent.length - 1].gn * app.map_conf.float_mapProportion).toFixed(1);
     let distancetext = "全长" + distance + "米 大约" + (distance * 0.016).toFixed(1) + "分钟";
-    
+
     return distancetext;
 }
 

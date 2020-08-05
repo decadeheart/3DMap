@@ -7,10 +7,8 @@ App({
     target:[],
     navigateFlag: 0,
     me: [],
-    arrow: [],
     POItarget: [],
     resultParent: [],
-    meBeforNav: [],
     map: {
         int_totalLayerNums: 9,
         int_loadedLayerNums: 0,
@@ -63,7 +61,7 @@ App({
     ],
     localization: {
         lastBluePosition: { x: 0, y: 0, z: 0, floor: -1 },
-        nowBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
+        nowBluePosition: { x: 0, y: 0, z: 0, floor: -1 },
         isWXReady: false,
         GPSOpen: 0,
         BluetoothOpen: 1,

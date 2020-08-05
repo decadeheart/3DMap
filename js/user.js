@@ -107,7 +107,7 @@ const userControl = {
                 me.position.set(nextpoint.x, nextpoint.y, nextpoint.z);
                 break;
             case "animation":
-                let meTween = new TWEEN.Tween(me.position).to(nextpoint, util.dis3(me.position, nextpoint) * 100);
+                let meTween = new TWEEN.Tween(me.position).to(nextpoint, 1000);
                 meTween.start();
                 break;
         }

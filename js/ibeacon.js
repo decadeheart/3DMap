@@ -3,7 +3,7 @@ import * as util from "../util/util";
 
 var blueConfig = {
     blueConfig: [],
-    maxBufferLength: 8,
+    maxBufferLength: 5,
     minValidRssi: -90,
     beaconInfo: [],
 };

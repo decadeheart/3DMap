@@ -1,14 +1,23 @@
-import { createScopedThreejs } from "../util/three";
+import {
+    createScopedThreejs
+} from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
 import initData from "../js/data";
-import { beaconUpdate, match2getFloor } from "../js/ibeacon";
+import {
+    beaconUpdate,
+    match2getFloor
+} from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
-import { autoMoving } from "../js/simNavigate";
+import {
+    autoMoving
+} from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import { showOrientationText } from "../js/directionNotify";
+import {
+    showOrientationText
+} from "../js/directionNotify";
 import userControl from "../js/user";
 
 var app = getApp();
@@ -50,12 +59,14 @@ main.initMap = function (that) {
                 let lastPoint = app.localization.lastBluePosition;
                 let systemControl = app.systemControl;
                 let me = app.me;
-                if (systemControl.state === "navigating" || systemControl.state === "previewing") {
+
+                //如果当前是导航模式，那么静止的管状路线会动起来，并且进行语音播报
+                if (systemControl.state === "navigating") {
                     app.pathControl.textures.forEach(function (item) {
                         item.offset.x -= 0.05;
                     });
-                }
-                if (systemControl.state === "navigating") {
+
+                    //获取语音播报的节点信息，并显示在页面上
                     let text = showOrientationText();
                     if (text) {
                         that.setData({
@@ -63,38 +74,45 @@ main.initMap = function (that) {
                         });
                     }
                 }
-                //console.log("状态",app.systemControl.realMode)
 
+
+
+                //若是当前点是在初始位置，直接改变位置到初始
+                if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
+                    userControl.changePosition(
+                        nowPoint.x,
+                        nowPoint.y,
+                        nowPoint.z,
+                        "direction"
+                    );
+                    main.onlyDisplayFloor(nowPoint.floor);
+                }
+
+                //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
-                if (floor != null) MODEL.onlyDisplayFloor(floor);
+                if (floor != null) main.onlyDisplayFloor(floor);
 
-                if (app.systemControl.realMode) {
+                //如果是真实模式，非模拟导航，并且me.radian 已经加载完毕
+                if (app.systemControl.realMode && me.radian) {
+
+                    //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
                         nowPoint.y != lastPoint.y ||
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-                        console.log("蓝牙", nowPoint, lastPoint);
 
-                        if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0) {
-                            userControl.changePosition(
-                                nowPoint.x,
-                                nowPoint.y,
-                                nowPoint.z,
-                                "direction"
-                            );
-                            MODEL.onlyDisplayFloor(nowPoint.floor);
-                        } else {
-                            userControl.changePosition(
-                                nowPoint.x,
-                                nowPoint.y,
-                                nowPoint.z,
-                                "animation"
-                            );
-                        }
 
-                        let L = 200; //相机与用户（me）之间的距离
+                        userControl.changePosition(
+                            nowPoint.x,
+                            nowPoint.y,
+                            nowPoint.z,
+                            "animation"
+                        );
+
+                        //动画更新部分
+                        let L = 200;
                         let newP = {
                             x: nowPoint.x - L * Math.sin(me.radian),
                             y: nowPoint.y - L * Math.cos(me.radian),
@@ -239,11 +257,17 @@ main.getBuildingData = () => {
         });
     });
 };
-
+/**
+ * 模拟导航中的根据路径进行移动
+ * @param {*} path 
+ */
 main.autoMove = (path) => {
     autoMoving(path);
 };
 
+/**
+ * 停止导航
+ */
 main.stopNav = () => {
     MODEL.stopNav();
 };
