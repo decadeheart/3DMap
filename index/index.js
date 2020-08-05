@@ -1,5 +1,5 @@
 import main from "./main";
-import { openCompass} from "../js/compass";
+import { openCompass } from "../js/compass";
 import { backToMe } from "../js/model";
 var app = getApp();
 Page({
@@ -8,14 +8,7 @@ Page({
         dimensionImgUrl: ["../img/2D.png", "../img/3D.png"],
         dimension: 3,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: [
-            "../img/1F.png",
-            "../img/2F.png",
-            "../img/3F.png",
-            "../img/4F.png",
-            "../img/5F.png",
-            "../img/6F.png",
-        ],
+        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png", "../img/6F.png"],
         logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
@@ -54,7 +47,7 @@ Page({
         var that = this;
         main.initMap(that);
         openCompass(this);
-        
+
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
             var eachFloor = [].concat(...buildingDataTmp[1]);
@@ -186,11 +179,10 @@ Page({
             });
             this.setData({
                 searchResult: tmp,
-                searchHidden:false
-
+                searchHidden: false,
             });
         }
-        return new Promise(() => { });
+        return new Promise(() => {});
     },
     /**
      * @description 搜索提示框隐藏和显示
@@ -215,7 +207,6 @@ Page({
         //调用
         main.onlyDisplayFloor(parseInt(target.floor));
         main.setCurClick(target);
-
     },
     /**
      * @description 搜索栏切换tab
@@ -261,10 +252,10 @@ Page({
         let self = this;
         app.systemControl.state = "navigating";
         app.systemControl.realMode = true;
-        if(self.startPointName != "我的位置") {
-        main.startMe();
+        if (self.startPointName != "我的位置") {
+            main.startMe();
 
-        setTimeout(function () {
+            setTimeout(function () {
                 let dis = main.navigateInit();
                 main.backToMe();
                 self.setData({
@@ -273,8 +264,8 @@ Page({
                     distanceInfo: dis,
                     startPointName: "我的位置",
                 });
-        }, 50);
-     }
+            }, 50);
+        }
     },
 
     /**
@@ -296,7 +287,7 @@ Page({
     },
     touchTap(e) {
         if (!app.navigateFlag) {
-            let tmp = main.selectObj(e.touches[0])
+            let tmp = main.selectObj(e.touches[0]);
             this.setData({
                 navFlag: 1,
                 infoFlag: 1,
@@ -339,7 +330,7 @@ Page({
         let self = this;
         this.setData({
             startPointName: this.data.currentPointName,
-        })
+        });
         setTimeout(function () {
             if (!!app.spriteControl.endSprite) {
                 let dis = main.navigateInit();
@@ -362,7 +353,7 @@ Page({
         let self = this;
         this.setData({
             endPointName: this.data.currentPointName,
-        })
+        });
         setTimeout(function () {
             if (!!app.spriteControl.startSprite) {
                 let dis = main.navigateInit();
