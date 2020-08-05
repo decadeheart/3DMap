@@ -85,12 +85,12 @@ main.initMap = function (that) {
                         nowPoint.z,
                         "direction"
                     );
-                    MODEL.onlyDisplayFloor(nowPoint.floor);
+                    main.onlyDisplayFloor(nowPoint.floor);
                 }
 
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
-                if (floor != null) MODEL.onlyDisplayFloor(floor);
+                if (floor != null) main.onlyDisplayFloor(floor);
 
                 //如果是真实模式，非模拟导航，并且me.radian 已经加载完毕
                 if (app.systemControl.realMode && me.radian) {
@@ -257,11 +257,17 @@ main.getBuildingData = () => {
         });
     });
 };
-
+/**
+ * 模拟导航中的根据路径进行移动
+ * @param {*} path 
+ */
 main.autoMove = (path) => {
     autoMoving(path);
 };
 
+/**
+ * 停止导航
+ */
 main.stopNav = () => {
     MODEL.stopNav();
 };

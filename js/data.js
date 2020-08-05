@@ -8,7 +8,6 @@ const initData = new Promise((resolve, reject) => {
 	let value = wx.getStorageSync('nodeData');
 	value=false;
 	if (value) {
-		// console.log(value,typeof value)
 		resolve(value);
 	} 
 	else {
@@ -21,10 +20,6 @@ const initData = new Promise((resolve, reject) => {
 			responseType: 'text',
 			success: res => {
 				let data = dataPreProcess(res);
-				// wx.setStorage({
-				// 	data: data,
-				// 	key: 'nodeData',
-				// })
 				resolve(data);
 			},
 			fail: err => {
@@ -51,12 +46,12 @@ var dataPreProcess = (res) => {
 	nodeList = data.nodeList;
 
 	let target = data.target;
+	//蓝牙信息
 	app.beaconCoordinate = data.beaconCoordinate;
-	// console.log(app.beaconCoordinate)
+	//节点信息
 	app.nodeList = nodeList;
 	app.target=target;
 
-	// console.log(target)
 	for (let build in target) {
 		for (let floor in target[build]) {
 			target[build][floor].forEach(function (item) {
@@ -107,7 +102,6 @@ var dataPreProcess = (res) => {
 					}
 				})
 				if (room.expend == group.expend) {
-					// console.log(item);
 					group.rooms.push(room);
 				}
 			})
@@ -117,7 +111,6 @@ var dataPreProcess = (res) => {
 			eachFloor.forEach(item => {
 				item.rooms.sort((a, b) => parseInt(a.name) - parseInt(b.name));
 			})
-			// console.log(eachFloor)
 			eachBuilding.push(eachFloor);
 		})
 		buildingRoomGroup.push(eachBuilding);

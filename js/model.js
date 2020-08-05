@@ -507,9 +507,8 @@ export function backToMe() {
     map.curFloor = floor;
     camera.fov = 30;
     camera.updateProjectionMatrix();
-    console.log(me);
+
     let newP = { x: poi.x - L * Math.sin(me.radian), y: poi.y - L * Math.cos(me.radian), z: 300 };
-    console.log(newP);
     animateCamera(camera.position, controls.target, newP, poi);
 }
 /**
@@ -566,9 +565,13 @@ export function stopNav() {
     scene.remove(app.pathControl.pathGroup);
     scene.remove(app.spriteControl.endSprite);
     scene.remove(app.spriteControl.startSprite);
+
     app.spriteControl.endSprite = null;
     app.spriteControl.startSprite = null;
     app.spriteControl.curSprite = null;
     app.routeClass.startPoint = {};
     app.routeClass.endPoint = {};
+
+    let point = app.localization.nowBluePosition;
+    userControl.changePosition(point.x ,point.y ,point.z,"animation")
 }
