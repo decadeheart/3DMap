@@ -61,7 +61,6 @@ function getDirectionText(index) {
  * @returns
  */
 function angleToDirection(angle) {
-    // console.log(angle)
     angle = parseFloat(angle)/Math.PI*180;
 
     if(angle>-30&&angle<30){return 0;}

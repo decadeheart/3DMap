@@ -1,6 +1,10 @@
 import main from "./main";
-import { openCompass } from "../js/compass";
-import { backToMe } from "../js/model";
+import {
+    openCompass
+} from "../js/compass";
+import {
+    backToMe
+} from "../js/model";
 var app = getApp();
 Page({
     data: {
@@ -21,14 +25,12 @@ Page({
         infoFlag: 0,
         showBlue: false,
         step: 0,
-        buttons: [
-            {
-                type: "primary",
-                className: "",
-                text: "确认",
-                value: 1,
-            },
-        ],
+        buttons: [{
+            type: "primary",
+            className: "",
+            text: "确认",
+            value: 1,
+        }, ],
         //模态框是否显示,模态框搜索结果
         modalFlag: false,
         searchResult: [],
@@ -41,12 +43,34 @@ Page({
         floorIndex: 0,
         searchTitle: app.map_conf.map_name,
         compassAngle: "",
+        isAndroid: false,
     },
 
     onLoad: function () {
         var that = this;
         main.initMap(that);
         openCompass(this);
+
+        wx.getSystemInfo({
+            success: function (res) {
+                that.setData({
+                    systemInfo: res,
+                })
+                if (res.platform == "devtools") {
+                    console.log('PC')
+                } else if (res.platform == "ios") {
+                    console.log('ios')
+                    that.setData({
+                        isAndroid: false
+                    })
+                } else if (res.platform == "android") {
+                    console.log('android')
+                    that.setData({
+                        isAndroid: true
+                    })
+                }
+            }
+        })
 
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
@@ -123,7 +147,7 @@ Page({
         let tmp = app.routeClass.startPoint;
         app.routeClass.startPoint = app.routeClass.endPoint;
         app.routeClass.endPoint = tmp;
-        // console.log("交换", tmp);
+
         main.endClick(app.routeClass.endPoint);
         main.startClick(app.routeClass.startPoint);
         main.navigateInit();
@@ -144,8 +168,6 @@ Page({
      * @param {*}
      */
     getMyLocation() {
-        // console.log("我在这");
-        // stop();
         main.backToMe();
     },
     test() {
@@ -153,8 +175,6 @@ Page({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
-        // start()
-        // console.log(this.data.navFlag, this.data.infoFlag);
     },
 
     /**
@@ -196,7 +216,6 @@ Page({
      * @description 选中搜索结果后触发
      */
     selectResult: function (e) {
-        // console.log('select result', e.currentTarget.dataset.selected);
         var target = e.currentTarget.dataset.selected;
         // 对应关闭模态框，显示提示框，修改当前地点的名字
         this.setData({
@@ -207,6 +226,7 @@ Page({
         //调用
         main.onlyDisplayFloor(parseInt(target.floor));
         main.setCurClick(target);
+        main.changeFocus(target);
     },
     /**
      * @description 搜索栏切换tab
@@ -238,7 +258,6 @@ Page({
      * @param {*} e 事件
      */
     simNavigate(e) {
-        // console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         main.autoMove(app.resultParent);
@@ -294,12 +313,25 @@ Page({
                 currentPointName: tmp,
             });
         }
+
     },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchstart",
         });
+        if (this.data.isAndroid) {
+            if (!app.navigateFlag) {
+                let tmp = main.selectObj(e.touches[0]);
+                this.setData({
+                    navFlag: 1,
+                    infoFlag: 1,
+                    currentPointName: tmp,
+                });
+            }
+
+        }
+
     },
     touchMove(e) {
         app.canvas.dispatchTouchEvent({

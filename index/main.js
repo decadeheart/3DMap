@@ -79,6 +79,7 @@ main.initMap = function (that) {
 
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
+
                     userControl.changePosition(
                         nowPoint.x,
                         nowPoint.y,
@@ -103,7 +104,8 @@ main.initMap = function (that) {
                         nowPoint.floor != lastPoint.floor
                     ) {
 
-
+                        console.log('当前点',nowPoint.x,nowPoint.y,nowPoint.z);
+                        console.log('之前点',lastPoint.x,lastPoint.y,lastPoint.z);
                         userControl.changePosition(
                             nowPoint.x,
                             nowPoint.y,
@@ -112,19 +114,7 @@ main.initMap = function (that) {
                         );
 
                         //动画更新部分
-                        let L = 200;
-                        let newP = {
-                            x: nowPoint.x - L * Math.sin(me.radian),
-                            y: nowPoint.y - L * Math.cos(me.radian),
-                            z: 300,
-                        };
-                        let newT = {
-                            x: nowPoint.x,
-                            y: nowPoint.y,
-                            z: nowPoint.z,
-                        };
-                        //console.log('视角')
-                        MODEL.animateCamera(camera.position, controls.target, newP, newT);
+                        main.changeFocus(nowPoint)
 
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
@@ -234,6 +224,7 @@ main.setCurClick = function (point) {
 /** 起点设定 */
 main.startClick = function (point) {
     MODEL.setStartClick(point);
+
 };
 
 /** 终点设定 */
@@ -271,5 +262,24 @@ main.autoMove = (path) => {
 main.stopNav = () => {
     MODEL.stopNav();
 };
+
+main.changeFocus = (point) => {
+    let camera = MODEL.getCamera();
+    let controls = MODEL.getControl();
+    let me = app.me
+    //动画更新部分
+    let L = 200;
+    let newP = {
+        x: point.x - L * Math.sin(me.radian),
+        y: point.y - L * Math.cos(me.radian),
+        z: 300,
+    };
+    let newT = {
+        x: point.x,
+        y: point.y,
+        z: point.z,
+    };
+    MODEL.animateCamera(camera.position, controls.target, newP, newT);
+}
 
 export default main;

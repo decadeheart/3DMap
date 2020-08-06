@@ -15,7 +15,7 @@ var app = getApp();
 function beaconUpdate() {
     wx.onBeaconUpdate((res) => {
         let data = [];
-        // if (!res.beacons.length) return;
+        if (!res.beacons.length) return;
         for (let i = 0; i < res.beacons.length; i++) {
             if (res.beacons[i].rssi !== 0) {
                 //将搜索到的蓝牙信号和数据库中蓝牙信号比对匹配
@@ -40,7 +40,7 @@ function beaconUpdate() {
         );
 
         let result = getMaxPossiblePoint();
-
+        if(!result) return;
         //minValidRssi表示最小有效的信号强度，小于这个强度的信号可以忽视
         if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
             return;
@@ -114,7 +114,6 @@ function getMaxPossiblePoint() {
 var rooms = []; //所有房间的数据
 function match2getFloor(point) {
     //找到当前的蓝牙点以及楼层
-    // console.log(point);
     if (app.nodeList != undefined) {
         let [cur] = app.nodeList.filter((item) => {
             return point.x == item.x && point.y == item.y && item.floor == point.floor;
@@ -126,7 +125,6 @@ function match2getFloor(point) {
             app.localization.lastBluePosition.floor == point.floor
         )
             return null;
-        console.log(cur.id, cur.floor, cur.priority);
         return cur.floor;
     }
 }
