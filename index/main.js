@@ -79,19 +79,19 @@ main.initMap = function (that) {
 
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
+
                     userControl.changePosition(
                         nowPoint.x,
                         nowPoint.y,
                         nowPoint.z,
                         "direction"
                     );
-                    MODEL.onlyDisplayFloor(nowPoint.floor);
+                    main.onlyDisplayFloor(nowPoint.floor);
                 }
 
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
-                // console.log(floor);
-                if (floor != null) MODEL.onlyDisplayFloor(floor);
+                if (floor != null) main.onlyDisplayFloor(floor);
 
                 //如果是真实模式，非模拟导航，并且me.radian 已经加载完毕
                 if (app.systemControl.realMode && me.radian) {
@@ -104,6 +104,8 @@ main.initMap = function (that) {
                         nowPoint.floor != lastPoint.floor
                     ) {
 
+                        console.log('当前点',nowPoint.x,nowPoint.y,nowPoint.z);
+                        console.log('之前点',lastPoint.x,lastPoint.y,lastPoint.z);
                         userControl.changePosition(
                             nowPoint.x,
                             nowPoint.y,
@@ -112,20 +114,7 @@ main.initMap = function (that) {
                         );
 
                         //动画更新部分
-                        let L = 200;
-                        let newP = {
-                            x: nowPoint.x - L * Math.sin(me.radian),
-                            y: nowPoint.y - L * Math.cos(me.radian),
-                            z: 300,
-                        };
-                        let newT = {
-                            x: nowPoint.x,
-                            y: nowPoint.y,
-                            z: nowPoint.z,
-                        };
-                        //console.log('视角')
-                        console.log(camera.position, controls.target, newP, newT);
-                        MODEL.animateCamera(camera.position, controls.target, newP, newT);
+                        main.changeFocus(nowPoint)
 
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
@@ -235,6 +224,7 @@ main.setCurClick = function (point) {
 /** 起点设定 */
 main.startClick = function (point) {
     MODEL.setStartClick(point);
+
 };
 
 /** 终点设定 */
@@ -258,13 +248,38 @@ main.getBuildingData = () => {
         });
     });
 };
-
+/**
+ * 模拟导航中的根据路径进行移动
+ * @param {*} path 
+ */
 main.autoMove = (path) => {
     autoMoving(path);
 };
 
+/**
+ * 停止导航
+ */
 main.stopNav = () => {
     MODEL.stopNav();
 };
+
+main.changeFocus = (point) => {
+    let camera = MODEL.getCamera();
+    let controls = MODEL.getControl();
+    let me = app.me
+    //动画更新部分
+    let L = 200;
+    let newP = {
+        x: point.x - L * Math.sin(me.radian),
+        y: point.y - L * Math.cos(me.radian),
+        z: 300,
+    };
+    let newT = {
+        x: point.x,
+        y: point.y,
+        z: point.z,
+    };
+    MODEL.animateCamera(camera.position, controls.target, newP, newT);
+}
 
 export default main;

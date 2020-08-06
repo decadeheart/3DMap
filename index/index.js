@@ -1,6 +1,10 @@
 import main from "./main";
-import { openCompass} from "../js/compass";
-import { backToMe } from "../js/model";
+import {
+    openCompass
+} from "../js/compass";
+import {
+    backToMe
+} from "../js/model";
 var app = getApp();
 Page({
     data: {
@@ -8,14 +12,7 @@ Page({
         dimensionImgUrl: ["../img/2D.png", "../img/3D.png"],
         dimension: 3,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: [
-            "../img/1F.png",
-            "../img/2F.png",
-            "../img/3F.png",
-            "../img/4F.png",
-            "../img/5F.png",
-            "../img/6F.png",
-        ],
+        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png", "../img/6F.png"],
         logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
@@ -28,14 +25,12 @@ Page({
         infoFlag: 0,
         showBlue: false,
         step: 0,
-        buttons: [
-            {
-                type: "primary",
-                className: "",
-                text: "确认",
-                value: 1,
-            },
-        ],
+        buttons: [{
+            type: "primary",
+            className: "",
+            text: "确认",
+            value: 1,
+        }, ],
         //模态框是否显示,模态框搜索结果
         modalFlag: false,
         searchResult: [],
@@ -48,13 +43,35 @@ Page({
         floorIndex: 0,
         searchTitle: app.map_conf.map_name,
         compassAngle: "",
+        isAndroid: false,
     },
 
     onLoad: function () {
         var that = this;
         main.initMap(that);
         openCompass(this);
-        
+
+        wx.getSystemInfo({
+            success: function (res) {
+                that.setData({
+                    systemInfo: res,
+                })
+                if (res.platform == "devtools") {
+                    console.log('PC')
+                } else if (res.platform == "ios") {
+                    console.log('ios')
+                    that.setData({
+                        isAndroid: false
+                    })
+                } else if (res.platform == "android") {
+                    console.log('android')
+                    that.setData({
+                        isAndroid: true
+                    })
+                }
+            }
+        })
+
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
             var eachFloor = [].concat(...buildingDataTmp[1]);
@@ -130,7 +147,7 @@ Page({
         let tmp = app.routeClass.startPoint;
         app.routeClass.startPoint = app.routeClass.endPoint;
         app.routeClass.endPoint = tmp;
-        // console.log("交换", tmp);
+
         main.endClick(app.routeClass.endPoint);
         main.startClick(app.routeClass.startPoint);
         main.navigateInit();
@@ -151,8 +168,6 @@ Page({
      * @param {*}
      */
     getMyLocation() {
-        // console.log("我在这");
-        // stop();
         main.backToMe();
     },
     test() {
@@ -160,8 +175,6 @@ Page({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
-        // start()
-        // console.log(this.data.navFlag, this.data.infoFlag);
     },
 
     /**
@@ -186,11 +199,10 @@ Page({
             });
             this.setData({
                 searchResult: tmp,
-                searchHidden:false
-
+                searchHidden: false,
             });
         }
-        return new Promise(() => { });
+        return new Promise(() => {});
     },
     /**
      * @description 搜索提示框隐藏和显示
@@ -204,7 +216,6 @@ Page({
      * @description 选中搜索结果后触发
      */
     selectResult: function (e) {
-        // console.log('select result', e.currentTarget.dataset.selected);
         var target = e.currentTarget.dataset.selected;
         // 对应关闭模态框，显示提示框，修改当前地点的名字
         this.setData({
@@ -215,7 +226,7 @@ Page({
         //调用
         main.onlyDisplayFloor(parseInt(target.floor));
         main.setCurClick(target);
-
+        main.changeFocus(target);
     },
     /**
      * @description 搜索栏切换tab
@@ -247,7 +258,6 @@ Page({
      * @param {*} e 事件
      */
     simNavigate(e) {
-        // console.log(e);
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         main.autoMove(app.resultParent);
@@ -261,10 +271,10 @@ Page({
         let self = this;
         app.systemControl.state = "navigating";
         app.systemControl.realMode = true;
-        if(self.startPointName != "我的位置") {
-        main.startMe();
+        if (self.startPointName != "我的位置") {
+            main.startMe();
 
-        setTimeout(function () {
+            setTimeout(function () {
                 let dis = main.navigateInit();
                 main.backToMe();
                 self.setData({
@@ -273,8 +283,8 @@ Page({
                     distanceInfo: dis,
                     startPointName: "我的位置",
                 });
-        }, 50);
-     }
+            }, 50);
+        }
     },
 
     /**
@@ -296,19 +306,32 @@ Page({
     },
     touchTap(e) {
         if (!app.navigateFlag) {
-            let tmp = main.selectObj(e.touches[0])
+            let tmp = main.selectObj(e.touches[0]);
             this.setData({
                 navFlag: 1,
                 infoFlag: 1,
                 currentPointName: tmp,
             });
         }
+
     },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
             ...e,
             type: "touchstart",
         });
+        if (this.data.isAndroid) {
+            if (!app.navigateFlag) {
+                let tmp = main.selectObj(e.touches[0]);
+                this.setData({
+                    navFlag: 1,
+                    infoFlag: 1,
+                    currentPointName: tmp,
+                });
+            }
+
+        }
+
     },
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
@@ -339,7 +362,7 @@ Page({
         let self = this;
         this.setData({
             startPointName: this.data.currentPointName,
-        })
+        });
         setTimeout(function () {
             if (!!app.spriteControl.endSprite) {
                 let dis = main.navigateInit();
@@ -362,7 +385,7 @@ Page({
         let self = this;
         this.setData({
             endPointName: this.data.currentPointName,
-        })
+        });
         setTimeout(function () {
             if (!!app.spriteControl.startSprite) {
                 let dis = main.navigateInit();

@@ -7,10 +7,8 @@ App({
     target:[],
     navigateFlag: 0,
     me: [],
-    arrow: [],
     POItarget: [],
     resultParent: [],
-    meBeforNav: [],
     map: {
         int_totalLayerNums: 9,
         int_loadedLayerNums: 0,

@@ -57,7 +57,6 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
-        // console.log(scene)
         //加载文字和图片
         // loadTargetText(scene);
 
@@ -245,7 +244,6 @@ function getNearPOIName(obj) {
             }
         }
     }
-    // console.log(list[k]);
     return list[k].name;
 }
 
@@ -412,12 +410,10 @@ export function createPathTube(path) {
     }
     pointlist.forEach(function (line, i) {
         if (line.length > 1) {
-            // console.log(line.length);
             let curve = new THREE.CatmullRomCurve3(line, false, "catmullrom", 0.01);
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
-            // console.log("tex", tex);
             let material = new THREE.MeshBasicMaterial({
                 map: tex,
             });
@@ -495,7 +491,7 @@ export function backToMe() {
     let poi = { x: point.x, y: point.y, z: point.z };
     let L = 200; //相机与用户（me）之间的距离
     let me = app.me;
-    // TWEEN.removeAll();
+
     let map = app.map;
     if (typeof floor != "number") {
         floor = parseInt(floor);
@@ -507,9 +503,8 @@ export function backToMe() {
     map.curFloor = floor;
     camera.fov = 30;
     camera.updateProjectionMatrix();
-    console.log(me);
+
     let newP = { x: poi.x - L * Math.sin(me.radian), y: poi.y - L * Math.cos(me.radian), z: 300 };
-    console.log(newP);
     animateCamera(camera.position, controls.target, newP, poi);
 }
 /**
@@ -566,9 +561,13 @@ export function stopNav() {
     scene.remove(app.pathControl.pathGroup);
     scene.remove(app.spriteControl.endSprite);
     scene.remove(app.spriteControl.startSprite);
+
     app.spriteControl.endSprite = null;
     app.spriteControl.startSprite = null;
     app.spriteControl.curSprite = null;
     app.routeClass.startPoint = {};
     app.routeClass.endPoint = {};
+
+    let point = app.localization.nowBluePosition;
+    userControl.changePosition(point.x ,point.y ,point.z,"animation")
 }

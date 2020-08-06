@@ -4,6 +4,12 @@ import * as util from "../util/util"
 let OrientationNotification = ["直行", "右前方直行", "右拐", "右后方直行", "后方直行", "左后方直行", "左拐", "左前方直行"];
 let app = getApp();
 
+/**
+ * @description 得到当前方向的文字
+ * @date 2020-08-05
+ * @param {*} index 点的下标
+ * @returns
+ */
 function getDirectionText(index) {
     let text;
     let resultParent = app.resultParent;
@@ -55,7 +61,6 @@ function getDirectionText(index) {
  * @returns
  */
 function angleToDirection(angle) {
-    // console.log(angle)
     angle = parseFloat(angle)/Math.PI*180;
 
     if(angle>-30&&angle<30){return 0;}

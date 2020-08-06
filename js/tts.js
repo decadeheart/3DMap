@@ -18,8 +18,6 @@ var getAudioSrc = (text) => {
             tts: true,
             content: text,
             success: function (res) {
-                // console.log("succ tts", res.filename)
-                // audioSrc = res.filename
                 resolve(res.filename);
             },
             fail: function (res) {
@@ -38,11 +36,9 @@ async function tts(text) {
     wx.setInnerAudioOption({
         obeyMuteSwitch: false,
     });
-    //innerAudioContext.playbackRate = 2;
     innerAudioContext.autoplay = true;
     innerAudioContext.src = encodeURI(await getAudioSrc(text));
     innerAudioContext.onPlay(() => {
-        // console.log("开始播放");
     });
     innerAudioContext.onError((res) => {
         console.log(res.errMsg);

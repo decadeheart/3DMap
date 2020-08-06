@@ -19,10 +19,9 @@ const userControl = {
             }
             let x = me.position.x + Math.sin(me.radian) * distance;
             let y = me.position.y + Math.cos(me.radian) * distance;
-            console.log(me.radian)
             if (! (app.systemControl.state === "navigating" && !app.systemControl.realMode) ) {
                 userControl.changePosition(x, y, null, "animation");
-                // console.log('x,y',x,y);
+
                 
             }
             map.preStep = map.stepCount;
@@ -107,7 +106,7 @@ const userControl = {
                 me.position.set(nextpoint.x, nextpoint.y, nextpoint.z);
                 break;
             case "animation":
-                let meTween = new TWEEN.Tween(me.position).to(nextpoint, util.dis3(me.position, nextpoint) * 100);
+                let meTween = new TWEEN.Tween(me.position).to(nextpoint, 1000);
                 meTween.start();
                 break;
         }
