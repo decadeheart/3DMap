@@ -376,7 +376,7 @@ Page({
                 if(startFloor == endFloor){
                     main.onlyDisplayFloor(startFloor)
                 }else {
-                    main.displayAllFloor();
+                    main.displayTwoFloor(startFloor, endFloor)
                 }
 
             }
@@ -402,11 +402,12 @@ Page({
                     infoFlag: 2,
                     distanceInfo: dis,
                 });
-                console.log(app.routeClass.startPoint.floor)
-                if(app.routeClass.endPoint.floor == app.routeClass.startPoint.floor){
-                    main.onlyDisplayFloor(app.routeClass.endPoint.floor)
+                let startFloor = app.routeClass.startPoint.floor;
+                let endFloor = app.routeClass.endPoint.floor
+                if(startFloor == endFloor){
+                    main.onlyDisplayFloor(startFloor)
                 }else {
-                    main.displayAllFloor();
+                    main.displayTwoFloor(startFloor, endFloor)
                 }
             }
         }, 50);
@@ -428,10 +429,12 @@ Page({
                     endPointName: self.data.currentPointName,
                     startPointName: "我的位置",
                 });
-                if(app.routeClass.endPoint.floor == app.routeClass.startPoint.floor){
-                    main.onlyDisplayFloor(app.routeClass.endPoint.floor)
+                let startFloor = app.routeClass.startPoint.floor;
+                let endFloor = app.routeClass.endPoint.floor
+                if(startFloor == endFloor){
+                    main.onlyDisplayFloor(startFloor)
                 }else {
-                    main.displayAllFloor();
+                    main.displayTwoFloor(startFloor, endFloor)
                 }
             }
         }, 50);

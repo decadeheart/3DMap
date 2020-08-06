@@ -282,4 +282,8 @@ main.changeFocus = (point) => {
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
 }
 
+main.displayTwoFloor = (floor1 ,floor2) => {
+    MODEL.displayTwoFloor(floor1 ,floor2)
+}
+
 export default main;
