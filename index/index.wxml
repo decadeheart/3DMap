@@ -1,4 +1,4 @@
-<view class="container">
+<view class="container" catchtouchmove="{{false}}">
 	<!-- 地图容器 -->
 	<canvas type="webgl" id="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap"></canvas>
 	<!-- 精灵容器 -->

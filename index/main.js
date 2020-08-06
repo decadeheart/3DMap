@@ -1,23 +1,14 @@
-import {
-    createScopedThreejs
-} from "../util/three";
+import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
 import initData from "../js/data";
-import {
-    beaconUpdate,
-    match2getFloor
-} from "../js/ibeacon";
+import { beaconUpdate, match2getFloor } from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
-import {
-    autoMoving
-} from "../js/simNavigate";
+import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import {
-    showOrientationText
-} from "../js/directionNotify";
+import { showOrientationText } from "../js/directionNotify";
 import userControl from "../js/user";
 
 var app = getApp();
@@ -75,16 +66,9 @@ main.initMap = function (that) {
                     }
                 }
 
-
-
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
-                    userControl.changePosition(
-                        nowPoint.x,
-                        nowPoint.y,
-                        nowPoint.z,
-                        "direction"
-                    );
+                    userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.onlyDisplayFloor(nowPoint.floor);
                 }
 
@@ -94,7 +78,6 @@ main.initMap = function (that) {
 
                 //如果是真实模式，非模拟导航，并且me.radian 已经加载完毕
                 if (app.systemControl.realMode && me.radian) {
-
                     //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
@@ -102,14 +85,7 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-
-
-                        userControl.changePosition(
-                            nowPoint.x,
-                            nowPoint.y,
-                            nowPoint.z,
-                            "animation"
-                        );
+                        userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
 
                         //动画更新部分
                         let L = 200;
@@ -259,7 +235,7 @@ main.getBuildingData = () => {
 };
 /**
  * 模拟导航中的根据路径进行移动
- * @param {*} path 
+ * @param {*} path
  */
 main.autoMove = (path) => {
     autoMoving(path);

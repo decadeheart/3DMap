@@ -1,10 +1,10 @@
-//配置文件参数   
+//配置文件参数
 App({
-    onLaunch: function () { },
+    onLaunch: function () {},
     THREE: null,
     canvasSprite: null,
     beaconCoordinate: [],
-    target:[],
+    target: [],
     navigateFlag: 0,
     me: [],
     POItarget: [],
@@ -20,7 +20,6 @@ App({
         deviceOrientation: 0,
         groundMeshes: [],
         compassRotation: 0,
-
     },
     map_conf: {
         map_id: "jxqzf",
@@ -77,7 +76,7 @@ App({
                     break;
                 case "BLUE":
                     this.GPSOpen = 0;
-                    this.BluetoothOpen = 1;//蓝牙一直打开
+                    this.BluetoothOpen = 1; //蓝牙一直打开
                     break;
                 case "OFF":
                     this.GPSOpen = 0;
@@ -100,18 +99,18 @@ App({
         },
     },
     systemControl: {
-        state: 'normal',
+        state: "normal",
         realMode: true,
-        navPriorityCode: 1,//1电梯 -1楼梯
+        navPriorityCode: 1, //1电梯 -1楼梯
         touching: false,
         isStimulation: function () {
-            return systemControl.state === "navigating" && !systemControl.realMode
-        }
+            return systemControl.state === "navigating" && !systemControl.realMode;
+        },
     },
     TweenControl: {
         preLocationTween: null,
         autoMoveTween: [],
-        cameraTween: null
+        cameraTween: null,
     },
     spriteControl: {
         endSprite: null,
@@ -146,10 +145,10 @@ App({
                     }
                 });
             });
-        }
+        },
     },
     pathControl: {
-        PathTweengroup: [],//no use now
+        PathTweengroup: [], //no use now
         textures: [],
         texture: null,
         pathGroup: null,
@@ -159,12 +158,12 @@ App({
                     tube.scale.set(scale, scale, 1);
                 });
             }
-        }
+        },
     },
     routeClass: {
         startPoint: {},
         endPoint: {},
         distance: 0,
-        time: 0
-    }
+        time: 0,
+    },
 });
