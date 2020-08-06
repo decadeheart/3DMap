@@ -57,7 +57,6 @@ export function renderModel(canvasDom, Three) {
 
         //加载模型
         loadModel(scene);
-        // console.log(scene)
         //加载文字和图片
         // loadTargetText(scene);
 
@@ -245,7 +244,6 @@ function getNearPOIName(obj) {
             }
         }
     }
-    // console.log(list[k]);
     return list[k].name;
 }
 
@@ -355,6 +353,46 @@ export function onlyDisplayFloor(floor) {
     }
     map.curFloor = floor;
 }
+/**
+ * @description 显示指定的两个楼层
+ * @export
+ * @param {*} floor1 楼层1 
+ * @param {*} floor2 楼层2
+ */
+export function displayTwoFloor(floor1, floor2) {
+    // let map = app.map;
+    // if (floor == map.curFloor) return;
+    if (typeof floor1 !== "number") {
+        floor1 = parseInt(floor1);
+        floor2 = parseInt(floor2);
+    }
+    scene.children.forEach(function (obj, i) {
+        if (!!obj.name) {
+            setVisible(obj);
+        }
+    });
+    /**
+     * @description 设置物体是否可见
+     * @param {*} obj 物体
+     * @returns
+     */
+    function setVisible(obj) {
+        (parseInt(obj.floor) === floor1||parseInt(obj.floor) === floor2) ? (obj.visible = true) : (obj.visible = false);
+        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
+        if (obj.name.indexOf("outside") !== -1) {
+            obj.visible = true;
+            return;
+        } else {
+            obj.children.forEach(function (child) {
+                setVisible(child);
+            });
+        }
+        if (obj.name === "user") {
+            obj.visible = true;
+        }
+    }
+    // map.curFloor = floor;
+}
 
 /**
  * @description 初始化贴图模型
@@ -412,12 +450,10 @@ export function createPathTube(path) {
     }
     pointlist.forEach(function (line, i) {
         if (line.length > 1) {
-            // console.log(line.length);
             let curve = new THREE.CatmullRomCurve3(line, false, "catmullrom", 0.01);
             let tubegeo = new THREE.TubeGeometry(curve, 100, 1, 20, false);
             let tex = pathControl.texture.clone();
             pathControl.textures.push(tex);
-            // console.log("tex", tex);
             let material = new THREE.MeshBasicMaterial({
                 map: tex,
             });
@@ -495,7 +531,7 @@ export function backToMe() {
     let poi = { x: point.x, y: point.y, z: point.z };
     let L = 200; //相机与用户（me）之间的距离
     let me = app.me;
-    // TWEEN.removeAll();
+
     let map = app.map;
     if (typeof floor != "number") {
         floor = parseInt(floor);

@@ -19,10 +19,9 @@ const userControl = {
             }
             let x = me.position.x + Math.sin(me.radian) * distance;
             let y = me.position.y + Math.cos(me.radian) * distance;
-            console.log(me.radian)
             if (! (app.systemControl.state === "navigating" && !app.systemControl.realMode) ) {
                 userControl.changePosition(x, y, null, "animation");
-                // console.log('x,y',x,y);
+
                 
             }
             map.preStep = map.stepCount;

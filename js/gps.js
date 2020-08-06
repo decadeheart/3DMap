@@ -37,7 +37,6 @@ gps.getLocationChange = function () {
 	wx.onLocationChange(res => {
 		const latitude = res.latitude;
 		const longitude = res.longitude;
-		// console.log(latitude,longitude);
 		let [x,y]=getXY(longitude,latitude)
 		MODEL.changePosition(x,y,0);
 	});
@@ -54,7 +53,6 @@ gps.getLocation = function () {
 			success(res) {
 				const latitude = res.latitude
 				const longitude = res.longitude
-				// console.log(longitude,latitude);
 				resolve(getXY(longitude,latitude));
 			},
 			fail() {
@@ -85,13 +83,11 @@ function gcj02tobd09(lng, lat) {
     let theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * x_pi);
     let bd_lng = z * Math.cos(theta) + 0.0065;
     let bd_lat = z * Math.sin(theta) + 0.006;
-    //alert(bd_lng+","+bd_lat);
+
     return [bd_lng, bd_lat]
 }
 function getXY(marsLng,marsLat){
-	// console.log(marsLng,marsLat)
 	let [lng,lat]=gcj02tobd09(marsLng,marsLat);
-	// console.log(lng,lat)  
 	let x = app.map_conf.coor_p1.x + (lng - app.map_conf.bd_p1.x)*scaleX ;
 	let y = app.map_conf.coor_p1.y + (lat - app.map_conf.bd_p1.y)*scaleY ;
 	// if (Math.min(Math.abs(x - app.map_conf.coor_p1.x), Math.abs(x - app.map_conf.coor_p2.x)) > (app.map_conf.coor_p2.x - app.map_conf.coor_p1.x) * 1.5 ||
