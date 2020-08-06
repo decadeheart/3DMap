@@ -104,8 +104,8 @@ main.initMap = function (that) {
                         nowPoint.floor != lastPoint.floor
                     ) {
 
-                        console.log('当前点',nowPoint.x,nowPoint.y,nowPoint.z);
-                        console.log('之前点',lastPoint.x,lastPoint.y,lastPoint.z);
+                        // console.log('当前点',nowPoint.x,nowPoint.y,nowPoint.z);
+                        // console.log('之前点',lastPoint.x,lastPoint.y,lastPoint.z);
                         userControl.changePosition(
                             nowPoint.x,
                             nowPoint.y,

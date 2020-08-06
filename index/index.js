@@ -331,7 +331,6 @@ Page({
             }
 
         }
-
     },
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
@@ -363,6 +362,7 @@ Page({
         this.setData({
             startPointName: this.data.currentPointName,
         });
+
         setTimeout(function () {
             if (!!app.spriteControl.endSprite) {
                 let dis = main.navigateInit();
@@ -371,7 +371,14 @@ Page({
                     infoFlag: 2,
                     distanceInfo: dis,
                 });
-                main.displayAllFloor();
+                let startFloor = app.routeClass.startPoint.floor;
+                let endFloor = app.routeClass.endPoint.floor
+                if(startFloor == endFloor){
+                    main.onlyDisplayFloor(startFloor)
+                }else {
+                    main.displayAllFloor();
+                }
+
             }
         }, 50);
     },
@@ -386,6 +393,7 @@ Page({
         this.setData({
             endPointName: this.data.currentPointName,
         });
+
         setTimeout(function () {
             if (!!app.spriteControl.startSprite) {
                 let dis = main.navigateInit();
@@ -394,7 +402,12 @@ Page({
                     infoFlag: 2,
                     distanceInfo: dis,
                 });
-                main.displayAllFloor();
+                console.log(app.routeClass.startPoint.floor)
+                if(app.routeClass.endPoint.floor == app.routeClass.startPoint.floor){
+                    main.onlyDisplayFloor(app.routeClass.endPoint.floor)
+                }else {
+                    main.displayAllFloor();
+                }
             }
         }, 50);
     },
@@ -415,6 +428,11 @@ Page({
                     endPointName: self.data.currentPointName,
                     startPointName: "我的位置",
                 });
+                if(app.routeClass.endPoint.floor == app.routeClass.startPoint.floor){
+                    main.onlyDisplayFloor(app.routeClass.endPoint.floor)
+                }else {
+                    main.displayAllFloor();
+                }
             }
         }, 50);
     },
