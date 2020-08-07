@@ -18,7 +18,7 @@ App({
         curFloor: 1,
 
         groundMeshes: [],
-
+        isFloorLoaded:[false,false,false,false,false,false]
 
     },
     map_conf: {

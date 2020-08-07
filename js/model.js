@@ -1,9 +1,14 @@
 //关于模型的各类操作
-import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
+import {
+    registerGLTFLoader
+} from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as SPRITE from "./sprite";
-import { loadModel } from "./loadModel"; //加载模型
+import {
+    loadModel,
+    loadModelByFloor
+} from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as util from "../util/util";
 
@@ -77,7 +82,9 @@ export function renderModel(canvasDom, Three) {
         renderer.gammaFactor = 2.2;
 
         //加载手势控制器，有MapControls和OrbitControls两种操作方式
-        const { MapControls } = registerOrbit(THREE);
+        const {
+            MapControls
+        } = registerOrbit(THREE);
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
@@ -90,7 +97,9 @@ export function renderModel(canvasDom, Three) {
         scene.add(axesHelper);
         //正交投影照相机
         let camera2 = new THREE.OrthographicCamera(-10, 10, 10, -10, 5, 300);
-        renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer = new THREE.WebGLRenderer({
+            alpha: true
+        });
         camera2.position.set(0, 0, 200);
         camera2.lookAt(new THREE.Vector3(0, 0, 0));
         //照相机辅助线
@@ -294,6 +303,12 @@ export function selectObj(index) {
  * @export
  */
 export function displayAllFloor() {
+    let floorArray = app.map.isFloorLoaded;
+    for (let i = 1; i <= floorArray.length; i++) {
+        if (!floorArray[i]) {
+            loadModelByFloor(scene, i);
+        }
+    }
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
             setVisible(obj);
@@ -330,11 +345,17 @@ export function displayOneFloor(floor) {
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
-    scene.children.forEach(function (obj, i) {
+    console.log(app.map.isFloorLoaded[floor])
+    if (!app.map.isFloorLoaded[floor]) {
+        loadModelByFloor(scene, floor);
+    }
+    scene.children.forEach(function (obj) {
         if (!!obj.name) {
             setVisible(obj);
         }
     });
+
+
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
@@ -370,6 +391,16 @@ export function displayTwoFloor(floor1, floor2) {
         floor1 = parseInt(floor1);
         floor2 = parseInt(floor2);
     }
+    if (!app.map.isFloorLoaded[floor1]) {
+        loadModelByFloor(scene, floor1);
+    }
+    if (!app.map.isFloorLoaded[floor2]) {
+        loadModelByFloor(scene, floor2);
+    }
+
+
+
+
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
             setVisible(obj);
@@ -522,7 +553,7 @@ export function setStartMe() {
     scene.remove(app.spriteControl.startSprite);
     app.spriteControl.startSprite = null;
 
-    showSprite(app.spriteControl.startSprite, app.me.position, "start");
+    showSprite(app.spriteControl.startSprite, app.localization.nowBluePosition, "start");
 }
 
 /**
@@ -532,7 +563,11 @@ export function setStartMe() {
 export function backToMe() {
     let point = app.localization.nowBluePosition;
     let floor = point.floor;
-    let poi = { x: point.x, y: point.y, z: point.z };
+    let poi = {
+        x: point.x,
+        y: point.y,
+        z: point.z
+    };
     let L = 200; //相机与用户（me）之间的距离
     let me = app.me;
 
@@ -548,7 +583,11 @@ export function backToMe() {
     camera.fov = 30;
     camera.updateProjectionMatrix();
 
-    let newP = { x: poi.x - L * Math.sin(me.radian), y: poi.y - L * Math.cos(me.radian), z: 300 };
+    let newP = {
+        x: poi.x - L * Math.sin(me.radian),
+        y: poi.y - L * Math.cos(me.radian),
+        z: 300
+    };
     animateCamera(camera.position, controls.target, newP, poi);
 }
 /**
@@ -570,8 +609,7 @@ export function animateCamera(current1, target1, current2, target2) {
     //关闭控制器
     controls.enabled = false;
     var tween = new TWEEN.Tween(positionVar);
-    tween.to(
-        {
+    tween.to({
             x1: current2.x,
             y1: current2.y,
             z1: current2.z,
