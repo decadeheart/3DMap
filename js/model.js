@@ -23,6 +23,10 @@ var selectedPoint = {};
 export function renderModel(canvasDom, Three) {
     THREE = Three;
     canvas = canvasDom;
+    // let ctx = canvas.getContext("webgl");
+    // // console.log(ctx)
+    // // ctx.setFontSize(20)
+    // ctx.fillText('Hello', 20, 20)
     registerGLTFLoader(THREE);
     init();
     animate();
@@ -377,7 +381,7 @@ export function displayTwoFloor(floor1, floor2) {
      * @returns
      */
     function setVisible(obj) {
-        (parseInt(obj.floor) === floor1||parseInt(obj.floor) === floor2) ? (obj.visible = true) : (obj.visible = false);
+        (parseInt(obj.floor) === floor1 || parseInt(obj.floor) === floor2) ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
@@ -609,5 +613,5 @@ export function stopNav() {
     app.routeClass.endPoint = {};
 
     let point = app.localization.nowBluePosition;
-    userControl.changePosition(point.x ,point.y ,point.z,"animation")
+    userControl.changePosition(point.x, point.y, point.z, "animation")
 }
