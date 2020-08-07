@@ -48,16 +48,8 @@ Page({
 
     onLoad: function () {
         var that = this;
-        main.startBeaconDiscovery().then((res) => {
-            that.setData({
-                showBlue: res.showBlueStatus,
-            });
-        });
 
-
-        main.initMap(that);
-        openCompass(this);
-
+        //最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
                 that.setData({
@@ -79,6 +71,7 @@ Page({
             }
         })
 
+
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
             var eachFloor = [].concat(...buildingDataTmp[1]);
@@ -91,9 +84,20 @@ Page({
                 buildingData1D: eachFloor,
                 modalSearch: that.modalSearch.bind(that),
             });
+            main.startBeaconDiscovery().then((res) => {
+                that.setData({
+                    showBlue: res.showBlueStatus,
+                });
 
+                main.initMap(that);
+            });
 
         });
+
+
+
+        openCompass(this);
+
     },
 
     /**
