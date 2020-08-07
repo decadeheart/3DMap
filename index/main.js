@@ -36,6 +36,7 @@ main.initMap = function (that) {
         .exec((res) => {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
+            
             app.canvas = canvas;
             app.THREE = THREE;
             MODEL.renderModel(canvas, THREE);

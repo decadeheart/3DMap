@@ -28,6 +28,10 @@ var selectedPoint = {};
 export function renderModel(canvasDom, Three) {
     THREE = Three;
     canvas = canvasDom;
+    // let ctx = canvas.getContext("webgl");
+    // // console.log(ctx)
+    // // ctx.setFontSize(20)
+    // ctx.fillText('Hello', 20, 20)
     registerGLTFLoader(THREE);
     init();
     animate();
