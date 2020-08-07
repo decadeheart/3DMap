@@ -48,6 +48,13 @@ Page({
 
     onLoad: function () {
         var that = this;
+        main.startBeaconDiscovery().then((res) => {
+            that.setData({
+                showBlue: res.showBlueStatus,
+            });
+        });
+
+
         main.initMap(that);
         openCompass(this);
 
@@ -85,11 +92,7 @@ Page({
                 modalSearch: that.modalSearch.bind(that),
             });
 
-            main.startBeaconDiscovery().then((res) => {
-                that.setData({
-                    showBlue: res.showBlueStatus,
-                });
-            });
+
         });
     },
 
