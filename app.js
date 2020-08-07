@@ -118,7 +118,7 @@ App({
 
             this.targetSprites.forEach(function (groups) {
                 groups.children.forEach(function (sprite) {
-                    sprite.scale.set(sprite.initScale.x * 6 / scale, sprite.initScale.y * 6 / scale, 1);
+                    sprite.scale.set(sprite.initScale.x * 4 / scale, sprite.initScale.y * 4 / scale, 1);
                     if (sprite.level > scale) {
                         sprite.visible = false;
                     } else {

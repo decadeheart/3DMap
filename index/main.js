@@ -74,8 +74,8 @@ main.initMap = function (that) {
                         });
                     }
                 }
-                
-                app.spriteControl.changeScale(2000/camera.position.z);
+
+                app.spriteControl.changeScale(2000 / camera.position.z);
 
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
@@ -86,6 +86,7 @@ main.initMap = function (that) {
                         nowPoint.z,
                         "direction"
                     );
+                    console.log(nowPoint.floor)
                     main.displayOneFloor(nowPoint.floor);
                 }
 
