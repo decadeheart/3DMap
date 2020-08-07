@@ -278,6 +278,7 @@ Page({
         let self = this;
         app.systemControl.state = "navigating";
         app.systemControl.realMode = true;
+        app.navigateFlag = 1;
         if (self.startPointName != "我的位置") {
             main.startMe();
 
