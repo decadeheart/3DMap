@@ -45,7 +45,7 @@ export function autoMoving(path) {
     let newP = { x: path[0].x, y: path[0].y + 15, z: path[0].z + 15 };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
     let floor = path[0].z / app.map_conf.layerHeight + 1;
-    MODEL.onlyDisplayFloor(floor);
+    MODEL.displayOneFloor(floor);
     SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 
     /**
@@ -74,7 +74,7 @@ export function autoMoving(path) {
         }
         if (path[i].z - path[i - 1].z != 0) {
             let floor = path[i].z / app.map_conf.layerHeight + 1;
-            MODEL.onlyDisplayFloor(floor);
+            MODEL.displayOneFloor(floor);
             SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
         }
 

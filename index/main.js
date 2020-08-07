@@ -27,6 +27,7 @@ main.initMap = function (that) {
         .exec((res) => {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
+
             app.canvas = canvas;
             app.THREE = THREE;
             MODEL.renderModel(canvas, THREE);
@@ -66,15 +67,18 @@ main.initMap = function (that) {
                     }
                 }
 
+                app.spriteControl.changeScale(2000 / camera.position.z);
+
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
                     userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
-                    main.onlyDisplayFloor(nowPoint.floor);
+                    // console.log(nowPoint.floor)
+                    main.displayOneFloor(nowPoint.floor);
                 }
 
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
-                if (floor != null) main.onlyDisplayFloor(floor);
+                if (floor != null) main.displayOneFloor(floor);
 
                 //如果是真实模式，非模拟导航，并且me.radian 已经加载完毕
                 if (app.systemControl.realMode && me.radian) {
@@ -128,8 +132,8 @@ main.cameraExchange = function (index) {
 main.displayAllFloor = function () {
     MODEL.displayAllFloor();
 };
-main.onlyDisplayFloor = function (floor) {
-    MODEL.onlyDisplayFloor(floor);
+main.displayOneFloor = function (floor) {
+    MODEL.displayOneFloor(floor);
     SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.selectObj = function (index) {
@@ -217,12 +221,11 @@ main.startMe = function () {
  * @return 格式化后的数据 [[],[]]
  */
 main.getBuildingData = () => {
-    initData();
-    // return new Promise((resolve, reject) => {
-    //     initData.then((res) => {
-    //         resolve(res);
-    //     });
-    // });
+    return new Promise((resolve, reject) => {
+        initData.then(() => {
+            resolve();
+        });
+    });
 };
 /**
  * 模拟导航中的根据路径进行移动

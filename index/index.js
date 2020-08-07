@@ -33,12 +33,11 @@ Page({
     },
 
     onLoad: function () {
-        main.getBuildingData();
         var that = this;
-
         main.initMap(that);
         openCompass(this);
 
+        //最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
                 that.setData({
@@ -57,13 +56,24 @@ Page({
                         isAndroid: true,
                     });
                 }
-            },
-        });
-        main.startBeaconDiscovery().then((res) => {
-            that.setData({
-                showBlue: res.showBlueStatus,
+            }
+        })
+
+        main.getBuildingData().then(() => {
+            main.startBeaconDiscovery().then((res) => {
+                that.setData({
+                    showBlue: res.showBlueStatus,
+                });
+
+                main.initMap(that);
             });
+
         });
+
+
+
+        openCompass(this);
+
     },
 
     /**
@@ -106,7 +116,7 @@ Page({
      */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
-        main.onlyDisplayFloor(floor + 1);
+        main.displayOneFloor(floor + 1);
     },
 
     /**
@@ -194,6 +204,7 @@ Page({
         let self = this;
         app.systemControl.state = "navigating";
         app.systemControl.realMode = true;
+        app.navigateFlag = 1;
         if (self.startPointName != "我的位置") {
             main.startMe();
 
@@ -293,11 +304,11 @@ Page({
                     distanceInfo: dis,
                 });
                 let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.onlyDisplayFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
+                let endFloor = app.routeClass.endPoint.floor
+                if(startFloor == endFloor){
+                    main.displayOneFloor(startFloor)
+                }else {
+                    main.displayTwoFloor(startFloor, endFloor)
                 }
             }
         }, 50);
@@ -323,11 +334,11 @@ Page({
                     distanceInfo: dis,
                 });
                 let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.onlyDisplayFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
+                let endFloor = app.routeClass.endPoint.floor
+                if(startFloor == endFloor){
+                    main.displayOneFloor(startFloor)
+                }else {
+                    main.displayTwoFloor(startFloor, endFloor)
                 }
             }
         }, 50);
@@ -350,11 +361,11 @@ Page({
                     startPointName: "我的位置",
                 });
                 let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.onlyDisplayFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
+                let endFloor = app.routeClass.endPoint.floor
+                if(startFloor == endFloor){
+                    main.displayOneFloor(startFloor)
+                }else {
+                    main.displayTwoFloor(startFloor, endFloor)
                 }
             }
         }, 50);

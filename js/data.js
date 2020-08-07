@@ -4,7 +4,7 @@ var DATA;
 /**
  * @description 从服务器加载数据
  */
-export function initData(){
+export function initData() {
     return new Promise((resolve, reject) => {
         wx.request({
             url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
@@ -15,14 +15,14 @@ export function initData(){
             responseType: "text",
             success: (res) => {
                 dataPreProcess(res);
-                DATA=res.data.target;
-                // resolve(data);
+                DATA = res.data.target;
+                resolve();
             },
             fail: (err) => {
                 reject(err);
             },
         });
-    })
+    });
 }
 
 /**
@@ -63,8 +63,8 @@ var buildingList = [];
 // buildingData[i]表示其中某栋建筑物，buildingData[i][j]表示该建筑物第j层，每层有很多办公室的对象
 var buildingData = [];
 var buildingRoomGroup = [];
-export function getSearchData(){
-    if(buildingData.length!=0) return [buildingList, buildingData, buildingRoomGroup];
+export function getSearchData() {
+    if (buildingData.length != 0) return [buildingList, buildingData, buildingRoomGroup];
     var tmp = DATA;
     for (let building in tmp) {
         buildingList.push(building);
