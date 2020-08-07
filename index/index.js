@@ -1,10 +1,5 @@
 import main from "./main";
-import {
-    openCompass
-} from "../js/compass";
-import {
-    backToMe
-} from "../js/model";
+import { openCompass } from "../js/compass";
 var app = getApp();
 Page({
     data: {
@@ -25,29 +20,22 @@ Page({
         infoFlag: 0,
         showBlue: false,
         step: 0,
-        buttons: [{
-            type: "primary",
-            className: "",
-            text: "确认",
-            value: 1,
-        }, ],
-        //模态框是否显示,模态框搜索结果
-        modalFlag: false,
-        searchResult: [],
-        buildingList: [],
-        buildingIndex: 0,
-        buildingData: [],
-        buildingData1D: [],
-        buildingRoomGroup: [],
-        searchHidden: true,
-        floorIndex: 0,
-        searchTitle: app.map_conf.map_name,
+        buttons: [
+            {
+                type: "primary",
+                className: "",
+                text: "确认",
+                value: 1,
+            },
+        ],
         compassAngle: "",
         isAndroid: false,
     },
 
     onLoad: function () {
+        main.getBuildingData();
         var that = this;
+
         main.initMap(that);
         openCompass(this);
 
@@ -55,40 +43,25 @@ Page({
             success: function (res) {
                 that.setData({
                     systemInfo: res,
-                })
-                if (res.platform == "devtools") {
-                    console.log('PC')
-                } else if (res.platform == "ios") {
-                    console.log('ios')
-                    that.setData({
-                        isAndroid: false
-                    })
-                } else if (res.platform == "android") {
-                    console.log('android')
-                    that.setData({
-                        isAndroid: true
-                    })
-                }
-            }
-        })
-
-        main.getBuildingData().then((buildingDataTmp) => {
-            // 将其变成一维数组，方便遍历
-            var eachFloor = [].concat(...buildingDataTmp[1]);
-            eachFloor = [].concat(...eachFloor);
-            that.setData({
-                buildingList: buildingDataTmp[0],
-                buildingData: buildingDataTmp[1],
-                buildingRoomGroup: buildingDataTmp[2],
-                searchResult: eachFloor,
-                buildingData1D: eachFloor,
-                modalSearch: that.modalSearch.bind(that),
-            });
-
-            main.startBeaconDiscovery().then((res) => {
-                that.setData({
-                    showBlue: res.showBlueStatus,
                 });
+                if (res.platform == "devtools") {
+                    // console.log('PC')
+                } else if (res.platform == "ios") {
+                    console.log("ios");
+                    that.setData({
+                        isAndroid: false,
+                    });
+                } else if (res.platform == "android") {
+                    console.log("android");
+                    that.setData({
+                        isAndroid: true,
+                    });
+                }
+            },
+        });
+        main.startBeaconDiscovery().then((res) => {
+            that.setData({
+                showBlue: res.showBlueStatus,
             });
         });
     },
@@ -180,81 +153,31 @@ Page({
     /**
      * @description 点击搜索栏，页面跳转
      */
-    switchModal() {
-        var status = this.data.modalFlag == true ? false : true;
-        this.setData({
-            modalFlag: status,
-        });
-    },
-    /**
-     * @description 模态框搜索
-     */
-    modalSearch(e) {
-        let searchInput = e.detail.value;
-        searchInput = searchInput.replace(/\s+/g, "");
-        if (searchInput.length != 0) {
-            let tmp = this.data.buildingData1D.filter((item) => {
-                var reg = new RegExp(searchInput);
-                return reg.test(item.name) || reg.test(item.name2);
-            });
-            this.setData({
-                searchResult: tmp,
-                searchHidden: false,
-            });
-        }
-        return new Promise(() => {});
-    },
-    /**
-     * @description 搜索提示框隐藏和显示
-     */
-    switchHidden() {
-        this.setData({
-            searchHidden: !this.data.searchHidden,
-        });
-    },
-    /**
-     * @description 选中搜索结果后触发
-     */
-    selectResult: function (e) {
-        var target = e.currentTarget.dataset.selected;
-        // 对应关闭模态框，显示提示框，修改当前地点的名字
-        this.setData({
-            currentPointName: target.name + target.name2,
-            modalFlag: false,
-            infoFlag: 1,
-        });
-        //调用
-        main.onlyDisplayFloor(parseInt(target.floor));
-        main.setCurClick(target);
-        main.changeFocus(target);
-    },
-    /**
-     * @description 搜索栏切换tab
-     * @date 2020-07-24
-     * @param {*} e 事件
-     */
-    switchTap(e) {
-        // wx.vibrateShort({});
-        let index = e.target.dataset.tapindex;
-        this.setData({
-            buildingIndex: index,
-        });
-    },
-    /**
-     * @description 显示该楼层的具体房间，如果重复选择该层，则隐藏
-     * @date 2020-07-24
-     * @param {*} e 事件
-     */
-    showFloor(e) {
-        let index = e.currentTarget.dataset.floorindex;
-        index = index == this.data.floorIndex ? -1 : index;
-        this.setData({
-            floorIndex: index,
+    goSearch() {
+        // var status = this.data.modalFlag == true ? false : true;
+        // this.setData({
+        //     modalFlag: status,
+        // });
+        var that = this;
+        wx.navigateTo({
+            url: "../search/search",
+            events: {
+                //响应和接收search页面传来的参数
+                selectedPoint: function (res) {
+                    let target = res.data;
+                    that.setData({
+                        currentPointName: target.name + target.name2,
+                        infoFlag: 1,
+                    });
+                    main.onlyDisplayFloor(parseInt(target.floor));
+                    main.setCurClick(target);
+                    main.changeFocus(target);
+                },
+            },
         });
     },
     /**
      * @description 模拟导航
-     * @date 2020-07-20
      * @param {*} e 事件
      */
     simNavigate(e) {
@@ -313,7 +236,6 @@ Page({
                 currentPointName: tmp,
             });
         }
-
     },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
@@ -329,7 +251,6 @@ Page({
                     currentPointName: tmp,
                 });
             }
-
         }
     },
     touchMove(e) {
@@ -372,13 +293,12 @@ Page({
                     distanceInfo: dis,
                 });
                 let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor
-                if(startFloor == endFloor){
-                    main.onlyDisplayFloor(startFloor)
-                }else {
-                    main.displayTwoFloor(startFloor, endFloor)
+                let endFloor = app.routeClass.endPoint.floor;
+                if (startFloor == endFloor) {
+                    main.onlyDisplayFloor(startFloor);
+                } else {
+                    main.displayTwoFloor(startFloor, endFloor);
                 }
-
             }
         }, 50);
     },
@@ -403,11 +323,11 @@ Page({
                     distanceInfo: dis,
                 });
                 let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor
-                if(startFloor == endFloor){
-                    main.onlyDisplayFloor(startFloor)
-                }else {
-                    main.displayTwoFloor(startFloor, endFloor)
+                let endFloor = app.routeClass.endPoint.floor;
+                if (startFloor == endFloor) {
+                    main.onlyDisplayFloor(startFloor);
+                } else {
+                    main.displayTwoFloor(startFloor, endFloor);
                 }
             }
         }, 50);
@@ -430,11 +350,11 @@ Page({
                     startPointName: "我的位置",
                 });
                 let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor
-                if(startFloor == endFloor){
-                    main.onlyDisplayFloor(startFloor)
-                }else {
-                    main.displayTwoFloor(startFloor, endFloor)
+                let endFloor = app.routeClass.endPoint.floor;
+                if (startFloor == endFloor) {
+                    main.onlyDisplayFloor(startFloor);
+                } else {
+                    main.displayTwoFloor(startFloor, endFloor);
                 }
             }
         }, 50);

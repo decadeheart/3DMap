@@ -2,7 +2,7 @@ import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
-import initData from "../js/data";
+import { initData } from "../js/data";
 import { beaconUpdate, match2getFloor } from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
@@ -68,13 +68,7 @@ main.initMap = function (that) {
 
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
-
-                    userControl.changePosition(
-                        nowPoint.x,
-                        nowPoint.y,
-                        nowPoint.z,
-                        "direction"
-                    );
+                    userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.onlyDisplayFloor(nowPoint.floor);
                 }
 
@@ -91,18 +85,12 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-
                         // console.log('当前点',nowPoint.x,nowPoint.y,nowPoint.z);
                         // console.log('之前点',lastPoint.x,lastPoint.y,lastPoint.z);
-                        userControl.changePosition(
-                            nowPoint.x,
-                            nowPoint.y,
-                            nowPoint.z,
-                            "animation"
-                        );
+                        userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
 
                         //动画更新部分
-                        main.changeFocus(nowPoint)
+                        main.changeFocus(nowPoint);
 
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
@@ -212,7 +200,6 @@ main.setCurClick = function (point) {
 /** 起点设定 */
 main.startClick = function (point) {
     MODEL.setStartClick(point);
-
 };
 
 /** 终点设定 */
@@ -230,11 +217,12 @@ main.startMe = function () {
  * @return 格式化后的数据 [[],[]]
  */
 main.getBuildingData = () => {
-    return new Promise((resolve, reject) => {
-        initData.then((res) => {
-            resolve(res);
-        });
-    });
+    initData();
+    // return new Promise((resolve, reject) => {
+    //     initData.then((res) => {
+    //         resolve(res);
+    //     });
+    // });
 };
 /**
  * 模拟导航中的根据路径进行移动
@@ -254,7 +242,7 @@ main.stopNav = () => {
 main.changeFocus = (point) => {
     let camera = MODEL.getCamera();
     let controls = MODEL.getControl();
-    let me = app.me
+    let me = app.me;
     //动画更新部分
     let L = 200;
     let newP = {
@@ -268,10 +256,10 @@ main.changeFocus = (point) => {
         z: point.z,
     };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
-}
+};
 
-main.displayTwoFloor = (floor1 ,floor2) => {
-    MODEL.displayTwoFloor(floor1 ,floor2)
-}
+main.displayTwoFloor = (floor1, floor2) => {
+    MODEL.displayTwoFloor(floor1, floor2);
+};
 
 export default main;

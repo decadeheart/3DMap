@@ -1,0 +1,176 @@
+.container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.search-container {
+    position: absolute;
+    left: 0;
+    margin: 0 2%;
+    width: 96%;
+    height: 99%;
+    background-color: #fff;
+    border-radius: 10rpx;
+    box-shadow: 0 2rpx 2rpx #eee;
+    z-index: 21;
+    overflow: hidden;
+}
+
+.search-result {
+    position: absolute;
+    top: 8%;
+    left: 1%;
+    overflow: hidden;
+    width: 95%;
+    height: 61.8%;
+    background-color: white;
+    border: 2rpx solid #ccc;
+    border-radius: 10rpx;
+    box-shadow: 0 2rpx 2rpx #ccc;
+    z-index: 23;
+    transition: all 1s;
+}
+
+.search-result scroll-view view {
+    padding: 4rpx;
+    padding-left: 40rpx;
+}
+
+.search-result scroll-view view:hover {
+    background-color: skyblue;
+}
+
+.tab-content {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    flex: 1;
+    flex-wrap: wrap;
+    padding: 0 3%;
+}
+
+.tab-content view:nth-child(n) {
+    padding: 2% 2.5% 2% 2.5%;
+    font-size: 35rpx;
+}
+
+.select-tap {
+    font-weight: bold;
+    color: rgb(92, 99, 231);
+    border-bottom: 5rpx solid rgb(92, 99, 231);
+}
+
+.scroll-view {
+    -webkit-overflow-scrolling: touch;
+}
+
+.search-body {
+    position: relative;
+    height: 90%;
+    z-index: 22;
+}
+.search-body scroll-view:nth-child(1) {
+    height: 100%;
+}
+
+.modal-floor-item {
+    margin: 3%;
+    width: 94%;
+    background-color: #ffffff;
+    border-radius: 4rpx;
+    /* border-bottom:2rpx solid #ccc; */
+    /* overflow: hidden; */
+}
+
+.floor-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60rpx;
+    border-bottom: 2rpx solid #ccc;
+}
+
+.floor-icon {
+    width: 15rpx;
+    height: 40rpx;
+    background-color: rgb(92, 99, 231);
+    border-radius: 15rpx;
+}
+
+.floor-num {
+    position: absolute;
+    left: 45rpx;
+    /* margin-left: 15rpx; */
+    font-size: 35rpx;
+}
+
+.state-arrow-close {
+    transform: rotate(-90deg);
+    transition: transform 0.3s;
+}
+
+.state-arrow-open {
+    transform: rotate(90deg);
+    transition: transform 0.3s;
+}
+
+/* 点击楼层，显示和隐藏房间 */
+.floor-item-bd {
+    height: 0;
+    overflow: hidden;
+}
+
+.floor-item-bd-show {
+    height: auto;
+}
+
+.option-box {
+    opacity: 0;
+    position: relative;
+    background-color: #ffffff;
+    line-height: 1.41176471;
+    font-size: 34rpx;
+    transform: translateY(-50%);
+    transition: 0.3s;
+}
+
+.option-box-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.group-item {
+    width: 100%;
+    height: auto;
+    /* background-color:rgb(247,247,247); */
+    margin: 30rpx 0;
+    border-bottom: 1rpx solid whitesmoke;
+}
+.group-item text:nth-child(1) {
+    margin: 10rpx;
+}
+.rooms-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: left;
+}
+.room-item {
+    width: auto;
+    padding: 1% 2%;
+    background-color: white;
+    border: 2rpx solid #ccc;
+    border-radius: 30rpx;
+    margin: 5rpx;
+    color: black;
+}
+.room-item:hover {
+    color: rgb(92, 99, 231);
+    background-color: rgba(92, 99, 231, 0.2);
+}
+.room-item-click {
+    color: rgb(92, 99, 231);
+}
