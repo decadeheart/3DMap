@@ -86,7 +86,6 @@ main.initMap = function (that) {
                         nowPoint.z,
                         "direction"
                     );
-                    console.log(nowPoint.floor)
                     main.displayOneFloor(nowPoint.floor);
                 }
 

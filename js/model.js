@@ -341,7 +341,6 @@ export function displayOneFloor(floor) {
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
-    console.log(app.map.isFloorLoaded[floor])
     if (!app.map.isFloorLoaded[floor]) {
         loadModelByFloor(scene, floor);
     }
