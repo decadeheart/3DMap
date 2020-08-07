@@ -320,7 +320,7 @@ export function displayAllFloor() {
  * @export
  * @param {*} floor 楼层
  */
-export function onlyDisplayFloor(floor) {
+export function displayOneFloor(floor) {
     let map = app.map;
     // if (floor == map.curFloor) return;
     if (typeof floor !== "number") {
@@ -537,7 +537,7 @@ export function backToMe() {
         floor = parseInt(floor);
     }
     //设置物体可见性
-    onlyDisplayFloor(floor);
+    displayOneFloor(floor);
     SPRITE.loadTargetTextByFloor(scene, floor);
 
     map.curFloor = floor;
@@ -548,7 +548,7 @@ export function backToMe() {
     animateCamera(camera.position, controls.target, newP, poi);
 }
 /**
- * @description
+ * @description 移动相机位置和注视点到新的位置
  * @param {*} current1 相机当前的位置
  * @param {*} target1 相机的controls的target
  * @param {*} current2 新相机的目标位置

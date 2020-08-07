@@ -133,7 +133,7 @@ Page({
      */
     selectFloor(e) {
         let floor = e.currentTarget.dataset.floor;
-        main.onlyDisplayFloor(floor + 1);
+        main.displayOneFloor(floor + 1);
     },
 
     /**
@@ -224,7 +224,7 @@ Page({
             infoFlag: 1,
         });
         //调用
-        main.onlyDisplayFloor(parseInt(target.floor));
+        main.displayOneFloor(parseInt(target.floor));
         main.setCurClick(target);
         main.changeFocus(target);
     },
@@ -374,7 +374,7 @@ Page({
                 let startFloor = app.routeClass.startPoint.floor;
                 let endFloor = app.routeClass.endPoint.floor
                 if(startFloor == endFloor){
-                    main.onlyDisplayFloor(startFloor)
+                    main.displayOneFloor(startFloor)
                 }else {
                     main.displayTwoFloor(startFloor, endFloor)
                 }
@@ -405,7 +405,7 @@ Page({
                 let startFloor = app.routeClass.startPoint.floor;
                 let endFloor = app.routeClass.endPoint.floor
                 if(startFloor == endFloor){
-                    main.onlyDisplayFloor(startFloor)
+                    main.displayOneFloor(startFloor)
                 }else {
                     main.displayTwoFloor(startFloor, endFloor)
                 }
@@ -432,7 +432,7 @@ Page({
                 let startFloor = app.routeClass.startPoint.floor;
                 let endFloor = app.routeClass.endPoint.floor
                 if(startFloor == endFloor){
-                    main.onlyDisplayFloor(startFloor)
+                    main.displayOneFloor(startFloor)
                 }else {
                     main.displayTwoFloor(startFloor, endFloor)
                 }
