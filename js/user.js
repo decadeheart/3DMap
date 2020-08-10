@@ -47,7 +47,6 @@ const userControl = {
         if (this.isInitUser === false) {
             return;
         }
-        console.log(scale);
         if (scale > 1)
             app.me.scale.set(scale, scale, app.me.scale.z);
     },
@@ -85,9 +84,8 @@ const userControl = {
      * @param {*} y 
      * @param {*} z 
      * @param {*} mode 
-     * @param {*} Group 
      */
-    changePosition: function (x, y, z, mode, Group) {
+    changePosition: function (x, y, z, mode) {
         let me = app.me
 
         if (this.isInitUser === false) {

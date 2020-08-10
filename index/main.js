@@ -155,6 +155,7 @@ main.displayAllFloor = function () {
     // SPRITE.loadAllTargetText(scene);
 };
 main.displayOneFloor = function (floor) {
+    if (floor == app.map.curFloor) { console.log("=="); return; }
     MODEL.displayOneFloor(floor);
     SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };

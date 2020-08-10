@@ -401,7 +401,7 @@ Page({
         main.stopNav();
         main.backToMe();
     },
-    
+
     // 手势事件
 
     touchTap(e) {

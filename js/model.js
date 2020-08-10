@@ -6,7 +6,7 @@ import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as SPRITE from "./sprite";
 import {
-    loadModel,
+    loadGround,
     loadModelByFloor
 } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
@@ -61,7 +61,7 @@ export function renderModel(canvasDom, Three) {
         // addHelper();
 
         //加载模型
-        loadModel(scene);
+        loadGround(scene);
 
         //添加用户贴图
         addUser();
@@ -148,14 +148,7 @@ export function addUser() {
         scene.add(app.me);
     });
 }
-//改变的当前地图上的位置
-export function changePosition(x, y, z) {
-    userControl.changePosition(x, y, z, "animation");
-}
-//改变旋转角度
-export function rotate(x, y, z) {
-    userControl.changeRotation(x, y, z, "animation");
-}
+
 var caCoord = {};
 /**
  * @description 2D-3D视角切换
@@ -326,7 +319,6 @@ export function displayAllFloor() {
  */
 export function displayOneFloor(floor) {
     let map = app.map;
-    // if (floor == map.curFloor) return;
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }

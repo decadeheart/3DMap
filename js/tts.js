@@ -44,7 +44,7 @@ async function tts(text) {
         console.log(res.errMsg);
         console.log(res.errCode);
     });
-    
-    
+
+
 }
 export default tts;

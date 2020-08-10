@@ -10,13 +10,10 @@ App({
     POItarget: [],
     resultParent: [],
     map: {
-        int_totalLayerNums: 9,
-        int_loadedLayerNums: 0,
-        bool_isMapModelReady: false,
         stepCount: 0,
         preStep: 0,
         curFloor: 1,
-        isFloorLoaded:[false,false,false,false,false,false]
+        isFloorLoaded: [false, false, false, false, false, false]
     },
     map_conf: {
         map_id: "jxqzf",
