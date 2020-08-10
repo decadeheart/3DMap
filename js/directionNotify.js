@@ -98,8 +98,8 @@ export function showOrientationText() {
 
             if (currtext === '已到达') {
                 text = currtext;
-            } else if (nexttext === '已到达') {
-                text = currtext + '，即将到达';
+            } else if(nexttext === '已到达') {
+                text = '即将到达';
             } else {
                 text = currtext;
             }

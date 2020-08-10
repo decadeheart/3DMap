@@ -535,6 +535,7 @@ export function setStartMe() {
  */
 export function backToMe() {
     let point = app.localization.nowBluePosition;
+    changePosition(point.x ,point.y ,point.z)
     let floor = point.floor;
     let poi = {
         x: point.x,
