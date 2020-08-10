@@ -147,7 +147,7 @@ export function loadAllTargetText(scene) {
         sprite.center = new THREE.Vector2(0.5, 0.5);
         spriteGroup.add(sprite);
     });
-    spriteGroup.name = "allFloor";
+    spriteGroup.name = "displayAllFloor";
     scene.add(spriteGroup);
     spriteGroup = null;
 }

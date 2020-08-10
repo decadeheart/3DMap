@@ -2,9 +2,7 @@ import main from "./main";
 import {
     openCompass
 } from "../js/compass";
-import {
-    backToMe
-} from "../js/model";
+
 var app = getApp();
 Page({
     data: {
@@ -30,8 +28,8 @@ Page({
             className: "",
             text: "确认",
             value: 1,
-        }, ],
-        //模态框是否显示,模态框搜索结果
+        },],
+        // 模态框是否显示,模态框搜索结果
         modalFlag: false,
         searchResult: [],
         buildingList: [],
@@ -49,7 +47,7 @@ Page({
     onLoad: function () {
         var that = this;
 
-        //最先应该获取设备的型号，也很快
+        // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
                 that.setData({
@@ -71,7 +69,7 @@ Page({
             }
         })
 
-
+        // 获取楼层数据
         main.getBuildingData().then((buildingDataTmp) => {
             // 将其变成一维数组，方便遍历
             var eachFloor = [].concat(...buildingDataTmp[1]);
@@ -84,24 +82,21 @@ Page({
                 buildingData1D: eachFloor,
                 modalSearch: that.modalSearch.bind(that),
             });
+            // 打开蓝牙搜索功能
             main.startBeaconDiscovery().then((res) => {
                 that.setData({
                     showBlue: res.showBlueStatus,
                 });
-
+                // 初始化地图（根据用户当前所在楼层加载指定楼层）
                 main.initMap(that);
             });
-
         });
-
-
-
+        // 启用指南针
         openCompass(this);
-
     },
 
     /**
-     * @description 弹窗事件
+     * @description 弹窗事件，用于提醒用户打开蓝牙
      * @date 2020-07-13
      * @param {*} e
      */
@@ -117,6 +112,8 @@ Page({
         });
     },
 
+    // 控件点击事件
+
     /**
      * @description 地图二维和三维视角切换
      */
@@ -131,18 +128,17 @@ Page({
      * @description 显示所有楼层
      * @param {*} e wxml的参数通过e获取
      */
-    allFloor(e) {
+    displayAllFloor(e) {
         main.displayAllFloor();
     },
     /**
      * @description 页面点击楼层图片，切换楼层
      * @param {*} e wxml的参数通过e获取
      */
-    selectFloor(e) {
+    displayOneFloor(e) {
         let floor = e.currentTarget.dataset.floor;
         main.displayOneFloor(floor + 1);
     },
-
     /**
      * @description 切换起点终点
      */
@@ -155,11 +151,10 @@ Page({
         app.routeClass.startPoint = app.routeClass.endPoint;
         app.routeClass.endPoint = tmp;
 
-        main.endClick(app.routeClass.endPoint);
-        main.startClick(app.routeClass.startPoint);
+        main.setEndClick(app.routeClass.endPoint);
+        main.setStartClick(app.routeClass.startPoint);
         main.navigateInit();
     },
-
     /**
      * @description 切换页面上方的提示  1 显示搜索框 2 显示起点终点 3 显示导航路线提示
      * @param {*} e 根据传来的参数切换
@@ -169,7 +164,6 @@ Page({
             navFlag: e.currentTarget.dataset.flag,
         });
     },
-
     /**
      * @description 获取当前的位置
      * @param {*}
@@ -177,12 +171,17 @@ Page({
     getMyLocation() {
         main.backToMe();
     },
+    /**
+     * @description 测试用，暂时绑定在指南针图标上
+     */
     test() {
         this.setData({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
     },
+
+    // 模态框专区
 
     /**
      * @description 点击搜索栏，页面跳转
@@ -209,7 +208,7 @@ Page({
                 searchHidden: false,
             });
         }
-        return new Promise(() => {});
+        return new Promise(() => { });
     },
     /**
      * @description 搜索提示框隐藏和显示
@@ -259,6 +258,95 @@ Page({
             floorIndex: index,
         });
     },
+
+    // 导航专区
+
+    /**
+     * @description 设置起点
+     * @date 2020-07-20
+     */
+    setStartPoint() {
+        main.setStartClick();
+        let self = this;
+        this.setData({
+            startPointName: this.data.currentPointName,
+        });
+
+        setTimeout(function () {
+            if (!!app.spriteControl.endSprite) {
+                let dis = main.navigateInit();
+                self.setData({
+                    navFlag: 2,
+                    infoFlag: 2,
+                    distanceInfo: dis,
+                });
+                let startFloor = app.routeClass.startPoint.floor;
+                let endFloor = app.routeClass.endPoint.floor
+                if (startFloor == endFloor) {
+                    main.displayOneFloor(startFloor)
+                } else {
+                    main.displayTwoFloor(startFloor, endFloor)
+                }
+
+            }
+        }, 50);
+    },
+    /**
+     * @description 设置终点
+     * @date 2020-07-20
+     */
+    setEndPoint() {
+        main.setEndClick();
+        let self = this;
+        this.setData({
+            endPointName: this.data.currentPointName,
+        });
+
+        setTimeout(function () {
+            if (!!app.spriteControl.startSprite) {
+                let dis = main.navigateInit();
+                self.setData({
+                    navFlag: 2,
+                    infoFlag: 2,
+                    distanceInfo: dis,
+                });
+                let startFloor = app.routeClass.startPoint.floor;
+                let endFloor = app.routeClass.endPoint.floor
+                if (startFloor == endFloor) {
+                    main.displayOneFloor(startFloor)
+                } else {
+                    main.displayTwoFloor(startFloor, endFloor)
+                }
+            }
+        }, 50);
+    },
+    /**
+     * @description 按钮“到这里去”的点击事件
+     */
+    goThere() {
+        main.setEndClick();
+        main.setStartMe();
+        let self = this;
+        setTimeout(function () {
+            if (!!app.spriteControl.startSprite) {
+                let dis = main.navigateInit();
+                self.setData({
+                    navFlag: 2,
+                    infoFlag: 2,
+                    distanceInfo: dis,
+                    endPointName: self.data.currentPointName,
+                    startPointName: "我的位置",
+                });
+                let startFloor = app.routeClass.startPoint.floor;
+                let endFloor = app.routeClass.endPoint.floor
+                if (startFloor == endFloor) {
+                    main.displayOneFloor(startFloor)
+                } else {
+                    main.displayTwoFloor(startFloor, endFloor)
+                }
+            }
+        }, 50);
+    },
     /**
      * @description 模拟导航
      * @date 2020-07-20
@@ -274,14 +362,17 @@ Page({
             infoFlag: 3,
         });
     },
+    /**
+     * @description 开始导航
+     * @param {*} e
+     */
     startNavigate(e) {
         let self = this;
         app.systemControl.state = "navigating";
         app.systemControl.realMode = true;
         app.navigateFlag = 1;
         if (self.startPointName != "我的位置") {
-            main.startMe();
-
+            main.setStartMe();
             setTimeout(function () {
                 let dis = main.navigateInit();
                 main.backToMe();
@@ -294,7 +385,6 @@ Page({
             }, 50);
         }
     },
-
     /**
      * @description 结束导航
      * @date 2020-08-03
@@ -309,9 +399,11 @@ Page({
             infoFlag: 1,
         });
         main.stopNav();
-
         main.backToMe();
     },
+    
+    // 手势事件
+
     touchTap(e) {
         if (!app.navigateFlag) {
             let tmp = main.selectObj(e.touches[0]);
@@ -321,7 +413,6 @@ Page({
                 currentPointName: tmp,
             });
         }
-
     },
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
@@ -337,7 +428,6 @@ Page({
                     currentPointName: tmp,
                 });
             }
-
         }
     },
     touchMove(e) {
@@ -356,95 +446,4 @@ Page({
         wx.stopPullDownRefresh();
     },
 
-    /**
-     * 导航点击专区
-     */
-
-    /**
-     * @description 设置起点
-     * @date 2020-07-20
-     */
-    setStartPoint() {
-        main.startClick();
-        let self = this;
-        this.setData({
-            startPointName: this.data.currentPointName,
-        });
-
-        setTimeout(function () {
-            if (!!app.spriteControl.endSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor
-                if(startFloor == endFloor){
-                    main.displayOneFloor(startFloor)
-                }else {
-                    main.displayTwoFloor(startFloor, endFloor)
-                }
-
-            }
-        }, 50);
-    },
-
-    /**
-     * @description 设置终点
-     * @date 2020-07-20
-     */
-    setEndPoint() {
-        main.endClick();
-        let self = this;
-        this.setData({
-            endPointName: this.data.currentPointName,
-        });
-
-        setTimeout(function () {
-            if (!!app.spriteControl.startSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor
-                if(startFloor == endFloor){
-                    main.displayOneFloor(startFloor)
-                }else {
-                    main.displayTwoFloor(startFloor, endFloor)
-                }
-            }
-        }, 50);
-    },
-    /**
-     * @description 按钮“到这里去”的点击事件
-     */
-    goThere() {
-        main.endClick();
-        main.startMe();
-        let self = this;
-        setTimeout(function () {
-            if (!!app.spriteControl.startSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                    endPointName: self.data.currentPointName,
-                    startPointName: "我的位置",
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor
-                if(startFloor == endFloor){
-                    main.displayOneFloor(startFloor)
-                }else {
-                    main.displayTwoFloor(startFloor, endFloor)
-                }
-            }
-        }, 50);
-    },
 });

@@ -547,7 +547,10 @@ export function setEndClick(point) {
         showSprite(app.spriteControl.endSprite, point, "end");
     }
 }
-
+/**
+ * @description 点击去这里响应事件
+ * @export
+ */
 export function setStartMe() {
     scene.remove(app.spriteControl.startSprite);
     app.spriteControl.startSprite = null;

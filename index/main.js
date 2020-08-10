@@ -36,16 +36,15 @@ main.initMap = function (that) {
         .exec((res) => {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
-            
             app.canvas = canvas;
             app.THREE = THREE;
+
             MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
 
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            let controls = MODEL.getControl();
 
             navRender();
             accChange();
@@ -76,6 +75,7 @@ main.initMap = function (that) {
                     }
                 }
 
+                //手势缩放时按照地点名称等级进行显示并调整大小
                 app.spriteControl.changeScale(2000 / camera.position.z);
 
                 //若是当前点是在初始位置，直接改变位置到初始
@@ -160,12 +160,7 @@ main.displayOneFloor = function (floor) {
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
 };
-main.setStartPoint = function () {
-    MODEL.showSprite(app.spriteControl.sprite.position, "start");
-};
-main.setEndPoint = function () {
-    MODEL.showSprite(app.spriteControl.sprite.position, "end");
-};
+
 main.backToMe = function () {
     MODEL.backToMe();
 };
@@ -217,26 +212,26 @@ main.closeGPS = function () {
 main.navigateInit = function () {
     return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
 };
+
 /** 当前点设定 */
 main.setCurClick = function (point) {
     MODEL.setCurClick(point);
 };
-
-/** 起点设定 */
-main.startClick = function (point) {
+/** 使用用户点击位置作为起点 */
+main.setStartClick = function (point) {
     MODEL.setStartClick(point);
 
 };
-
+/** 使用用户当前位置作为起点 */
+main.setStartMe = function () {
+    MODEL.setStartMe();
+};
 /** 终点设定 */
-main.endClick = function (point) {
+main.setEndClick = function (point) {
     MODEL.setEndClick(point);
 };
 
-/** 起点设定 */
-main.startMe = function () {
-    MODEL.setStartMe();
-};
+
 /**
  * @description 通过data.js 向服务器获取数据集、初始化数据
  * @date 2020-07-23
@@ -263,7 +258,9 @@ main.autoMove = (path) => {
 main.stopNav = () => {
     MODEL.stopNav();
 };
-
+/**
+ * 切换注视点
+ */
 main.changeFocus = (point) => {
     let camera = MODEL.getCamera();
     let controls = MODEL.getControl();
@@ -282,7 +279,9 @@ main.changeFocus = (point) => {
     };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
 }
-
+/**
+ * 显示
+ */
 main.displayTwoFloor = (floor1, floor2) => {
     MODEL.displayTwoFloor(floor1, floor2)
 }
