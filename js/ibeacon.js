@@ -39,7 +39,7 @@ function beaconUpdate() {
         );
 
         let result = getMaxPossiblePoint();
-        if(!result) return;
+        if (!result) return;
         //minValidRssi表示最小有效的信号强度，小于这个强度的信号可以忽视
         if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
             return;
@@ -59,7 +59,9 @@ function matchRecord(obj) {
     for (let i = 0; i < app.beaconCoordinate.length; i++) {
         if (obj.major == app.beaconCoordinate[i].major && obj.minor == app.beaconCoordinate[i].minor) {
             //rssi表示设备的信号强度
-            let beaCor = { rssi: obj.rssi };
+            let beaCor = {
+                rssi: obj.rssi
+            };
             let ret = util.extendObj(beaCor, app.beaconCoordinate[i]);
 
             return ret;
@@ -86,13 +88,13 @@ function getMaxPossiblePoint() {
             for (i; i < temp.length; i++) {
                 if (temp[i].major === list[j].major && temp[i].minor === list[j].minor) {
                     //算法获得每一个信标的加权进行判断
-                    temp[i].count += blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
+                    temp[i].count += blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 6);
                     break;
                 }
             }
 
             if (i === temp.length) {
-                list[j].count = blueConfig.maxBufferLength * k + (blueConfig.maxBufferLength - j * 2);
+                list[j].count = blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 6);
 
                 temp.push(list[j]);
             }
@@ -127,4 +129,7 @@ function match2getFloor(point) {
     }
 }
 
-export { beaconUpdate, match2getFloor };
+export {
+    beaconUpdate,
+    match2getFloor
+};
