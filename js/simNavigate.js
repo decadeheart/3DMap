@@ -135,7 +135,7 @@ export function autoMoving(path) {
 
         let A = null;
         if (angle - me.rotation.z > Math.PI) {
-            // alert("ccs")
+           
             A = new TWEEN.Tween(me.rotation)
                 .to(
                     {

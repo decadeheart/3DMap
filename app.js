@@ -4,9 +4,9 @@ App({
     THREE: null,
     canvasSprite: null,
     beaconCoordinate: [],
+    me: [],
     target: [],
     navigateFlag: 0,
-    me: [],
     POItarget: [],
     resultParent: [],
     map: {
@@ -16,10 +16,7 @@ App({
         stepCount: 0,
         preStep: 0,
         curFloor: 1,
-
-        groundMeshes: [],
         isFloorLoaded:[false,false,false,false,false,false]
-
     },
     map_conf: {
         map_id: "jxqzf",
@@ -28,8 +25,7 @@ App({
         img_dir: "https://www.cleverguided.com/iLaN/3D-jxqzf/target_img/",
         int_userHeight: 2,
         fontSpriteScale: 4,
-        imgSpriteScale: 2,
-        noTargetSpriteScale: 7,
+        imgSpriteScale: 7,
         float_mapProportion: 0.3,
         layerHeight: 15,
         lineHeight: 1,
@@ -43,13 +39,13 @@ App({
             building_id: "1",
             building_name: "行政楼",
             layer_nums: 6,
-            layer_height: 10,
+            layer_height: 15,
         },
         {
             building_id: "2",
             building_name: "会议中心",
             layer_nums: 2,
-            layer_height: 10,
+            layer_height: 15,
         },
     ],
     localization: {
@@ -86,36 +82,17 @@ App({
     systemControl: {
         state: 'normal',
         realMode: true,
-        navPriorityCode: 1,//1电梯 -1楼梯
         touching: false,
         isStimulation: function () {
-            return systemControl.state === "navigating" && !systemControl.realMode
+            return systemControl.state === "navigating" && !systemControl.realMode;
         }
-    },
-    TweenControl: {
-        preLocationTween: null,
-        autoMoveTween: [],
-        cameraTween: null
     },
     spriteControl: {
         endSprite: null,
         startSprite: null,
         curSprite: null,
         targetSprites: [],
-        setSizeAttenuation: function (Atten) {
-            Object.keys(spriteControl).forEach(function (key) {
-                if (spriteControl[key] instanceof THREE.Sprite) {
-                    spriteControl[key].material.sizeAttenuation = Atten;
-                }
-            });
-            this.targetSprites.forEach(function (groups) {
-                groups.children.forEach(function (sprite) {
-                    sprite.material.sizeAttenuation = Atten;
-                });
-            });
-        },
         changeScale: function (scale) {
-
             this.targetSprites.forEach(function (groups) {
                 groups.children.forEach(function (sprite) {
                     if (scale < 4) sprite.scale.set(sprite.initScale.x * 4 / scale, sprite.initScale.y * 4 / scale, 1);
@@ -129,7 +106,6 @@ App({
         }
     },
     pathControl: {
-        PathTweengroup: [],//no use now
         textures: [],
         texture: null,
         pathGroup: null,

@@ -1,6 +1,5 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as util from "../util/util"
-import * as MODEL from "../js/model";
 
 var app = getApp();
 
@@ -14,15 +13,15 @@ const userControl = {
         map.stepCount += 1;
         if (map.stepCount - map.preStep > 0) {
             let distance = app.map_conf.float_mapProportion * (map.stepCount - map.preStep) * 2.5;
-            if(me.radian*180/Math.PI < 20) {
+            if (me.radian * 180 / Math.PI < 20) {
                 me.radian = 0;
             }
             let x = me.position.x + Math.sin(me.radian) * distance;
             let y = me.position.y + Math.cos(me.radian) * distance;
-            if (! (app.systemControl.state === "navigating" && !app.systemControl.realMode) ) {
+            if (!(app.systemControl.state === "navigating" && !app.systemControl.realMode)) {
                 userControl.changePosition(x, y, null, "animation");
 
-                
+
             }
             map.preStep = map.stepCount;
         }
@@ -45,10 +44,12 @@ const userControl = {
      * @param {*} scale  倍数
      */
     changeScale: function (scale) {
-        if (this.isInitUser === false || map.bool_isMapModelReady === false) {
+        if (this.isInitUser === false) {
             return;
         }
-        me.scale.set(scale, scale, me.scale.z);
+        console.log(scale);
+        if (scale > 1)
+            app.me.scale.set(scale, scale, app.me.scale.z);
     },
     /**
      * 用户改变旋转方向

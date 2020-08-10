@@ -77,10 +77,10 @@ function makeImgSprite(imageURL) {
     let texture = new THREE.TextureLoader().load(imageURL);
     let material = new THREE.SpriteMaterial({ map: texture, depthTest: true });
     let sprite = new THREE.Sprite(material);
-    sprite.scale.set(map_conf.noTargetSpriteScale / 2, map_conf.noTargetSpriteScale / 2, 1);
+    sprite.scale.set(map_conf.imgSpriteScale / 2, map_conf.imgSpriteScale / 2, 1);
     sprite.initScale = {
-        x: map_conf.noTargetSpriteScale / 2,
-        y: map_conf.noTargetSpriteScale / 2,
+        x: map_conf.imgSpriteScale / 2,
+        y: map_conf.imgSpriteScale / 2,
         z: 1,
     };
     return sprite;

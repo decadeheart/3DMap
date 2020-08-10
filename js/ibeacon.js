@@ -1,4 +1,3 @@
-import { addUser } from "./model";
 import * as util from "../util/util";
 
 var blueConfig = {
@@ -111,7 +110,6 @@ function getMaxPossiblePoint() {
  * @param {*} point
  * @returns int:floor
  */
-var rooms = []; //所有房间的数据
 function match2getFloor(point) {
     //找到当前的蓝牙点以及楼层
     if (app.nodeList != undefined) {

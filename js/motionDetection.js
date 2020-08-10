@@ -4,8 +4,9 @@ let oriValues = [];
 //当前传感器的值
 let gravityNew = 0;
 
-var app = getApp();
-
+/**
+ * @description 检测步数变化
+ */
 function accChange() {
     wx.onAccelerometerChange((res) => {
         oriValues[0] = res.x;
