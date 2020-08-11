@@ -341,6 +341,9 @@ Page({
             ...e,
             type: "touchstart",
         });
+        this.a(e);
+    },
+    a: util.throttle(function (e) {
         if (this.data.isAndroid) {
             if (!app.navigateFlag) {
                 let tmp = main.selectObj(e.touches[0]);
@@ -351,7 +354,7 @@ Page({
                 });
             }
         }
-    },
+    }, 300),
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
             ...e,

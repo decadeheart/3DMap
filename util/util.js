@@ -96,15 +96,29 @@ export function CalculateNodeDis(node1, node2) {
  * @param {*} interval 等待时间
  * @returns
  */
+var cnt = 0;
 export function throttle(fn, interval) {
     var enterTime = 0;//触发的时间
     var gapTime = interval || 300;//间隔时间，如果interval不传，则默认300ms
+
     return function (...args) {
+        cnt++;
+        console.log(cnt);
+        if (cnt > 4) {
+            wx.showToast({
+                title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
+                icon: "none",
+                image: "",
+                duration: 1500,
+                mask: true,
+            });
+        }
         var context = this;
         var backTime = new Date();//第一次函数return即触发的时间
         if (backTime - enterTime > gapTime) {
             fn.call(context, ...args);
             enterTime = backTime;//赋值给第一次触发的时间，这样就保存了第二次触发的时间
+            cnt = 0;
         }
     };
 }
