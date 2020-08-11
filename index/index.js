@@ -2,6 +2,7 @@ import main from "./main";
 import {
     openCompass
 } from "../js/compass";
+import * as util from "../util/util";
 
 var app = getApp();
 Page({
@@ -117,32 +118,31 @@ Page({
     /**
      * @description 地图二维和三维视角切换
      */
-    changeDimension() {
+    changeDimension: util.throttle(function () {
         let index = this.data.dimension == 2 ? 3 : 2;
         main.cameraExchange(index);
         this.setData({
             dimension: index,
         });
-    },
+    }, 300),
     /**
      * @description 显示所有楼层
-     * @param {*} e wxml的参数通过e获取
      */
-    displayAllFloor(e) {
+    displayAllFloor: util.throttle(function () {
         main.displayAllFloor();
-    },
+    }, 300),
     /**
      * @description 页面点击楼层图片，切换楼层
      * @param {*} e wxml的参数通过e获取
      */
-    displayOneFloor(e) {
+    displayOneFloor: util.throttle(function (e) {
         let floor = e.currentTarget.dataset.floor;
         main.displayOneFloor(floor + 1);
-    },
+    }, 300),
     /**
      * @description 切换起点终点
      */
-    switchPoint() {
+    switchPoint: util.throttle(function () {
         this.setData({
             startPointName: this.data.endPointName,
             endPointName: this.data.startPointName,
@@ -154,23 +154,23 @@ Page({
         main.setEndClick(app.routeClass.endPoint);
         main.setStartClick(app.routeClass.startPoint);
         main.navigateInit();
-    },
+    }, 300),
     /**
      * @description 切换页面上方的提示  1 显示搜索框 2 显示起点终点 3 显示导航路线提示
      * @param {*} e 根据传来的参数切换
      */
-    switchNavFlag(e) {
+    switchNavFlag: util.throttle(function (e) {
         this.setData({
             navFlag: e.currentTarget.dataset.flag,
         });
-    },
+    }, 300),
     /**
      * @description 获取当前的位置
      * @param {*}
      */
-    getMyLocation() {
+    getMyLocation: util.throttle(function () {
         main.backToMe();
-    },
+    }, 300),
     /**
      * @description 测试用，暂时绑定在指南针图标上
      */
@@ -265,7 +265,7 @@ Page({
      * @description 设置起点
      * @date 2020-07-20
      */
-    setStartPoint() {
+    setStartPoint: util.throttle(function () {
         main.setStartClick();
         let self = this;
         this.setData({
@@ -290,12 +290,12 @@ Page({
 
             }
         }, 50);
-    },
+    }, 300),
     /**
      * @description 设置终点
      * @date 2020-07-20
      */
-    setEndPoint() {
+    setEndPoint: util.throttle(function () {
         main.setEndClick();
         let self = this;
         this.setData({
@@ -319,11 +319,11 @@ Page({
                 }
             }
         }, 50);
-    },
+    }, 300),
     /**
      * @description 按钮“到这里去”的点击事件
      */
-    goThere() {
+    goThere: util.throttle(function () {
         main.setEndClick();
         main.setStartMe();
         let self = this;
@@ -346,13 +346,12 @@ Page({
                 }
             }
         }, 50);
-    },
+    }, 300),
     /**
      * @description 模拟导航
      * @date 2020-07-20
-     * @param {*} e 事件
      */
-    simNavigate(e) {
+    simNavigate: util.throttle(function () {
         app.systemControl.state = "navigating";
         app.systemControl.realMode = false;
         main.autoMove(app.resultParent);
@@ -361,12 +360,11 @@ Page({
             navFlag: 3,
             infoFlag: 3,
         });
-    },
+    }, 300),
     /**
      * @description 开始导航
-     * @param {*} e
      */
-    startNavigate(e) {
+    startNavigate: util.throttle(function () {
         let self = this;
         app.systemControl.state = "navigating";
         app.systemControl.realMode = true;
@@ -384,13 +382,12 @@ Page({
                 });
             }, 50);
         }
-    },
+    }, 300),
     /**
      * @description 结束导航
      * @date 2020-08-03
-     * @param {*} e
      */
-    stopNavigate(e) {
+    stopNavigate: util.throttle(function () {
         app.systemControl.state = "normal";
         app.systemControl.realMode = true;
         app.navigateFlag = 0;
@@ -400,11 +397,11 @@ Page({
         });
         main.stopNav();
         main.backToMe();
-    },
+    }, 300),
 
     // 手势事件
 
-    touchTap(e) {
+    touchTap: util.throttle(function (e) {
         if (!app.navigateFlag) {
             let tmp = main.selectObj(e.touches[0]);
             this.setData({
@@ -413,7 +410,7 @@ Page({
                 currentPointName: tmp,
             });
         }
-    },
+    }, 300),
     touchStart(e) {
         app.canvas.dispatchTouchEvent({
             ...e,

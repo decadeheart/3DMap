@@ -2,6 +2,7 @@
 App({
     onLaunch: function () { },
     THREE: null,
+    canvas:null,
     canvasSprite: null,
     beaconCoordinate: [],
     me: [],
@@ -12,7 +13,7 @@ App({
     map: {
         stepCount: 0,
         preStep: 0,
-        curFloor: 1,
+        curFloor: 0,
         isFloorLoaded: [false, false, false, false, false, false]
     },
     map_conf: {

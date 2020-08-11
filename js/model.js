@@ -178,6 +178,7 @@ export function showSprite(sprite, point, type) {
     let routeClass = app.routeClass;
     if (sprite != null) {
         sprite.position.set(point.x, point.y, point.z + 5);
+        sprite.visible = true;
         if (type == "start") {
             routeClass.startPoint = point;
         } else if (type == "end") {
@@ -322,6 +323,7 @@ export function displayOneFloor(floor) {
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
+    if (floor == app.map.curFloor) return;
     if (!app.map.isFloorLoaded[floor]) {
         loadModelByFloor(scene, floor);
     }
@@ -535,7 +537,7 @@ export function setStartMe() {
  */
 export function backToMe() {
     let point = app.localization.nowBluePosition;
-    changePosition(point.x ,point.y ,point.z)
+    userControl.changePosition(point.x, point.y, point.z, "animation");
     let floor = point.floor;
     let poi = {
         x: point.x,

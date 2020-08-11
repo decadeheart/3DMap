@@ -1,6 +1,3 @@
-import * as TWEEN from "../util/tween.min"; //动画操作
-
-var app = getApp();
 /**
  * @description 三维勾股定理
  * @param {*} nowLi 节点1
@@ -14,7 +11,6 @@ export function dis3(nowLi, nowLi2) {
     let c = nowLi.z - nowLi2.z;
     return Math.sqrt(a * a + b * b + c * c);
 }
-
 
 /**
  * @description 计算两个向量之间的夹角，确定旋转的角度
@@ -60,7 +56,6 @@ export function extendObj() {
     return temp;
 }
 
-
 /**
  * @description 找到距离我的当前位置最近的节点
  * @date 2020-07-28
@@ -93,4 +88,23 @@ export function CalculateNodeDis(node1, node2) {
     let c = node1.z - node2.z;
     let d = Math.sqrt(a * a + b * b + c * c);
     return d;
+}
+
+/**
+ * @description 函数节流
+ * @param {*} fn 需要节流的函数
+ * @param {*} interval 等待时间
+ * @returns
+ */
+export function throttle(fn, interval) {
+    var enterTime = 0;//触发的时间
+    var gapTime = interval || 300;//间隔时间，如果interval不传，则默认300ms
+    return function (...args) {
+        var context = this;
+        var backTime = new Date();//第一次函数return即触发的时间
+        if (backTime - enterTime > gapTime) {
+            fn.call(context, ...args);
+            enterTime = backTime;//赋值给第一次触发的时间，这样就保存了第二次触发的时间
+        }
+    };
 }
