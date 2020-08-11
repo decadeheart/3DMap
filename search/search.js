@@ -13,7 +13,7 @@ Page({
 		searchTitle: app.map_conf.map_name,
 	},
 	onLoad: function () {
-		console.log(this.data)
+		// console.log(this.data)
 		let buildingDataTmp=getSearchData();
 		// 将其变成一维数组，方便遍历
 		let eachFloor = [].concat(...buildingDataTmp[1]);
@@ -60,17 +60,12 @@ Page({
      * @description 选中搜索结果后触发
      */
     selectResult: function (e) {
-        var target = e.currentTarget.dataset.selected;
-        // 对应关闭模态框，显示提示框，修改当前地点的名字
-        this.setData({
-            currentPointName: target.name + target.name2,
-            infoFlag: 1,
-		});
+        var target = e.currentTarget.dataset.selected
 		//向index页面传递数据，并返回至index页面
 		const eventChannel = this.getOpenerEventChannel()
 		eventChannel.emit('selectedPoint', {data: target});
 		wx.navigateBack({
-			delta: 1,
+			delta: 0,
 		})
     },
     /**

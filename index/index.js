@@ -5,7 +5,6 @@ import * as util from "../util/util";
 var app = getApp();
 Page({
     data: {
-        baseUrl: "https://www.cleverguided.com/iLaN/3D-jxqzf/",
         dimensionImgUrl: ["../img/2D.png", "../img/3D.png"],
         dimension: 3,
         allFloorImgUrl: "../img/more.png",
@@ -156,8 +155,6 @@ Page({
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
     },
-
-    // 模态框专区
 
     /**
      * @description 点击搜索栏，页面跳转
