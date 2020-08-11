@@ -1,35 +1,33 @@
-var nodeList;
 var app = getApp();
 var DATA;
 /**
  * @description 从服务器加载数据
  */
-export function initData() {
-    return new Promise((resolve, reject) => {
-        wx.request({
-            url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
-            data: {},
-            header: { "content-type": "application/json" },
-            method: "GET",
-            dataType: "json",
-            responseType: "text",
-            success: (res) => {
-                dataPreProcess(res);
-                DATA = res.data.target;
-                resolve();
-            },
-            fail: (err) => {
-                reject(err);
-            },
-        });
+export const initData=new Promise((resolve, reject) => {
+    wx.request({
+        url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
+        data: {},
+        header: { "content-type": "application/json" },
+        method: "GET",
+        dataType: "json",
+        responseType: "text",
+        success: (res) => {
+            dataPreProcess(res);
+            DATA = res.data.target;
+            resolve();
+        },
+        fail: (err) => {
+            reject(err);
+        },
     });
-}
+});
 
 /**
  * @description 预处理、格式化数据方便检索和显示
  * @date 2020-07-10
  */
 var dataPreProcess = (res) => {
+    var nodeList;
     let data = res.data;
     nodeList = data.nodeList;
 

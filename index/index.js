@@ -34,7 +34,6 @@ Page({
 
     onLoad: function () {
         var that = this;
-        main.initMap(that);
         openCompass(this);
 
         //最先应该获取设备的型号，也很快
@@ -64,15 +63,10 @@ Page({
                 that.setData({
                     showBlue: res.showBlueStatus,
                 });
-
                 main.initMap(that);
             });
 
         });
-
-
-
-        openCompass(this);
 
     },
 
@@ -179,7 +173,7 @@ Page({
                         currentPointName: target.name + target.name2,
                         infoFlag: 1,
                     });
-                    main.onlyDisplayFloor(parseInt(target.floor));
+                    main.displayOneFloor(parseInt(target.floor));
                     main.setCurClick(target);
                     main.changeFocus(target);
                 },
