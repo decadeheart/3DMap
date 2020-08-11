@@ -6,7 +6,7 @@ import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as SPRITE from "./sprite";
 import {
-    loadModel,
+    loadGround,
     loadModelByFloor
 } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
@@ -28,10 +28,6 @@ var selectedPoint = {};
 export function renderModel(canvasDom, Three) {
     THREE = Three;
     canvas = canvasDom;
-    // let ctx = canvas.getContext("webgl");
-    // // console.log(ctx)
-    // // ctx.setFontSize(20)
-    // ctx.fillText('Hello', 20, 20)
     registerGLTFLoader(THREE);
     init();
     animate();
@@ -65,9 +61,7 @@ export function renderModel(canvasDom, Three) {
         // addHelper();
 
         //加载模型
-        loadModel(scene);
-        //加载文字和图片
-        // loadTargetText(scene);
+        loadGround(scene);
 
         //添加用户贴图
         addUser();
@@ -150,25 +144,11 @@ export function addUser() {
             depthTest: false,
         });
         app.me = new THREE.Mesh(usergeometry, material);
-        //获取当期位置的GPS坐标并初始化
-        // gps.getLocation().then(res=>{
-        //     //userControl.initUser(res[0],res[1],0);
-        //     userControl.initUser(20,3,0);
-        // })
-
-        app.me = new THREE.Mesh(usergeometry, material);
         userControl.initUser(5, 0, 0);
         scene.add(app.me);
     });
 }
-//改变的当前地图上的位置
-export function changePosition(x, y, z) {
-    userControl.changePosition(x, y, z, "animation");
-}
-//改变旋转角度
-export function rotate(x, y, z) {
-    userControl.changeRotation(x, y, z, "animation");
-}
+
 var caCoord = {};
 /**
  * @description 2D-3D视角切换
@@ -198,6 +178,7 @@ export function showSprite(sprite, point, type) {
     let routeClass = app.routeClass;
     if (sprite != null) {
         sprite.position.set(point.x, point.y, point.z + 5);
+        sprite.visible = true;
         if (type == "start") {
             routeClass.startPoint = point;
         } else if (type == "end") {
@@ -216,10 +197,10 @@ export function showSprite(sprite, point, type) {
                 depthTest: false,
             });
             sprite = new THREE.Sprite(material);
-            sprite.scale.set(map_conf.noTargetSpriteScale, map_conf.noTargetSpriteScale, 1);
+            sprite.scale.set(map_conf.imgSpriteScale, map_conf.imgSpriteScale, 1);
             sprite.initScale = {
-                x: map_conf.noTargetSpriteScale,
-                y: map_conf.noTargetSpriteScale,
+                x: map_conf.imgSpriteScale,
+                y: map_conf.imgSpriteScale,
                 z: 1,
             };
             sprite.name = type + "Sprite";
@@ -257,6 +238,8 @@ function getNearPOIName(obj) {
             }
         }
     }
+    //超过最大距离时则认定为室外
+    if (util.dis3(list[k], obj) > 100) return "室外"; //参数100为测试得到，不同模型参数需要重新测试
     return list[k].name;
 }
 
@@ -270,7 +253,6 @@ export function selectObj(index) {
     let raycaster = new THREE.Raycaster();
     let mouse = new THREE.Vector2();
     //获取全局变量并改名
-    let map = app.map;
     let me = app.me;
     //定义一个极小的位移量，用于调整坐标点位置
     let tinyPos = 1.5;
@@ -280,7 +262,6 @@ export function selectObj(index) {
     //转换为视点坐标系
     raycaster.setFromCamera(mouse, camera);
     //获取选中物体
-    // let intersects = raycaster.intersectObjects(map.groundMeshes);
     let intersects = raycaster.intersectObjects(scene.children, true);
     //被选中物体不为空时
     if (intersects.length > 0) {
@@ -314,8 +295,6 @@ export function displayAllFloor() {
             setVisible(obj);
         }
     });
-    //为了提高加载性能，暂不使用该函数
-    // SPRITE.loadAllTargetText(scene);
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
@@ -341,11 +320,10 @@ export function displayAllFloor() {
  */
 export function displayOneFloor(floor) {
     let map = app.map;
-    // if (floor == map.curFloor) return;
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
-    console.log(app.map.isFloorLoaded[floor])
+    if (floor == app.map.curFloor) return;
     if (!app.map.isFloorLoaded[floor]) {
         loadModelByFloor(scene, floor);
     }
@@ -354,8 +332,6 @@ export function displayOneFloor(floor) {
             setVisible(obj);
         }
     });
-
-
     /**
      * @description 设置物体是否可见
      * @param {*} obj 物体
@@ -397,10 +373,6 @@ export function displayTwoFloor(floor1, floor2) {
     if (!app.map.isFloorLoaded[floor2]) {
         loadModelByFloor(scene, floor2);
     }
-
-
-
-
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
             setVisible(obj);
@@ -548,7 +520,10 @@ export function setEndClick(point) {
         showSprite(app.spriteControl.endSprite, point, "end");
     }
 }
-
+/**
+ * @description 点击去这里响应事件
+ * @export
+ */
 export function setStartMe() {
     scene.remove(app.spriteControl.startSprite);
     app.spriteControl.startSprite = null;
@@ -562,6 +537,7 @@ export function setStartMe() {
  */
 export function backToMe() {
     let point = app.localization.nowBluePosition;
+    userControl.changePosition(point.x, point.y, point.z, "animation");
     let floor = point.floor;
     let poi = {
         x: point.x,
@@ -610,13 +586,13 @@ export function animateCamera(current1, target1, current2, target2) {
     controls.enabled = false;
     var tween = new TWEEN.Tween(positionVar);
     tween.to({
-            x1: current2.x,
-            y1: current2.y,
-            z1: current2.z,
-            x2: target2.x,
-            y2: target2.y,
-            z2: target2.z,
-        },
+        x1: current2.x,
+        y1: current2.y,
+        z1: current2.z,
+        x2: target2.x,
+        y2: target2.y,
+        z2: target2.z,
+    },
         1000
     );
 
@@ -638,7 +614,10 @@ export function animateCamera(current1, target1, current2, target2) {
     tween.easing(TWEEN.Easing.Cubic.InOut);
     tween.start();
 }
-
+/**
+ * @description 结束导航
+ * @export
+ */
 export function stopNav() {
     scene.remove(app.pathControl.pathGroup);
     scene.remove(app.spriteControl.endSprite);

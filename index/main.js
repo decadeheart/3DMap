@@ -27,16 +27,15 @@ main.initMap = function (that) {
         .exec((res) => {
             const canvas = res[0].node;
             const THREE = createScopedThreejs(canvas);
-
             app.canvas = canvas;
             app.THREE = THREE;
+
             MODEL.renderModel(canvas, THREE);
             MODEL.initPath();
 
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            let controls = MODEL.getControl();
 
             navRender();
             accChange();
@@ -67,12 +66,14 @@ main.initMap = function (that) {
                     }
                 }
 
-                app.spriteControl.changeScale(2000 / camera.position.z);
+                //手势缩放时调整文字和图标大小并按等级显示
+                app.spriteControl.changeScale(2000 / camera.position.z); //参数2000为测试得到，不同模型参数需要重新测试
+                // app.pathControl.changeScale(camera.position.z / 500)
+                userControl.changeScale(camera.position.z / 600); //参数600为测试得到，不同模型参数需要重新测试
 
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
                     userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
-                    // console.log(nowPoint.floor)
                     main.displayOneFloor(nowPoint.floor);
                 }
 
@@ -80,7 +81,7 @@ main.initMap = function (that) {
                 let floor = match2getFloor(nowPoint);
                 if (floor != null) main.displayOneFloor(floor);
 
-                //如果是真实模式，非模拟导航，并且me.radian 已经加载完毕
+                //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode && me.radian) {
                     //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
@@ -89,8 +90,6 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-                        // console.log('当前点',nowPoint.x,nowPoint.y,nowPoint.z);
-                        // console.log('之前点',lastPoint.x,lastPoint.y,lastPoint.z);
                         userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
 
                         //动画更新部分
@@ -131,22 +130,78 @@ main.cameraExchange = function (index) {
 };
 main.displayAllFloor = function () {
     MODEL.displayAllFloor();
+    //为了提高加载性能，暂不使用该函数
+    // SPRITE.loadAllTargetText(scene);
 };
 main.displayOneFloor = function (floor) {
+    if (floor == app.map.curFloor) return;
     MODEL.displayOneFloor(floor);
     SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
+};
+main.displayTwoFloor = (floor1, floor2) => {
+    MODEL.displayTwoFloor(floor1, floor2);
 };
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
 };
-main.setStartPoint = function () {
-    MODEL.showSprite(app.spriteControl.sprite.position, "start");
-};
-main.setEndPoint = function () {
-    MODEL.showSprite(app.spriteControl.sprite.position, "end");
-};
 main.backToMe = function () {
     MODEL.backToMe();
+};
+
+//获取当前经纬度坐标,用完必须关闭
+main.setPoibyLngLat = function () {
+    gps.getLocationChange();
+};
+//关闭GPS并清除定时器
+main.closeGPS = function () {
+    gps.closeGPS();
+};
+
+/** 当前点设定 */
+main.setCurClick = function (point) {
+    MODEL.setCurClick(point);
+};
+/** 使用用户点击位置作为起点 */
+main.setStartClick = function (point) {
+    MODEL.setStartClick(point);
+};
+/** 使用用户当前位置作为起点 */
+main.setStartMe = function () {
+    MODEL.setStartMe();
+};
+/** 终点设定 */
+main.setEndClick = function (point) {
+    MODEL.setEndClick(point);
+};
+/** 获得起点和终点信息后获得导航路径 */
+main.navigateInit = function () {
+    return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
+};
+/**
+ * 模拟导航中的根据路径进行移动
+ * @param {*} path
+ */
+main.autoMove = (path) => {
+    autoMoving(path);
+};
+/**
+ * 停止导航
+ */
+main.stopNav = () => {
+    MODEL.stopNav();
+};
+
+/**
+ * @description 通过data.js 向服务器获取数据集、初始化数据
+ * @date 2020-07-23
+ * @return 格式化后的数据 [[],[]]
+ */
+main.getBuildingData = () => {
+    return new Promise((resolve, reject) => {
+        initData.then(() => {
+            resolve();
+        });
+    });
 };
 
 /** ibeacon 打开测试 */
@@ -183,65 +238,7 @@ main.startBeaconDiscovery = function () {
     });
 };
 
-//获取当前经纬度坐标,用完必须关闭
-main.setPoibyLngLat = function () {
-    gps.getLocationChange();
-};
-//关闭GPS并清除定时器
-main.closeGPS = function () {
-    gps.closeGPS();
-};
-
-/** 获得起点和终点信息后获得导航路径 */
-main.navigateInit = function () {
-    return navigate(app.nodeList, app.routeClass.startPoint, app.routeClass.endPoint);
-};
-/** 当前点设定 */
-main.setCurClick = function (point) {
-    MODEL.setCurClick(point);
-};
-
-/** 起点设定 */
-main.startClick = function (point) {
-    MODEL.setStartClick(point);
-};
-
-/** 终点设定 */
-main.endClick = function (point) {
-    MODEL.setEndClick(point);
-};
-
-/** 起点设定 */
-main.startMe = function () {
-    MODEL.setStartMe();
-};
-/**
- * @description 通过data.js 向服务器获取数据集、初始化数据
- * @date 2020-07-23
- * @return 格式化后的数据 [[],[]]
- */
-main.getBuildingData = () => {
-    return new Promise((resolve, reject) => {
-        initData.then(() => {
-            resolve();
-        });
-    });
-};
-/**
- * 模拟导航中的根据路径进行移动
- * @param {*} path
- */
-main.autoMove = (path) => {
-    autoMoving(path);
-};
-
-/**
- * 停止导航
- */
-main.stopNav = () => {
-    MODEL.stopNav();
-};
-
+/** 切换注视点 */
 main.changeFocus = (point) => {
     let camera = MODEL.getCamera();
     let controls = MODEL.getControl();
@@ -259,10 +256,6 @@ main.changeFocus = (point) => {
         z: point.z,
     };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
-};
-
-main.displayTwoFloor = (floor1, floor2) => {
-    MODEL.displayTwoFloor(floor1, floor2);
 };
 
 export default main;

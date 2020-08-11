@@ -43,15 +43,13 @@ function setFloor(obj, f) {
     });
 }
 /**
- * @description 加载模型
+ * @description 加载地面
  * @export
- * @param {*} scene 模型放置的场景
+ * @param {*} scene 地面放置的场景
  */
-export function loadModel(scene) {
+export function loadGround(scene) {
     //获取必须的全局变量并改名
-    let map = app.map;
     let map_conf = app.map_conf;
-    let building_conf = app.building_conf;
     let THREE = app.THREE;
     let loader = new THREE.GLTFLoader();
     loader.load(map_conf.src_dir + "data/" + map_conf.map_id + ".glb", function (glb) {
@@ -61,12 +59,5 @@ export function loadModel(scene) {
         //设置物体参数
         ground.name = map_conf.map_id + "_" + "outside";
         setFloor(ground, 0);
-        //修改已加载楼层数并判断是否加载完毕
-        map.int_loadedLayerNums += 1;
-        map.int_loadedLayerNums === map.int_totalLayerNums
-            ? (function () {
-                  map.bool_isMapModelReady = true;
-              })()
-            : null;
     });
 }

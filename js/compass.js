@@ -46,7 +46,7 @@ export function openCompass(that) {
 //旋转当前在地图上的朝向
 function rotate(angle) {
     let me = app.me;
-    if(!me.rotation) return;
+    if (!me.rotation) return;
     let a = new TWEEN.Tween(me.rotation).to({
         x: me.rotation.x,
         y: me.rotation.y,
