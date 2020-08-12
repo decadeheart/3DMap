@@ -1,8 +1,8 @@
-//配置文件参数   
+//配置文件参数
 App({
-    onLaunch: function () { },
+    onLaunch: function () {},
     THREE: null,
-    canvas:null,
+    canvas: null,
     canvasSprite: null,
     beaconCoordinate: [],
     me: [],
@@ -60,7 +60,7 @@ App({
                     break;
                 case "BLUE":
                     this.GPSOpen = 0;
-                    this.BluetoothOpen = 1;//蓝牙一直打开
+                    this.BluetoothOpen = 1; //蓝牙一直打开
                     break;
                 case "OFF":
                     this.GPSOpen = 0;
@@ -78,7 +78,7 @@ App({
         },
     },
     systemControl: {
-        state: 'normal',
+        state: "normal",
         realMode: true,
         touching: false,
         isStimulation: function () {
@@ -93,15 +93,16 @@ App({
         changeScale: function (scale) {
             this.targetSprites.forEach(function (groups) {
                 groups.children.forEach(function (sprite) {
-                    if (scale < 4) sprite.scale.set(sprite.initScale.x * 4 / scale, sprite.initScale.y * 4 / scale, 1);
+                    if (scale < 5) sprite.scale.set(sprite.initScale.x * 5 / scale, sprite.initScale.y * 5 / scale, 1);
                     if (sprite.level > scale) {
                         sprite.visible = false;
                     } else {
                         sprite.visible = true;
                     }
+                    if (scale >= 3 && sprite.level == 2 && !sprite.img) { sprite.visible = false; }
                 });
             });
-        }
+        },
     },
     pathControl: {
         textures: [],
@@ -113,12 +114,12 @@ App({
                     tube.scale.set(scale, scale, 1);
                 });
             }
-        }
+        },
     },
     routeClass: {
         startPoint: {},
         endPoint: {},
         distance: 0,
-        time: 0
-    }
+        time: 0,
+    },
 });

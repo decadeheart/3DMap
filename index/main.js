@@ -1,23 +1,14 @@
-import {
-    createScopedThreejs
-} from "../util/three";
+import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
-import initData from "../js/data";
-import {
-    beaconUpdate,
-    match2getFloor
-} from "../js/ibeacon";
+import { initData } from "../js/data";
+import { beaconUpdate, match2getFloor } from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
-import {
-    autoMoving
-} from "../js/simNavigate";
+import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import {
-    showOrientationText
-} from "../js/directionNotify";
+import { showOrientationText } from "../js/directionNotify";
 import userControl from "../js/user";
 
 var app = getApp();
@@ -82,13 +73,7 @@ main.initMap = function (that) {
 
                 //若是当前点是在初始位置，直接改变位置到初始
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
-
-                    userControl.changePosition(
-                        nowPoint.x,
-                        nowPoint.y,
-                        nowPoint.z,
-                        "direction"
-                    );
+                    userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.displayOneFloor(nowPoint.floor);
                 }
 
@@ -98,7 +83,6 @@ main.initMap = function (that) {
 
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode && me.radian) {
-
                     //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
@@ -106,15 +90,10 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-                        userControl.changePosition(
-                            nowPoint.x,
-                            nowPoint.y,
-                            nowPoint.z,
-                            "animation"
-                        );
+                        userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
 
                         //动画更新部分
-                        main.changeFocus(nowPoint)
+                        main.changeFocus(nowPoint);
 
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
@@ -160,8 +139,8 @@ main.displayOneFloor = function (floor) {
     SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.displayTwoFloor = (floor1, floor2) => {
-    MODEL.displayTwoFloor(floor1, floor2)
-}
+    MODEL.displayTwoFloor(floor1, floor2);
+};
 main.selectObj = function (index) {
     return MODEL.selectObj(index);
 };
@@ -185,7 +164,6 @@ main.setCurClick = function (point) {
 /** 使用用户点击位置作为起点 */
 main.setStartClick = function (point) {
     MODEL.setStartClick(point);
-
 };
 /** 使用用户当前位置作为起点 */
 main.setStartMe = function () {
@@ -201,7 +179,7 @@ main.navigateInit = function () {
 };
 /**
  * 模拟导航中的根据路径进行移动
- * @param {*} path 
+ * @param {*} path
  */
 main.autoMove = (path) => {
     autoMoving(path);
@@ -220,8 +198,8 @@ main.stopNav = () => {
  */
 main.getBuildingData = () => {
     return new Promise((resolve, reject) => {
-        initData.then((res) => {
-            resolve(res);
+        initData.then(() => {
+            resolve();
         });
     });
 };
@@ -264,7 +242,7 @@ main.startBeaconDiscovery = function () {
 main.changeFocus = (point) => {
     let camera = MODEL.getCamera();
     let controls = MODEL.getControl();
-    let me = app.me
+    let me = app.me;
     //动画更新部分
     let L = 200;
     let newP = {
@@ -278,6 +256,6 @@ main.changeFocus = (point) => {
         z: point.z,
     };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
-}
+};
 
 export default main;

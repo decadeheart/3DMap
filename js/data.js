@@ -1,45 +1,33 @@
-var nodeList;
 var app = getApp();
+var DATA;
 /**
  * @description 从服务器加载数据
- * @date 2020-07-10
  */
-const initData = new Promise((resolve, reject) => {
-    let value = wx.getStorageSync("nodeData");
-    value = false;
-    if (value) {
-        resolve(value);
-    } else {
-        wx.request({
-            url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
-            data: {},
-            header: { "content-type": "application/json" },
-            method: "GET",
-            dataType: "json",
-            responseType: "text",
-            success: (res) => {
-                let data = dataPreProcess(res);
-                resolve(data);
-            },
-            fail: (err) => {
-                reject(err);
-            },
-        });
-    }
+export const initData=new Promise((resolve, reject) => {
+    wx.request({
+        url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
+        data: {},
+        header: { "content-type": "application/json" },
+        method: "GET",
+        dataType: "json",
+        responseType: "text",
+        success: (res) => {
+            dataPreProcess(res);
+            DATA = res.data.target;
+            resolve();
+        },
+        fail: (err) => {
+            reject(err);
+        },
+    });
 });
-export default initData;
-
-// 建筑物名字列表
-var buildingList = [];
-// buildingData[i]表示其中某栋建筑物，buildingData[i][j]表示该建筑物第j层，每层有很多办公室的对象
-var buildingData = [];
-var buildingRoomGroup = [];
 
 /**
  * @description 预处理、格式化数据方便检索和显示
  * @date 2020-07-10
  */
 var dataPreProcess = (res) => {
+    var nodeList;
     let data = res.data;
     nodeList = data.nodeList;
 
@@ -66,8 +54,16 @@ var dataPreProcess = (res) => {
     app.beaconCoordinate.forEach(function (node) {
         node.z = (node.floor - 1) * app.map_conf.layerHeight;
     });
+};
 
-    var tmp = target;
+// 建筑物名字列表
+var buildingList = [];
+// buildingData[i]表示其中某栋建筑物，buildingData[i][j]表示该建筑物第j层，每层有很多办公室的对象
+var buildingData = [];
+var buildingRoomGroup = [];
+export function getSearchData() {
+    if (buildingData.length != 0) return [buildingList, buildingData, buildingRoomGroup];
+    var tmp = DATA;
     for (let building in tmp) {
         buildingList.push(building);
         let floor = [];
@@ -114,4 +110,4 @@ var dataPreProcess = (res) => {
         buildingRoomGroup.push(eachBuilding);
     });
     return [buildingList, buildingData, buildingRoomGroup];
-};
+}
