@@ -67,7 +67,7 @@ main.initMap = function (that) {
                 }
 
                 //手势缩放时调整文字和图标大小并按等级显示
-                app.spriteControl.changeScale(2000 / camera.position.z); //参数2000为测试得到，不同模型参数需要重新测试
+                app.spriteControl.changeScale(2200 / camera.position.z); //参数2200为测试得到，不同模型参数需要重新测试
                 // app.pathControl.changeScale(camera.position.z / 500)
                 userControl.changeScale(camera.position.z / 600); //参数600为测试得到，不同模型参数需要重新测试
 
