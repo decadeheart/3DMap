@@ -39,7 +39,10 @@ function beaconUpdate() {
         );
 
         let result = getMaxPossiblePoint();
-        if (!result) return;
+        if (!result) {
+            app.localization.getBlue(1, 1, 1, 1);
+            return;
+        }
         //minValidRssi表示最小有效的信号强度，小于这个强度的信号可以忽视
         if (parseInt(result.rssi) < parseInt(blueConfig.minValidRssi)) {
             return;
