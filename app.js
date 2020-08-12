@@ -2,7 +2,7 @@
 App({
     onLaunch: function () {},
     THREE: null,
-    canvas:null,
+    canvas: null,
     canvasSprite: null,
     beaconCoordinate: [],
     me: [],
@@ -99,6 +99,7 @@ App({
                     } else {
                         sprite.visible = true;
                     }
+                    if (scale >= 3 && sprite.level == 2 && !sprite.img) { sprite.visible = false; }
                 });
             });
         },

@@ -83,6 +83,7 @@ function makeImgSprite(imageURL) {
         y: map_conf.imgSpriteScale / 2,
         z: 1,
     };
+    sprite.img = true;
     return sprite;
 }
 /**
