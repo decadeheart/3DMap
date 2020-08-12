@@ -93,7 +93,7 @@ App({
         changeScale: function (scale) {
             this.targetSprites.forEach(function (groups) {
                 groups.children.forEach(function (sprite) {
-                    if (scale < 4) sprite.scale.set(sprite.initScale.x * 4 / scale, sprite.initScale.y * 4 / scale, 1);
+                    if (scale < 5) sprite.scale.set(sprite.initScale.x * 5 / scale, sprite.initScale.y * 5 / scale, 1);
                     if (sprite.level > scale) {
                         sprite.visible = false;
                     } else {
