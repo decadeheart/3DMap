@@ -55,12 +55,12 @@
 	</view>
 
 	<!-- 左上角指南针 10%-->
-	<view class="{{isAndroid? 'compass-android':'compass'}}" bindtap="test" style="transform: rotate({{compassAngle}}); ">
+	<view class="compass" bindtap="test" style="transform: rotate({{compassAngle}}); ">
 		<span class="iconfont icon-compass1" style=""></span>
 	</view>
 
 	<!-- 左下角定位 9% -->
-	<view class="{{isAndroid? 'myLocation-android':'myLocation'}}" bindtap="getMyLocation">
+	<view class="myLocation" bindtap="getMyLocation">
 		<span class="iconfont icon-dingwei" ></span>
 	</view>
 

@@ -197,34 +197,33 @@
 }
 
 /* <!-- 右下角指南针 > */
-.compass {
+.compass1 {
     position: absolute;
     bottom: 16.5%;
     right: 5%;
     transition: transform 0.5s;
     z-index: 10;
 }
-.compass-android {
+.compass{
     position: absolute;
     top: 18%;
     right: 2%;
-    /* background-color: turquoise; */
     transition: transform 0.5s;
     z-index: 10;
 }
 
+.compass1 span{    
+    color:#000; 
+    font-size:100rpx;
+    border-radius:  50%;
+}
 .compass span{    
     color:#000; 
     font-size:100rpx;
     border-radius:  50%;
 }
-.compass-android span{    
-    color:#000; 
-    font-size:100rpx;
-    border-radius:  50%;
-}
 /* <!-- 左下角定位  --> */
-.myLocation {
+.myLocation1 {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -241,11 +240,11 @@
     box-shadow: 1rpx 1rpx 1rpx 1rpx #ccc;
     z-index: 10;
 }
-.myLocation span{
+.myLocation1 span{
     font-size:50rpx;
 }
 /* <!-- 左下角定位  --> */
-.myLocation-android {
+.myLocation {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -262,7 +261,7 @@
     box-shadow: 1rpx 1rpx 1rpx 1rpx #ccc;
     z-index: 10;
 }
-.myLocation-android span{
+.myLocation span{
     font-size:50rpx;
 }
 /* <!-- 选择的地点提示信息 20% --> */

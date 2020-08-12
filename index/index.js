@@ -30,7 +30,7 @@ Page({
             },
         ],
         compassAngle: "",
-        isAndroid: true,
+        isAndroid: false,
     },
 
     onLoad: function () {
@@ -44,6 +44,9 @@ Page({
                 });
                 if (res.platform == "devtools") {
                     // console.log('PC')
+                    that.setData({
+                        isAndroid: false,
+                    });
                 } else if (res.platform == "ios") {
                     console.log("ios");
                     that.setData({
