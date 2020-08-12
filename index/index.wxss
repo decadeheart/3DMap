@@ -199,19 +199,13 @@
 /* <!-- 右下角指南针 > */
 .compass {
     position: absolute;
-    /* top: 15%; */
-    /* left: 3%; */
-
     bottom: 16.5%;
     right: 5%;
-    /* background-color: turquoise; */
     transition: transform 0.5s;
     z-index: 10;
 }
 .compass-android {
     position: absolute;
-    /* top: 15%; */
-    /* left: 3%; */
     top: 18%;
     right: 2%;
     /* background-color: turquoise; */
@@ -222,15 +216,11 @@
 .compass span{    
     color:#000; 
     font-size:100rpx;
-    /* box-shadow:  1rpx 1rpx 1rpx rgb(98,165,220); */
-    /* border: 1rpx solid rgb(98,165,220); */
     border-radius:  50%;
 }
 .compass-android span{    
     color:#000; 
     font-size:100rpx;
-    /* box-shadow:  1rpx 1rpx 1rpx rgb(98,165,220); */
-    /* border: 1rpx solid rgb(98,165,220); */
     border-radius:  50%;
 }
 /* <!-- 左下角定位  --> */
