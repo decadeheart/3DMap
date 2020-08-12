@@ -99,7 +99,7 @@ App({
                     } else {
                         sprite.visible = true;
                     }
-                    if (scale >= 3 && sprite.level == 2) { sprite.visible = false; }
+                    if (scale >= 3 && sprite.level == 2 && !sprite.img) { sprite.visible = false; }
                 });
             });
         }
