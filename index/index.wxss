@@ -17,7 +17,7 @@
 .map-android {
     position: fixed;
     width: 78%;
-    height: 55%;
+    height: 66%;
     /* background-color: wheat; */
     top:17%;
     left:5%;
@@ -166,7 +166,7 @@
 .floor-container {
     position: absolute;
     overflow: hidden;
-    top: 25%;
+    top: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -201,20 +201,38 @@
     position: absolute;
     /* top: 15%; */
     /* left: 3%; */
+
     bottom: 16.5%;
     right: 5%;
     /* background-color: turquoise; */
     transition: transform 0.5s;
     z-index: 10;
 }
+.compass-android {
+    position: absolute;
+    /* top: 15%; */
+    /* left: 3%; */
+    top: 18%;
+    right: 2%;
+    /* background-color: turquoise; */
+    transition: transform 0.5s;
+    z-index: 10;
+}
+
 .compass span{    
+    color:#000; 
+    font-size:20rpx;
+    /* box-shadow:  1rpx 1rpx 1rpx rgb(98,165,220); */
+    /* border: 1rpx solid rgb(98,165,220); */
+    border-radius:  50%;
+}
+.compass-android span{    
     color:#000; 
     font-size:100rpx;
     /* box-shadow:  1rpx 1rpx 1rpx rgb(98,165,220); */
     /* border: 1rpx solid rgb(98,165,220); */
     border-radius:  50%;
 }
-
 /* <!-- 左下角定位  --> */
 .myLocation {
     position: absolute;
@@ -236,7 +254,27 @@
 .myLocation span{
     font-size:50rpx;
 }
-
+/* <!-- 左下角定位  --> */
+.myLocation-android {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 18%;
+    right: 5%;
+    box-sizing: border-box;
+    width: 80rpx;
+    height: 80rpx;
+    color:rgb(98,165,220);
+    background-color:rgba(254, 254, 255, 0.9);
+    border-radius: 10rpx;
+    padding: 10rpx;
+    box-shadow: 1rpx 1rpx 1rpx 1rpx #ccc;
+    z-index: 10;
+}
+.myLocation-android span{
+    font-size:50rpx;
+}
 /* <!-- 选择的地点提示信息 20% --> */
 .point-info,
 .navigating-simu,

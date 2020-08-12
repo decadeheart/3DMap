@@ -42,7 +42,7 @@ Page({
         floorIndex: 0,
         searchTitle: app.map_conf.map_name,
         compassAngle: "",
-        isAndroid: false,
+        isAndroid: true,
     },
 
     onLoad: function () {

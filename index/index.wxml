@@ -1,8 +1,8 @@
 <view class="container" catchtouchmove="{{false}}">
 	<!-- 地图容器 -->
-	<canvas type="webgl" id="map" class="{{isAndroid? 'map-android':'map'}}" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap"></canvas>
+	<canvas type="webgl" id="map" class="{{isAndroid? 'map-android':'map'}}" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap" hidden="{{showBlue}}"></canvas>
 	<!-- 精灵容器 -->
-	<canvas type="2d" id="sprite"></canvas>
+	<canvas type="2d" id="sprite" hidden="{{showBlue}}"></canvas>
 	
 
 	<!-- 正上方搜索框 16%-->
@@ -55,12 +55,12 @@
 	</view>
 
 	<!-- 左上角指南针 10%-->
-	<view class="compass" bindtap="test" style="transform: rotate({{compassAngle}}); ">
+	<view class="{{isAndroid? 'compass-android':'compass'}}" bindtap="test" style="transform: rotate({{compassAngle}}); ">
 		<span class="iconfont icon-compass1" style=""></span>
 	</view>
 
 	<!-- 左下角定位 9% -->
-	<view class="myLocation" bindtap="getMyLocation">
+	<view class="{{isAndroid? 'myLocation-android':'myLocation'}}" bindtap="getMyLocation">
 		<span class="iconfont icon-dingwei" ></span>
 	</view>
 
