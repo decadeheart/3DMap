@@ -4,16 +4,16 @@
 	</mp-searchbar>
 
 	<!-- 搜索下拉栏 -->
-	<view class="search-result" hidden="{{searchHidden}}">
+	<view class="search-result" hidden="{{searchHidden}}" bindtap="selectResult">
 		<scroll-view scroll-y="true" style="height: 100%;" class="scroll-view">
 			<block wx:key="index" wx:for="{{searchResult}}">
-				<view bindtap="selectResult" data-selected="{{item}}">{{item.name+item.name2}}</view>
+				<view data-selected="{{item}}">{{item.name+item.name2}}</view>
 			</block>
 		</scroll-view>
 
 	</view>
 	<!-- 切换building -->
-	<view class="tab-content">
+	<view wx:if="{{buildingList.length>1}}" class="tab-content">
 		<block wx:key="index" wx:for="{{buildingList}}">
 			<view class="{{buildingIndex==index? 'select-tap':''}}" style="{{tabSelectStyle[index]}}" bindtap="switchTap" data-tapIndex="{{index}}">{{item}}
 			</view>
@@ -21,7 +21,7 @@
 	</view>
 
 	<!-- 按层显示 -->
-	<view class="search-body">
+	<view class="search-body" bindtap="selectResult">
 		<scroll-view scroll-y="true">
 			<block wx:for="{{buildingRoomGroup[buildingIndex]}}" wx:key="index" wx:for-item="floor">
 				<view class="modal-floor-item">
@@ -35,8 +35,7 @@
 					</view>
 
 					<!-- 抽屉内容 按组显示-->
-
-					<view class="floor-item-bd {{floorIndex==index ? 'floor-item-bd-show' : ''}}">
+					<view class="floor-item-bd {{floorIndex==index ? 'floor-item-bd-show' : ''}}" >
 						<view class="option-box {{floorIndex==index ? 'option-box-show' : ''}}">
 
 							<block wx:for="{{floor}}" wx:key="index" wx:for-item="group">
@@ -44,8 +43,8 @@
 									<text>{{group.expend}}</text>
 									<view class="rooms-container">
 										<block wx:key="index" wx:for="{{group.rooms}}" wx:for-item="room">
-											<view class="room-item" bindtap="selectResult" data-selected="{{room}}">
-												<view>{{room.name+' '+room.name2}}</view>
+											<view class="room-item" data-selected="{{room}}">
+												{{room.name+' '+room.name2}}
 											</view>
 										</block>
 									</view>

@@ -60,8 +60,10 @@ Page({
      * @description 选中搜索结果后触发
      */
     selectResult: function (e) {
-        var target = e.currentTarget.dataset.selected
-		//向index页面传递数据，并返回至index页面
+        // console.log(e.currentTarget.dataset.selected,e.target.dataset.selected)
+        var target = e.currentTarget.dataset.selected || e.target.dataset.selected;
+        if(!target) return;
+		// 向index页面传递数据，并返回至index页面
 		const eventChannel = this.getOpenerEventChannel()
 		eventChannel.emit('selectedPoint', {data: target});
 		wx.navigateBack({
