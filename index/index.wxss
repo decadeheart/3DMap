@@ -221,7 +221,7 @@
 
 .compass span{    
     color:#000; 
-    font-size:20rpx;
+    font-size:100rpx;
     /* box-shadow:  1rpx 1rpx 1rpx rgb(98,165,220); */
     /* border: 1rpx solid rgb(98,165,220); */
     border-radius:  50%;
