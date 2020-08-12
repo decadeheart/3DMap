@@ -30,7 +30,7 @@ Page({
             },
         ],
         compassAngle: "",
-        isAndroid: false,
+        isAndroid: true,
     },
 
     onLoad: function () {
