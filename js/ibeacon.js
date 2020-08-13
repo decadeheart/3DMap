@@ -63,7 +63,7 @@ function matchRecord(obj) {
         if (obj.major == app.beaconCoordinate[i].major && obj.minor == app.beaconCoordinate[i].minor) {
             //rssi表示设备的信号强度
             let beaCor = {
-                rssi: obj.rssi
+                rssi: obj.rssi,
             };
             let ret = util.extendObj(beaCor, app.beaconCoordinate[i]);
 
@@ -91,13 +91,13 @@ function getMaxPossiblePoint() {
             for (i; i < temp.length; i++) {
                 if (temp[i].major === list[j].major && temp[i].minor === list[j].minor) {
                     //算法获得每一个信标的加权进行判断
-                    temp[i].count += blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 6);
+                    temp[i].count += blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 20);
                     break;
                 }
             }
 
             if (i === temp.length) {
-                list[j].count = blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 6);
+                list[j].count = blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 20);
 
                 temp.push(list[j]);
             }
@@ -132,7 +132,4 @@ function match2getFloor(point) {
     }
 }
 
-export {
-    beaconUpdate,
-    match2getFloor
-};
+export { beaconUpdate, match2getFloor };

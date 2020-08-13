@@ -1,7 +1,7 @@
-var app=getApp();
-import {getSearchData} from "../js/data";
+var app = getApp();
+import { getSearchData } from "../js/data";
 Page({
-	data: {
+    data: {
         searchResult: [],
         buildingList: [],
         buildingIndex: 0,
@@ -10,27 +10,25 @@ Page({
         buildingRoomGroup: [],
         searchHidden: true,
         floorIndex: 0,
-		searchTitle: app.map_conf.map_name,
-	},
-	onLoad: function () {
-		// console.log(this.data)
-		let buildingDataTmp=getSearchData();
-		// 将其变成一维数组，方便遍历
-		let eachFloor = [].concat(...buildingDataTmp[1]);
-		eachFloor = [].concat(...eachFloor);
-		this.setData({
-			buildingList: buildingDataTmp[0],
-			buildingData: buildingDataTmp[1],
-			buildingRoomGroup: buildingDataTmp[2],
-			searchResult: eachFloor,
-			buildingData1D: eachFloor,
-			modalSearch: this.modalSearch.bind(this),
-		});
-	},
-	onShow:function(){
-
-	},
-	 /**
+        searchTitle: app.map_conf.map_name,
+    },
+    onLoad: function () {
+        // console.log(this.data)
+        let buildingDataTmp = getSearchData();
+        // 将其变成一维数组，方便遍历
+        let eachFloor = [].concat(...buildingDataTmp[1]);
+        eachFloor = [].concat(...eachFloor);
+        this.setData({
+            buildingList: buildingDataTmp[0],
+            buildingData: buildingDataTmp[1],
+            buildingRoomGroup: buildingDataTmp[2],
+            searchResult: eachFloor,
+            buildingData1D: eachFloor,
+            modalSearch: this.modalSearch.bind(this),
+        });
+    },
+    onShow: function () {},
+    /**
      * @description 搜索
      */
     modalSearch(e) {
@@ -47,8 +45,8 @@ Page({
             });
         }
         return new Promise(() => {});
-	},
-	    /**
+    },
+    /**
      * @description 搜索提示框隐藏和显示
      */
     switchHidden() {
@@ -62,13 +60,13 @@ Page({
     selectResult: function (e) {
         // console.log(e.currentTarget.dataset.selected,e.target.dataset.selected)
         var target = e.currentTarget.dataset.selected || e.target.dataset.selected;
-        if(!target) return;
-		// 向index页面传递数据，并返回至index页面
-		const eventChannel = this.getOpenerEventChannel()
-		eventChannel.emit('selectedPoint', {data: target});
-		wx.navigateBack({
-			delta: 0,
-		})
+        if (!target) return;
+        // 向index页面传递数据，并返回至index页面
+        const eventChannel = this.getOpenerEventChannel();
+        eventChannel.emit("selectedPoint", { data: target });
+        wx.navigateBack({
+            delta: 0,
+        });
     },
     /**
      * @description 搜索栏切换tab
@@ -78,8 +76,7 @@ Page({
         let index = e.target.dataset.tapindex;
         this.setData({
             buildingIndex: index,
-		});
-		
+        });
     },
     /**
      * @description 显示该楼层的具体房间，如果重复选择该层，则隐藏
@@ -91,5 +88,5 @@ Page({
         this.setData({
             floorIndex: index,
         });
-    }
-})
+    },
+});
