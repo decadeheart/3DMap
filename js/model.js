@@ -302,15 +302,9 @@ export function displayAllFloor() {
      */
     function setVisible(obj) {
         obj.visible = true;
-        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
-        if (obj.name.indexOf("outside") !== -1) {
-            obj.visible = true;
-            return;
-        } else {
-            obj.children.forEach(function (child) {
-                setVisible(child);
-            });
-        }
+        obj.children.forEach(function (child) {
+            setVisible(child);
+        });
     }
 }
 /**
@@ -348,7 +342,7 @@ export function displayOneFloor(floor) {
                 setVisible(child);
             });
         }
-        if (obj.name === "user") {
+        if (obj.name === "user" || obj.name === "sprite" + floor) {
             obj.visible = true;
         }
     }
@@ -394,7 +388,7 @@ export function displayTwoFloor(floor1, floor2) {
                 setVisible(child);
             });
         }
-        if (obj.name === "user") {
+        if (obj.name === "user" || obj.name === "sprite" + floor1 || obj.name === "sprite" + floor2) {
             obj.visible = true;
         }
     }
