@@ -12,14 +12,14 @@
     height: 100%;
     /* background-color: wheat; */
     z-index: -1;
-}
+} 
 
 .map-android {
     position: fixed;
     width: 82%;
-    height: 75%;
+    height: 73%;
     /* background-color: wheat; */
-    top:12%;
+    top:13%;
     left:3%;
     z-index: -1;   
 }
@@ -35,13 +35,13 @@
 /* 正上方搜索框 包括上下留白 16% */
 .search {
     position: absolute;
-    top: 0%;
+    top: 1%;
     left: 50%;
     transform: translate(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 5%;
+    height: 7%;
     width: 95%;
     margin: 0 auto;
     border: 2rpx solid gainsboro;
@@ -67,7 +67,7 @@
     transform: translate(-50%);
     top: 0;
     padding-top: 1rpx;
-    width: 95%;
+    width: 100%;
     height: 12%;
     /* background-color: rgba(43, 54, 73, 0.5); */
     background-color: rgba(255, 255, 255, 0.8);
