@@ -553,7 +553,6 @@ export function backToMe() {
     }
     //设置物体可见性
     displayOneFloor(floor);
-    SPRITE.loadTargetTextByFloor(scene, floor);
 
     map.curFloor = floor;
     camera.fov = 30;

@@ -136,7 +136,6 @@ main.displayAllFloor = function () {
 main.displayOneFloor = function (floor) {
     if (floor == app.map.curFloor) return;
     MODEL.displayOneFloor(floor);
-    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.displayTwoFloor = (floor1, floor2) => {
     MODEL.displayTwoFloor(floor1, floor2);

@@ -1,3 +1,4 @@
+import * as SPRITE from "./sprite";
 //加载模型到场景中
 
 var app = getApp();
@@ -30,6 +31,7 @@ export function loadModelByFloor(scene, floor) {
             );
         }
     });
+    SPRITE.loadTargetTextByFloor(scene, floor);
 }
 /**
  * @description 设置楼层//并将场景元素添加进map.groundMeshes中
