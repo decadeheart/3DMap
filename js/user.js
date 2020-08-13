@@ -20,8 +20,6 @@ const userControl = {
             let y = me.position.y + Math.cos(me.radian) * distance;
             if (!(app.systemControl.state === "navigating" && !app.systemControl.realMode)) {
                 userControl.changePosition(x, y, null, "animation");
-
-
             }
             map.preStep = map.stepCount;
         }
@@ -32,11 +30,8 @@ const userControl = {
     initUser: function (x, y, z) {
         let me = app.me
         userControl.isInitUser = true;
-
         userControl.changePosition(x, y, z, 'direction');
-
         me.floor = app.map.curFloor;
-
         userControl.changeRotation(null, null, 0);
     },
     /**
@@ -75,7 +70,6 @@ const userControl = {
                 me.rotation.y = y;
                 me.rotation.z = z;
             }
-
         }
     },
     /**
@@ -109,7 +103,6 @@ const userControl = {
                 meTween.start();
                 break;
         }
-
     }
 }
 

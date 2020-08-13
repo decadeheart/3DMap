@@ -102,7 +102,7 @@ export function autoMoving(path) {
                 },
                 1000
             )
-            .onStart(function () { })
+            .onStart(function () {})
             .onComplete(function () {
                 //结束时朝向和路的方向一致
                 rotate(i);
@@ -123,10 +123,7 @@ export function autoMoving(path) {
 
         let angle = util.figureVectorAngle(
             new THREE.Vector2(0, 1),
-            new THREE.Vector2(
-                path[i + 1].x - path[i].x,
-                path[i + 1].y - path[i].y
-            )
+            new THREE.Vector2(path[i + 1].x - path[i].x, path[i + 1].y - path[i].y)
         );
 
         if (angle < 0) {
@@ -135,7 +132,6 @@ export function autoMoving(path) {
 
         let A = null;
         if (angle - me.rotation.z > Math.PI) {
-
             A = new TWEEN.Tween(me.rotation)
                 .to(
                     {
@@ -145,7 +141,7 @@ export function autoMoving(path) {
                     },
                     (Math.abs(me.rotation.z - 0) / Math.PI) * 1000
                 )
-                .onStart(function () { })
+                .onStart(function () {})
                 .onComplete(function () {
                     me.rotation.z = Math.PI * 2;
 
@@ -165,7 +161,7 @@ export function autoMoving(path) {
                     me.rotation.z = 0;
                     rotate(i);
                 })
-                .onStart(function () { });
+                .onStart(function () {});
         } else {
             A = new TWEEN.Tween(me.rotation)
                 .to(
