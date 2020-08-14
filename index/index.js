@@ -15,10 +15,10 @@ Page({
         startPointName: "我的位置",
         endPointName: "华中科技大学",
         navInformation: "前方路口右转",
-        currentPointName: "华中科技大学",
+        currentPointName: "请点击地图选择位置",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
-        infoFlag: 0,
+        infoFlag: 1,
         showBlue: false,
         step: 0,
         buttons: [
@@ -35,7 +35,6 @@ Page({
 
     onLoad: function () {
         var that = this;
-
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -193,6 +192,16 @@ Page({
      * @date 2020-07-20
      */
     setStartPoint: util.throttle(function () {
+        if(this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });     
+            return;      
+        }
         main.setStartClick();
         let self = this;
         this.setData({
@@ -220,6 +229,16 @@ Page({
      * @date 2020-07-20
      */
     setEndPoint: util.throttle(function () {
+        if(this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });      
+            return;      
+        }
         main.setEndClick();
         let self = this;
         this.setData({
@@ -248,6 +267,16 @@ Page({
      * @description 按钮“到这里去”的点击事件
      */
     goThere: util.throttle(function () {
+        if(this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });      
+            return;      
+        }
         main.setEndClick();
         main.setStartMe();
         let self = this;
