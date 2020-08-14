@@ -286,13 +286,13 @@ Page({
      * @description 开始导航
      */
     startNavigate: util.throttle(function () {
-        let self = this;
-        app.systemControl.state = "navigating";
+        let self = this;        
         app.systemControl.realMode = true;
         app.navigateFlag = 1;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
             let dis = main.navigateInit();
+            app.systemControl.state = "navigating";
             main.backToMe();
             self.setData({
                 navFlag: 3,
