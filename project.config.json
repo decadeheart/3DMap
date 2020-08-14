@@ -29,7 +29,7 @@
 	},
 	"appid": "wx5387df6615f202ed",
 	"projectname": "3dMap",
-	"libVersion": "2.12.0",
+	"libVersion": "2.12.1",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"compileType": "miniprogram",

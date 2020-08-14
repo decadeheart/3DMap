@@ -177,8 +177,6 @@ export function cameraExchange(index) {
 export function showSprite(sprite, point, type) {
     let routeClass = app.routeClass;
     if (sprite != null) {
-        sprite.position.set(point.x, point.y, point.z + 5);
-        sprite.visible = true;
         if (type == "start") {
             routeClass.startPoint = point;
         } else if (type == "end") {
@@ -186,10 +184,20 @@ export function showSprite(sprite, point, type) {
         }
         if (!!app.pathControl.pathGroup) {
             scene.remove(app.pathControl.pathGroup);
-        }
+        }        
+        sprite.position.set(point.x, point.y, point.z + 5);
+        sprite.visible = true;
+
     } else {
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
+
+        if (type == "start") {
+            routeClass.startPoint = point;
+        } else if (type == "end") {
+            routeClass.endPoint = point;
+        }
+
 
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
@@ -214,10 +222,8 @@ export function showSprite(sprite, point, type) {
                 app.spriteControl.curSprite = sprite;
             } else if (type == "start") {
                 app.spriteControl.startSprite = sprite;
-                routeClass.startPoint = point;
             } else if (type == "end") {
                 app.spriteControl.endSprite = sprite;
-                routeClass.endPoint = point;
             }
         });
     }

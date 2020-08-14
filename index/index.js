@@ -199,23 +199,21 @@ Page({
             startPointName: this.data.currentPointName,
         });
 
-        setTimeout(function () {
-            if (!!app.spriteControl.endSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.displayOneFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
-                }
+        if (!!app.spriteControl.endSprite) {
+            let dis = main.navigateInit();
+            self.setData({
+                navFlag: 2,
+                infoFlag: 2,
+                distanceInfo: dis,
+            });
+            let startFloor = app.routeClass.startPoint.floor;
+            let endFloor = app.routeClass.endPoint.floor;
+            if (startFloor == endFloor) {
+                main.displayOneFloor(startFloor);
+            } else {
+                main.displayTwoFloor(startFloor, endFloor);
             }
-        }, 50);
+        }
     }, 300),
     /**
      * @description 设置终点
@@ -228,23 +226,23 @@ Page({
             endPointName: this.data.currentPointName,
         });
 
-        setTimeout(function () {
-            if (!!app.spriteControl.startSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.displayOneFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
-                }
+
+        if (!!app.spriteControl.startSprite) {
+            let dis = main.navigateInit();
+            self.setData({
+                navFlag: 2,
+                infoFlag: 2,
+                distanceInfo: dis,
+            });
+            let startFloor = app.routeClass.startPoint.floor;
+            let endFloor = app.routeClass.endPoint.floor;
+            if (startFloor == endFloor) {
+                main.displayOneFloor(startFloor);
+            } else {
+                main.displayTwoFloor(startFloor, endFloor);
             }
-        }, 50);
+        }
+
     }, 300),
     /**
      * @description 按钮“到这里去”的点击事件
@@ -253,25 +251,23 @@ Page({
         main.setEndClick();
         main.setStartMe();
         let self = this;
-        setTimeout(function () {
-            if (!!app.spriteControl.startSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                    endPointName: self.data.currentPointName,
-                    startPointName: "我的位置",
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.displayOneFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
-                }
-            }
-        }, 50);
+
+        let dis = main.navigateInit();
+        self.setData({
+            navFlag: 2,
+            infoFlag: 2,
+            distanceInfo: dis,
+            endPointName: self.data.currentPointName,
+            startPointName: "我的位置",
+        });
+        let startFloor = app.routeClass.startPoint.floor;
+        let endFloor = app.routeClass.endPoint.floor;
+        if (startFloor == endFloor) {
+            main.displayOneFloor(startFloor);
+        } else {
+            main.displayTwoFloor(startFloor, endFloor);
+        }
+
     }, 300),
     /**
      * @description 模拟导航
@@ -296,16 +292,14 @@ Page({
         app.navigateFlag = 1;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
-            setTimeout(function () {
-                let dis = main.navigateInit();
-                main.backToMe();
-                self.setData({
-                    navFlag: 3,
-                    infoFlag: 3,
-                    distanceInfo: dis,
-                    startPointName: "我的位置",
-                });
-            }, 50);
+            let dis = main.navigateInit();
+            main.backToMe();
+            self.setData({
+                navFlag: 3,
+                infoFlag: 3,
+                distanceInfo: dis,
+                startPointName: "我的位置",
+            });
         }
     }, 300),
     /**
