@@ -46,7 +46,6 @@ export function autoMoving(path) {
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
     let floor = path[0].z / app.map_conf.layerHeight + 1;
     MODEL.displayOneFloor(floor);
-    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 
     /**
      * @description 在导航路径上图标向前移动
@@ -75,7 +74,6 @@ export function autoMoving(path) {
         if (path[i].z - path[i - 1].z != 0) {
             let floor = path[i].z / app.map_conf.layerHeight + 1;
             MODEL.displayOneFloor(floor);
-            SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
         }
 
         let newT = { x: path[i].x, y: path[i].y, z: path[i].z + 5 };

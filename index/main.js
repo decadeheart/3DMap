@@ -38,6 +38,7 @@ main.initMap = function (that) {
             let camera = MODEL.getCamera();
 
             navRender();
+            //打开步数监测
             accChange();
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
@@ -90,15 +91,36 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-                        userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                        //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
+                        if(systemControl.state === "navigating") {
+                            let [cur] = app.resultParent.filter((item) => {
+                                return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == point.floor;
+                            });
+                            console.log('cur',cur);
+                            if(!cur) {
+                                userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
 
-                        //动画更新部分
-                        main.changeFocus(nowPoint);
+                                //动画更新部分
+                                main.changeFocus(nowPoint);
+        
+                                lastPoint.x = nowPoint.x;
+                                lastPoint.y = nowPoint.y;
+                                lastPoint.z = nowPoint.z;
+                                lastPoint.floor = nowPoint.floor;                                
+                            }
+                        }else {
+                            //如果不是导航过程当中，只要发生了变化就应该跳转
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
 
-                        lastPoint.x = nowPoint.x;
-                        lastPoint.y = nowPoint.y;
-                        lastPoint.z = nowPoint.z;
-                        lastPoint.floor = nowPoint.floor;
+                            //动画更新部分
+                            main.changeFocus(nowPoint);
+    
+                            lastPoint.x = nowPoint.x;
+                            lastPoint.y = nowPoint.y;
+                            lastPoint.z = nowPoint.z;
+                            lastPoint.floor = nowPoint.floor;
+                        }
+
                     }
                 }
 
@@ -136,7 +158,6 @@ main.displayAllFloor = function () {
 main.displayOneFloor = function (floor) {
     if (floor == app.map.curFloor) return;
     MODEL.displayOneFloor(floor);
-    SPRITE.loadTargetTextByFloor(MODEL.getScene(), floor);
 };
 main.displayTwoFloor = (floor1, floor2) => {
     MODEL.displayTwoFloor(floor1, floor2);

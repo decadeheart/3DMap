@@ -58,7 +58,6 @@ function makeFontSprite(message) {
     texture = null;
     spriteMaterial.dispose();
     spriteMaterial = null;
-
     return sprite;
 }
 /**
@@ -111,7 +110,7 @@ export function loadTargetTextByFloor(scene, floor) {
             spriteGroup.add(sprite);
         }
     });
-    spriteGroup.name = "floor" + floor;
+    spriteGroup.name = "sprite" + floor;
     scene.add(spriteGroup);
     app.spriteControl.targetSprites.push(spriteGroup);
     spriteGroup = null;

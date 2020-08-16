@@ -161,28 +161,44 @@ export function cameraExchange(index) {
     camera.updateProjectionMatrix();
     controls.update();
 }
+
 /**
- * @description 显示精灵
+ * @description  根据不同类型的事件加载不同的贴图
+ * @date 2020-08-14
  * @export
- * @param {*} point 位置
+ * @param {*} sprite 精灵
+ * @param {*} point 点
  * @param {*} type 类型
  */
 export function showSprite(sprite, point, type) {
     let routeClass = app.routeClass;
+    //当精灵不为空时，只需要改变位置
     if (sprite != null) {
-        sprite.position.set(point.x, point.y, point.z + 5);
-        sprite.visible = true;
+        //判断终点和起点并设置,用于计算，位置在前
         if (type == "start") {
             routeClass.startPoint = point;
         } else if (type == "end") {
             routeClass.endPoint = point;
         }
+        //当管状路径不为空时，需要清除路径
         if (!!app.pathControl.pathGroup) {
             scene.remove(app.pathControl.pathGroup);
-        }
+        }        
+        sprite.position.set(point.x, point.y, point.z + 5);
+        sprite.visible = true;
+
     } else {
+        //当精灵为时，需要创建精灵贴图
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
+        
+        //判断终点和起点并设置,用于计算，位置在前
+        if (type == "start") {
+            routeClass.startPoint = point;
+        } else if (type == "end") {
+            routeClass.endPoint = point;
+        }
+
 
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
@@ -202,15 +218,13 @@ export function showSprite(sprite, point, type) {
             sprite.position.set(point.x, point.y, point.z + 5);
             sprite.floor = point.floor;
             scene.add(sprite);
-
+            //这里只是为了存储精灵对象
             if (type == "cur") {
                 app.spriteControl.curSprite = sprite;
             } else if (type == "start") {
                 app.spriteControl.startSprite = sprite;
-                routeClass.startPoint = point;
             } else if (type == "end") {
                 app.spriteControl.endSprite = sprite;
-                routeClass.endPoint = point;
             }
         });
     }
@@ -295,15 +309,9 @@ export function displayAllFloor() {
      */
     function setVisible(obj) {
         obj.visible = true;
-        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
-        if (obj.name.indexOf("outside") !== -1) {
-            obj.visible = true;
-            return;
-        } else {
-            obj.children.forEach(function (child) {
-                setVisible(child);
-            });
-        }
+        obj.children.forEach(function (child) {
+            setVisible(child);
+        });
     }
 }
 /**
@@ -341,7 +349,7 @@ export function displayOneFloor(floor) {
                 setVisible(child);
             });
         }
-        if (obj.name === "user") {
+        if (obj.name === "user" || obj.name === "sprite" + floor) {
             obj.visible = true;
         }
     }
@@ -387,7 +395,7 @@ export function displayTwoFloor(floor1, floor2) {
                 setVisible(child);
             });
         }
-        if (obj.name === "user") {
+        if (obj.name === "user" || obj.name === "sprite" + floor1 || obj.name === "sprite" + floor2) {
             obj.visible = true;
         }
     }
@@ -540,7 +548,6 @@ export function backToMe() {
     }
     //设置物体可见性
     displayOneFloor(floor);
-    SPRITE.loadTargetTextByFloor(scene, floor);
 
     map.curFloor = floor;
     camera.fov = 30;
