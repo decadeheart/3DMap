@@ -1,7 +1,6 @@
 import main from "./main";
 import { openCompass } from "../js/compass";
 import * as util from "../util/util";
-
 var app = getApp();
 Page({
     data: {
@@ -20,7 +19,7 @@ Page({
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
         infoFlag: 1,
         showBlue: false,
-        step: 0,
+        currentFloor: 0,
         buttons: [
             {
                 type: "primary",
@@ -35,6 +34,15 @@ Page({
 
     onLoad: function () {
         var that = this;
+        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
+        Object.defineProperty(app.map,"curFloor",{
+            set:function(val){
+                that.setData({
+                    currentFloor:val
+                })
+            }
+        })
+        
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -113,8 +121,11 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
-        let floor = e.currentTarget.dataset.floor;
-        main.displayOneFloor(floor + 1);
+        let floor =1+ e.currentTarget.dataset.floor;
+        this.setData({
+            currentFloor:floor
+        })
+        main.displayOneFloor(floor);
     }, 300),
     /**
      * @description 切换起点终点

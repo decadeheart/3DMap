@@ -211,10 +211,19 @@
     height: 50rpx;
     margin: 5rpx 0;
     border-bottom: 2rpx solid #ccc;
+    filter: grayscale(100%);
 }
-
+/* .floor-item:hover{
+    filter: brightness(100%);
+    transform: scale(1.15, 1.15);
+} */
+.floor-item-hover{
+    filter: brightness(100%);
+    transform: scale(1.15, 1.15);
+}
 .floor-item:last-child {
     border-bottom: 0;
+    
 }
 
 .floor-space {
@@ -324,7 +333,13 @@
     height: 100%;
     width: 50%;
     font-size: 28rpx;
+    transition: 0.3s;
     /* flex: 1; */
+}
+.settingBox view:hover{
+    font-weight: bolder;
+    transform: scale(1.15, 1.15);
+    opacity: 0.9;
 }
 
 .settingBox view:nth-child(-n + 2) {

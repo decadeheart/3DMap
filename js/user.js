@@ -1,6 +1,5 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as util from "../util/util"
-
 var app = getApp();
 
 const userControl = {

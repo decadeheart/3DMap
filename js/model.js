@@ -550,6 +550,7 @@ export function backToMe() {
     displayOneFloor(floor);
 
     map.curFloor = floor;
+
     camera.fov = 30;
     camera.updateProjectionMatrix();
 
