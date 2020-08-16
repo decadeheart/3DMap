@@ -213,10 +213,10 @@
     border-bottom: 2rpx solid #ccc;
     filter: grayscale(100%);
 }
-/* .floor-item:hover{
+.floor-item:hover{
     filter: brightness(100%);
     transform: scale(1.15, 1.15);
-} */
+}
 .floor-item-hover{
     filter: brightness(100%);
     transform: scale(1.15, 1.15);

@@ -58,9 +58,9 @@ function getDirectionText(index) {
             i = i + 1;
         }
         if (resultParent[i].floor > resultParent[index].floor) {
-            text = "从电梯到达" + resultParent[i].floor + "楼";
+            text = "从电梯/楼梯到达" + resultParent[i].floor + "楼";
         } else if (resultParent[i].floor < resultParent[index].floor) {
-            text = "从电梯到达" + resultParent[i].floor + "楼";
+            text = "从电梯/楼梯到达" + resultParent[i].floor + "楼";
         } else {
             text = "直行";
         }
