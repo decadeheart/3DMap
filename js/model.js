@@ -1,14 +1,9 @@
 //关于模型的各类操作
-import {
-    registerGLTFLoader
-} from "../util/gltf-loader"; //将GLTFLoader注入到THREE
+import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as SPRITE from "./sprite";
-import {
-    loadGround,
-    loadModelByFloor
-} from "./loadModel"; //加载模型
+import { loadGround, loadModelByFloor } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as util from "../util/util";
 
@@ -76,9 +71,7 @@ export function renderModel(canvasDom, Three) {
         renderer.gammaFactor = 2.2;
 
         //加载手势控制器，有MapControls和OrbitControls两种操作方式
-        const {
-            MapControls
-        } = registerOrbit(THREE);
+        const { MapControls } = registerOrbit(THREE);
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
@@ -92,7 +85,7 @@ export function renderModel(canvasDom, Three) {
         //正交投影照相机
         let camera2 = new THREE.OrthographicCamera(-10, 10, 10, -10, 5, 300);
         renderer = new THREE.WebGLRenderer({
-            alpha: true
+            alpha: true,
         });
         camera2.position.set(0, 0, 200);
         camera2.lookAt(new THREE.Vector3(0, 0, 0));
@@ -141,10 +134,10 @@ export function addUser() {
             map: texture,
             transparent: true,
             opacity: 1,
-            depthTest: false,
+            depthTest: true,
         });
         app.me = new THREE.Mesh(usergeometry, material);
-        userControl.initUser(5, 0, 0);
+        userControl.initUser(5, 0, 5);
         scene.add(app.me);
     });
 }
@@ -168,28 +161,44 @@ export function cameraExchange(index) {
     camera.updateProjectionMatrix();
     controls.update();
 }
+
 /**
- * @description 显示精灵
+ * @description  根据不同类型的事件加载不同的贴图
+ * @date 2020-08-14
  * @export
- * @param {*} point 位置
+ * @param {*} sprite 精灵
+ * @param {*} point 点
  * @param {*} type 类型
  */
 export function showSprite(sprite, point, type) {
     let routeClass = app.routeClass;
+    //当精灵不为空时，只需要改变位置
     if (sprite != null) {
-        sprite.position.set(point.x, point.y, point.z + 5);
-        sprite.visible = true;
+        //判断终点和起点并设置,用于计算，位置在前
         if (type == "start") {
             routeClass.startPoint = point;
         } else if (type == "end") {
             routeClass.endPoint = point;
         }
+        //当管状路径不为空时，需要清除路径
         if (!!app.pathControl.pathGroup) {
             scene.remove(app.pathControl.pathGroup);
-        }
+        }        
+        sprite.position.set(point.x, point.y, point.z + 5);
+        sprite.visible = true;
+
     } else {
+        //当精灵为时，需要创建精灵贴图
         let map_conf = app.map_conf;
         let textureLoader = new THREE.TextureLoader();
+        
+        //判断终点和起点并设置,用于计算，位置在前
+        if (type == "start") {
+            routeClass.startPoint = point;
+        } else if (type == "end") {
+            routeClass.endPoint = point;
+        }
+
 
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
@@ -209,15 +218,13 @@ export function showSprite(sprite, point, type) {
             sprite.position.set(point.x, point.y, point.z + 5);
             sprite.floor = point.floor;
             scene.add(sprite);
-
+            //这里只是为了存储精灵对象
             if (type == "cur") {
                 app.spriteControl.curSprite = sprite;
             } else if (type == "start") {
                 app.spriteControl.startSprite = sprite;
-                routeClass.startPoint = point;
             } else if (type == "end") {
                 app.spriteControl.endSprite = sprite;
-                routeClass.endPoint = point;
             }
         });
     }
@@ -351,7 +358,7 @@ export function displayOneFloor(floor) {
 /**
  * @description 显示指定的两个楼层
  * @export
- * @param {*} floor1 楼层1 
+ * @param {*} floor1 楼层1
  * @param {*} floor2 楼层2
  */
 export function displayTwoFloor(floor1, floor2) {
@@ -378,7 +385,7 @@ export function displayTwoFloor(floor1, floor2) {
      * @returns
      */
     function setVisible(obj) {
-        (parseInt(obj.floor) === floor1 || parseInt(obj.floor) === floor2) ? (obj.visible = true) : (obj.visible = false);
+        parseInt(obj.floor) === floor1 || parseInt(obj.floor) === floor2 ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
@@ -431,11 +438,7 @@ export function createPathTube(path) {
     for (let i = 1; i < path.length; i++) {
         if (path[i].floor !== path[i - 1].floor) {
             pointlist.push([
-                new THREE.Vector3(
-                    path[i - 1].x,
-                    path[i - 1].y,
-                    path[i - 1].z + map_conf.lineHeight
-                ),
+                new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map_conf.lineHeight),
                 new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight),
             ]);
             floorlist.push(path[i - 1].floor);
@@ -444,9 +447,7 @@ export function createPathTube(path) {
             pointlist.push(line);
             floorlist.push(path[i].floor);
         } else {
-            pointlist[pointlist.length - 1].push(
-                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)
-            );
+            pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
         }
     }
     pointlist.forEach(function (line, i) {
@@ -536,7 +537,7 @@ export function backToMe() {
     let poi = {
         x: point.x,
         y: point.y,
-        z: point.z
+        z: point.z,
     };
     let L = 200; //相机与用户（me）之间的距离
     let me = app.me;
@@ -549,13 +550,14 @@ export function backToMe() {
     displayOneFloor(floor);
 
     map.curFloor = floor;
+
     camera.fov = 30;
     camera.updateProjectionMatrix();
 
     let newP = {
         x: poi.x - L * Math.sin(me.radian),
         y: poi.y - L * Math.cos(me.radian),
-        z: 300
+        z: 300,
     };
     animateCamera(camera.position, controls.target, newP, poi);
 }
@@ -578,14 +580,15 @@ export function animateCamera(current1, target1, current2, target2) {
     //关闭控制器
     controls.enabled = false;
     var tween = new TWEEN.Tween(positionVar);
-    tween.to({
-        x1: current2.x,
-        y1: current2.y,
-        z1: current2.z,
-        x2: target2.x,
-        y2: target2.y,
-        z2: target2.z,
-    },
+    tween.to(
+        {
+            x1: current2.x,
+            y1: current2.y,
+            z1: current2.z,
+            x2: target2.x,
+            y2: target2.y,
+            z2: target2.z,
+        },
         1000
     );
 
@@ -623,5 +626,5 @@ export function stopNav() {
     app.routeClass.endPoint = {};
 
     let point = app.localization.nowBluePosition;
-    userControl.changePosition(point.x, point.y, point.z, "animation")
+    userControl.changePosition(point.x, point.y, point.z, "animation");
 }

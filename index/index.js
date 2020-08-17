@@ -1,7 +1,6 @@
 import main from "./main";
 import { openCompass } from "../js/compass";
 import * as util from "../util/util";
-
 var app = getApp();
 Page({
     data: {
@@ -15,12 +14,12 @@ Page({
         startPointName: "我的位置",
         endPointName: "华中科技大学",
         navInformation: "前方路口右转",
-        currentPointName: "华中科技大学",
+        currentPointName: "请点击地图选择位置",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
-        infoFlag: 0,
+        infoFlag: 1,
         showBlue: false,
-        step: 0,
+        currentFloor: 0,
         buttons: [
             {
                 type: "primary",
@@ -35,7 +34,15 @@ Page({
 
     onLoad: function () {
         var that = this;
-
+        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
+        Object.defineProperty(app.map,"curFloor",{
+            set:function(val){
+                that.setData({
+                    currentFloor:val
+                })
+            }
+        })
+        
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -114,8 +121,11 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
-        let floor = e.currentTarget.dataset.floor;
-        main.displayOneFloor(floor + 1);
+        let floor =1+ e.currentTarget.dataset.floor;
+        this.setData({
+            currentFloor:floor
+        })
+        main.displayOneFloor(floor);
     }, 300),
     /**
      * @description 切换起点终点
@@ -193,85 +203,111 @@ Page({
      * @date 2020-07-20
      */
     setStartPoint: util.throttle(function () {
+        if(this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });     
+            return;      
+        }
         main.setStartClick();
         let self = this;
         this.setData({
             startPointName: this.data.currentPointName,
         });
 
-        setTimeout(function () {
-            if (!!app.spriteControl.endSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.displayOneFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
-                }
+        if (!!app.spriteControl.endSprite) {
+            let dis = main.navigateInit();
+            self.setData({
+                navFlag: 2,
+                infoFlag: 2,
+                distanceInfo: dis,
+            });
+            let startFloor = app.routeClass.startPoint.floor;
+            let endFloor = app.routeClass.endPoint.floor;
+            if (startFloor == endFloor) {
+                main.displayOneFloor(startFloor);
+            } else {
+                main.displayTwoFloor(startFloor, endFloor);
             }
-        }, 50);
+        }
     }, 300),
     /**
      * @description 设置终点
      * @date 2020-07-20
      */
     setEndPoint: util.throttle(function () {
+        if(this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });      
+            return;      
+        }
         main.setEndClick();
         let self = this;
         this.setData({
             endPointName: this.data.currentPointName,
         });
 
-        setTimeout(function () {
-            if (!!app.spriteControl.startSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.displayOneFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
-                }
+
+        if (!!app.spriteControl.startSprite) {
+            let dis = main.navigateInit();
+            self.setData({
+                navFlag: 2,
+                infoFlag: 2,
+                distanceInfo: dis,
+            });
+            let startFloor = app.routeClass.startPoint.floor;
+            let endFloor = app.routeClass.endPoint.floor;
+            if (startFloor == endFloor) {
+                main.displayOneFloor(startFloor);
+            } else {
+                main.displayTwoFloor(startFloor, endFloor);
             }
-        }, 50);
+        }
+
     }, 300),
     /**
      * @description 按钮“到这里去”的点击事件
      */
     goThere: util.throttle(function () {
+        if(this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });      
+            return;      
+        }
         main.setEndClick();
         main.setStartMe();
         let self = this;
-        setTimeout(function () {
-            if (!!app.spriteControl.startSprite) {
-                let dis = main.navigateInit();
-                self.setData({
-                    navFlag: 2,
-                    infoFlag: 2,
-                    distanceInfo: dis,
-                    endPointName: self.data.currentPointName,
-                    startPointName: "我的位置",
-                });
-                let startFloor = app.routeClass.startPoint.floor;
-                let endFloor = app.routeClass.endPoint.floor;
-                if (startFloor == endFloor) {
-                    main.displayOneFloor(startFloor);
-                } else {
-                    main.displayTwoFloor(startFloor, endFloor);
-                }
-            }
-        }, 50);
+
+        let dis = main.navigateInit();
+        self.setData({
+            navFlag: 2,
+            infoFlag: 2,
+            distanceInfo: dis,
+            endPointName: self.data.currentPointName,
+            startPointName: "我的位置",
+        });
+        let startFloor = app.routeClass.startPoint.floor;
+        let endFloor = app.routeClass.endPoint.floor;
+        if (startFloor == endFloor) {
+            main.displayOneFloor(startFloor);
+        } else {
+            main.displayTwoFloor(startFloor, endFloor);
+        }
+
     }, 300),
     /**
      * @description 模拟导航
@@ -290,23 +326,20 @@ Page({
      * @description 开始导航
      */
     startNavigate: util.throttle(function () {
-        let self = this;
-        app.systemControl.state = "navigating";
+        let self = this;        
         app.systemControl.realMode = true;
         app.navigateFlag = 1;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
             let dis = main.navigateInit();
-                main.backToMe();
-                self.setData({
-                    navFlag: 3,
-                    infoFlag: 3,
-                    distanceInfo: dis,
-                    startPointName: "我的位置",
-                });
-            // setTimeout(function () {
-                
-            // }, 50);
+            app.systemControl.state = "navigating";
+            main.backToMe();
+            self.setData({
+                navFlag: 3,
+                infoFlag: 3,
+                distanceInfo: dis,
+                startPointName: "我的位置",
+            });
         }
     }, 300),
     /**

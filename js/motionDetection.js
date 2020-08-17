@@ -1,4 +1,4 @@
-import userControl from "./user"
+import userControl from "./user";
 //存放三轴数据
 let oriValues = [];
 //当前传感器的值
@@ -12,9 +12,7 @@ function accChange() {
         oriValues[0] = res.x;
         oriValues[1] = res.y;
         oriValues[2] = res.z;
-        gravityNew = Math.sqrt(
-            oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]
-        );
+        gravityNew = Math.sqrt(oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]);
         detectorNewStep(gravityNew);
     });
 }
@@ -49,10 +47,7 @@ function detectorNewStep(values) {
     } else {
         if (detectorPeak(values, gravityOld)) {
             timeOfNow = Date.now();
-            if (
-                timeOfNow - timeOfLastPeak >= TimeInterval &&
-                peakOfWave - valleyOfWave >= ThreadValue
-            ) {
+            if (timeOfNow - timeOfLastPeak >= TimeInterval && peakOfWave - valleyOfWave >= ThreadValue) {
                 timeOfThisPeak = timeOfNow;
                 /*
                  * 更新界面的处理，不涉及到算法
@@ -66,10 +61,7 @@ function detectorNewStep(values) {
                 userControl.moveDetect();
             }
 
-            if (
-                timeOfNow - timeOfLastPeak >= TimeInterval &&
-                peakOfWave - valleyOfWave >= InitialValue
-            ) {
+            if (timeOfNow - timeOfLastPeak >= TimeInterval && peakOfWave - valleyOfWave >= InitialValue) {
                 timeOfThisPeak = timeOfNow;
             }
 

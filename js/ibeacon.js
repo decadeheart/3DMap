@@ -63,7 +63,7 @@ function matchRecord(obj) {
         if (obj.major == app.beaconCoordinate[i].major && obj.minor == app.beaconCoordinate[i].minor) {
             //rssi表示设备的信号强度
             let beaCor = {
-                rssi: obj.rssi
+                rssi: obj.rssi,
             };
             let ret = util.extendObj(beaCor, app.beaconCoordinate[i]);
 
@@ -132,7 +132,4 @@ function match2getFloor(point) {
     }
 }
 
-export {
-    beaconUpdate,
-    match2getFloor
-};
+export { beaconUpdate, match2getFloor };

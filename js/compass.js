@@ -1,5 +1,4 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
-import * as MODEL from "./model";
 var app = getApp();
 /**
  * @description 打开罗盘，转动指南针
@@ -7,8 +6,7 @@ var app = getApp();
  */
 export function openCompass(that) {
     wx.startCompass({
-        success: (res) => {
-        },
+        success: (res) => {},
         fail: (res) => {
             console.log(res);
         },
@@ -28,7 +26,14 @@ export function openCompass(that) {
             else if (curAngle > 225 && curAngle <= 315) curAngle = 270;
             else curAngle = 0;
 
-            let radian = (curAngle / 360) * 2 * Math.PI;
+            let radian;
+            if(curAngle<180){
+                radian = (curAngle / 360) * 2 * Math.PI;
+            }
+            else{
+                radian = ((curAngle-360) / 360) * 2 * Math.PI;
+            }
+
 
             if (cnt > 0) {
                 rotate(radian);

@@ -1,28 +1,25 @@
 {
-  "pages": [
-    "index/index",
-    "search/search"
-  ],
-  "permission": {
-    "scope.userLocation": {
-      "desc": "你的位置信息将用于小程序导航"
+    "pages": ["index/index", "search/search"],
+    "permission": {
+        "scope.userLocation": {
+            "desc": "你的位置信息将用于小程序导航"
+        }
+    },
+    "window": {
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "智慧标识导航系统",
+        "navigationStyle": "default",
+        "navigationBarTextStyle": "black",
+        "enablePullDownRefresh": false
+    },
+    "sitemapLocation": "sitemap.json",
+    "useExtendedLib": {
+        "weui": true
+    },
+    "plugins": {
+        "WechatSI": {
+            "version": "0.3.4",
+            "provider": "wx069ba97219f66d99"
+        }
     }
-  },
-  "window": {
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "智慧标识导航系统",
-    "navigationStyle":"default",
-    "navigationBarTextStyle": "black",
-    "enablePullDownRefresh": false
-  },
-  "sitemapLocation": "sitemap.json",
-  "useExtendedLib": {
-    "weui": true
-  },
-  "plugins": {
-    "WechatSI": {
-      "version": "0.3.4",
-      "provider": "wx069ba97219f66d99"
-    }
-  }
 }
