@@ -328,7 +328,7 @@ Page({
     startNavigate: util.throttle(function () {
         let self = this;        
         app.systemControl.realMode = true;
-        app.navigateFlag = 1;
+        app.navigateFlag = 2;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
             let dis = main.navigateInit();

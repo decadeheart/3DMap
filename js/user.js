@@ -17,7 +17,10 @@ const userControl = {
             }
             let x = me.position.x + Math.sin(me.radian) * distance;
             let y = me.position.y + Math.cos(me.radian) * distance;
-            if (!(app.systemControl.state === "navigating" && !app.systemControl.realMode)) {
+
+            //当是非导航状态并且是真实模式的情况下可以移动
+            if (app.navigateFlag != 1) {
+                console.log('move');
                 userControl.changePosition(x, y, null, "animation");
             }
             map.preStep = map.stepCount;
