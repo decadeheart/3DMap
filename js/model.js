@@ -141,10 +141,10 @@ export function addUser() {
             map: texture,
             transparent: true,
             opacity: 1,
-            depthTest: false,
+            depthTest: true,
         });
         app.me = new THREE.Mesh(usergeometry, material);
-        userControl.initUser(5, 0, 0);
+        userControl.initUser(5, 0, 5);
         scene.add(app.me);
     });
 }
