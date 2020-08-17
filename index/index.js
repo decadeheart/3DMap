@@ -296,8 +296,7 @@ Page({
         app.navigateFlag = 1;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
-            setTimeout(function () {
-                let dis = main.navigateInit();
+            let dis = main.navigateInit();
                 main.backToMe();
                 self.setData({
                     navFlag: 3,
@@ -305,7 +304,9 @@ Page({
                     distanceInfo: dis,
                     startPointName: "我的位置",
                 });
-            }, 50);
+            // setTimeout(function () {
+                
+            // }, 50);
         }
     }, 300),
     /**
