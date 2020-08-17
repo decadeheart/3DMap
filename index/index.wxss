@@ -161,12 +161,38 @@
     text-align: center;
     color: #fff;
 }
+/* 指南针 */
+.compass1 {
+    position: absolute;
+    bottom: 16.5%;
+    right: 5%;
+    transition: transform 0.5s;
+    z-index: 10;
+}
+.compass{
+    position: absolute;
+    top: 12%;
+    right: 2%;
+    transition: transform 0.5s;
+    z-index: 10;
+}
+
+.compass1 span{    
+    color:#000; 
+    font-size:75rpx;
+    border-radius:  50%;
+}
+.compass span{    
+    color:#000; 
+    font-size:75rpx;
+    border-radius:  50%;
+}
 
 /* <!-- 右侧楼层容器 --> */
 .floor-container {
     position: absolute;
     overflow: hidden;
-    top: 30%;
+    top: 24%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -185,10 +211,19 @@
     height: 50rpx;
     margin: 5rpx 0;
     border-bottom: 2rpx solid #ccc;
+    filter: grayscale(100%);
 }
-
+.floor-item:hover{
+    filter: brightness(100%);
+    transform: scale(1.15, 1.15);
+}
+.floor-item-hover{
+    filter: brightness(100%);
+    transform: scale(1.15, 1.15);
+}
 .floor-item:last-child {
     border-bottom: 0;
+    
 }
 
 .floor-space {
@@ -196,32 +231,6 @@
     height: 15rpx;
 }
 
-/* <!-- 右下角指南针 > */
-.compass1 {
-    position: absolute;
-    bottom: 16.5%;
-    right: 5%;
-    transition: transform 0.5s;
-    z-index: 10;
-}
-.compass{
-    position: absolute;
-    top: 18%;
-    right: 2%;
-    transition: transform 0.5s;
-    z-index: 10;
-}
-
-.compass1 span{    
-    color:#000; 
-    font-size:75rpx;
-    border-radius:  50%;
-}
-.compass span{    
-    color:#000; 
-    font-size:75rpx;
-    border-radius:  50%;
-}
 /* <!-- 右下角定位  --> */
 .myLocation1 {
     position: absolute;
@@ -324,7 +333,13 @@
     height: 100%;
     width: 50%;
     font-size: 28rpx;
+    transition: 0.3s;
     /* flex: 1; */
+}
+.settingBox view:hover{
+    font-weight: bolder;
+    transform: scale(1.15, 1.15);
+    opacity: 0.9;
 }
 
 .settingBox view:nth-child(-n + 2) {

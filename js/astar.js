@@ -1,5 +1,5 @@
 import * as MODEL from "../js/model";
-import * as util from "../util/util"
+import * as util from "../util/util";
 var app = getApp();
 /**
  * @description 导航算法
@@ -66,7 +66,6 @@ function initnode(nodeList) {
     resultParent = [];
 }
 
-
 /**
  * @description 1.把open队列中的元素移到close队列中，表示起始节点已经走过了
  *              2.把起始位置周围的 8 个点都找出来 并且 计算出 估价函数值最低的那个元素  那么这个元素就是接下来要走的这步
@@ -95,11 +94,10 @@ function openFn(nodeList) {
     //经过上步 已经能够找到相邻的元素， 接下来要对这些元素的估值进行排序
     openArr.sort(function (li1, li2) {
         return li1.num - li2.num;
-    })
+    });
 
     //进行递归操作 找到下一步需要走的节点 在这个过程中，也需要执行相同的步骤，那就是查找相邻的节点
     openFn(nodeList);
-
 }
 
 /**
@@ -162,7 +160,6 @@ function findLi(nodeLi, nodeList) {
  * @returns
  */
 function filter(nodeLi, prenode) {
-
     /** 循环close队列中的所有元素，与传过来的节点进行比对 如果比对成功返回false */
     for (var i = 0; i < closeArr.length; i++) {
         if (nodeLi === closeArr[i]) {
@@ -219,7 +216,6 @@ function navigation(nodeList) {
     findParent(lastLi);
 
     resultParent.push(endLi);
-
 }
 /**
  * @description 点击后开始导航
@@ -227,7 +223,6 @@ function navigation(nodeList) {
  * @param {*} nodeList
  */
 function navigate(nodeList, start, end) {
-
     let startNode = util.findnearest2(start, nodeList);
     let endNode = util.findnearest2(end, nodeList);
 
@@ -246,6 +241,5 @@ function navigate(nodeList, start, end) {
 
     return distancetext;
 }
-
 
 export default navigate;

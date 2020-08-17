@@ -38,10 +38,14 @@
 .search-result scroll-view view {
     padding: 4rpx;
     padding-left: 40rpx;
+    transition: 0.3s;
 }
 
 .search-result scroll-view view:hover {
     background-color: skyblue;
+    font-weight: bolder;
+    transform: scale(1.05, 1.05);
+    opacity: 0.9;
 }
 
 .tab-content {
@@ -170,6 +174,9 @@
 .room-item:hover {
     color: rgb(92, 99, 231);
     background-color: rgba(92, 99, 231, 0.2);
+    font-weight: bolder;
+    transform: scale(1.05, 1.05);
+    opacity: 0.9;
 }
 .room-item-click {
     color: rgb(92, 99, 231);

@@ -1,14 +1,9 @@
 //关于模型的各类操作
-import {
-    registerGLTFLoader
-} from "../util/gltf-loader"; //将GLTFLoader注入到THREE
+import { registerGLTFLoader } from "../util/gltf-loader"; //将GLTFLoader注入到THREE
 import registerOrbit from "../util/orbit"; //手势操作
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as SPRITE from "./sprite";
-import {
-    loadGround,
-    loadModelByFloor
-} from "./loadModel"; //加载模型
+import { loadGround, loadModelByFloor } from "./loadModel"; //加载模型
 import userControl from "./user"; //用户贴图
 import * as util from "../util/util";
 
@@ -76,9 +71,7 @@ export function renderModel(canvasDom, Three) {
         renderer.gammaFactor = 2.2;
 
         //加载手势控制器，有MapControls和OrbitControls两种操作方式
-        const {
-            MapControls
-        } = registerOrbit(THREE);
+        const { MapControls } = registerOrbit(THREE);
         controls = new MapControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
         controls.update();
@@ -92,7 +85,7 @@ export function renderModel(canvasDom, Three) {
         //正交投影照相机
         let camera2 = new THREE.OrthographicCamera(-10, 10, 10, -10, 5, 300);
         renderer = new THREE.WebGLRenderer({
-            alpha: true
+            alpha: true,
         });
         camera2.position.set(0, 0, 200);
         camera2.lookAt(new THREE.Vector3(0, 0, 0));
@@ -365,7 +358,7 @@ export function displayOneFloor(floor) {
 /**
  * @description 显示指定的两个楼层
  * @export
- * @param {*} floor1 楼层1 
+ * @param {*} floor1 楼层1
  * @param {*} floor2 楼层2
  */
 export function displayTwoFloor(floor1, floor2) {
@@ -392,7 +385,7 @@ export function displayTwoFloor(floor1, floor2) {
      * @returns
      */
     function setVisible(obj) {
-        (parseInt(obj.floor) === floor1 || parseInt(obj.floor) === floor2) ? (obj.visible = true) : (obj.visible = false);
+        parseInt(obj.floor) === floor1 || parseInt(obj.floor) === floor2 ? (obj.visible = true) : (obj.visible = false);
         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
         if (obj.name.indexOf("outside") !== -1) {
             obj.visible = true;
@@ -445,11 +438,7 @@ export function createPathTube(path) {
     for (let i = 1; i < path.length; i++) {
         if (path[i].floor !== path[i - 1].floor) {
             pointlist.push([
-                new THREE.Vector3(
-                    path[i - 1].x,
-                    path[i - 1].y,
-                    path[i - 1].z + map_conf.lineHeight
-                ),
+                new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map_conf.lineHeight),
                 new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight),
             ]);
             floorlist.push(path[i - 1].floor);
@@ -458,9 +447,7 @@ export function createPathTube(path) {
             pointlist.push(line);
             floorlist.push(path[i].floor);
         } else {
-            pointlist[pointlist.length - 1].push(
-                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight)
-            );
+            pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
         }
     }
     pointlist.forEach(function (line, i) {
@@ -550,7 +537,7 @@ export function backToMe() {
     let poi = {
         x: point.x,
         y: point.y,
-        z: point.z
+        z: point.z,
     };
     let L = 200; //相机与用户（me）之间的距离
     let me = app.me;
@@ -563,13 +550,14 @@ export function backToMe() {
     displayOneFloor(floor);
 
     map.curFloor = floor;
+
     camera.fov = 30;
     camera.updateProjectionMatrix();
 
     let newP = {
         x: poi.x - L * Math.sin(me.radian),
         y: poi.y - L * Math.cos(me.radian),
-        z: 300
+        z: 300,
     };
     animateCamera(camera.position, controls.target, newP, poi);
 }
@@ -592,14 +580,15 @@ export function animateCamera(current1, target1, current2, target2) {
     //关闭控制器
     controls.enabled = false;
     var tween = new TWEEN.Tween(positionVar);
-    tween.to({
-        x1: current2.x,
-        y1: current2.y,
-        z1: current2.z,
-        x2: target2.x,
-        y2: target2.y,
-        z2: target2.z,
-    },
+    tween.to(
+        {
+            x1: current2.x,
+            y1: current2.y,
+            z1: current2.z,
+            x2: target2.x,
+            y2: target2.y,
+            z2: target2.z,
+        },
         1000
     );
 
@@ -637,5 +626,5 @@ export function stopNav() {
     app.routeClass.endPoint = {};
 
     let point = app.localization.nowBluePosition;
-    userControl.changePosition(point.x, point.y, point.z, "animation")
+    userControl.changePosition(point.x, point.y, point.z, "animation");
 }
