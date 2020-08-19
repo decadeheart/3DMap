@@ -1,6 +1,8 @@
 import main from "./main";
 import { openCompass } from "../js/compass";
 import * as util from "../util/util";
+import tts from "../js/tts";
+
 var app = getApp();
 Page({
     data: {
@@ -13,7 +15,7 @@ Page({
         navFlag: 1,
         startPointName: "我的位置",
         endPointName: "华中科技大学",
-        navInformation: "前方路口右转",
+        navInformation: "",
         currentPointName: "请点击地图选择位置",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
@@ -42,7 +44,19 @@ Page({
                 })
             }
         })
-        
+         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
+         Object.defineProperty(app.localization,"isOffset",{
+            set:function(val){
+                if(val) {
+                    let text = "您已经偏移"
+                    tts(text)
+                    that.setData({
+                        navInformation:val
+                    })
+                    
+                }
+            }
+        })       
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -328,11 +342,12 @@ Page({
     startNavigate: util.throttle(function () {
         let self = this;        
         app.systemControl.realMode = true;
+        app.systemControl.state = "navigating";
         app.navigateFlag = 2;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
             let dis = main.navigateInit();
-            app.systemControl.state = "navigating";
+            
             main.backToMe();
             self.setData({
                 navFlag: 3,
@@ -377,18 +392,18 @@ Page({
         });
         this.a(e);
     },
-    a: util.throttle(function (e) {
-        if (this.data.isAndroid) {
-            if (!app.navigateFlag) {
-                let tmp = main.selectObj(e.touches[0]);
-                this.setData({
-                    navFlag: 1,
-                    infoFlag: 1,
-                    currentPointName: tmp,
-                });
-            }
-        }
-    }, 300),
+    // a: util.throttle(function (e) {
+    //     if (this.data.isAndroid) {
+    //         if (!app.navigateFlag) {
+    //             let tmp = main.selectObj(e.touches[0]);
+    //             this.setData({
+    //                 navFlag: 1,
+    //                 infoFlag: 1,
+    //                 currentPointName: tmp,
+    //             });
+    //         }
+    //     }
+    // }, 500),
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
             ...e,

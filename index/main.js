@@ -1,15 +1,27 @@
-import { createScopedThreejs } from "../util/three";
+import {
+    createScopedThreejs
+} from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
-import { initData } from "../js/data";
-import { beaconUpdate, match2getFloor } from "../js/ibeacon";
+import {
+    initData
+} from "../js/data";
+import {
+    beaconUpdate,
+    match2getFloor
+} from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
-import { autoMoving } from "../js/simNavigate";
+import {
+    autoMoving
+} from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import { showOrientationText } from "../js/directionNotify";
+import {
+    showOrientationText
+} from "../js/directionNotify";
 import userControl from "../js/user";
+import * as util from "../util/util"
 
 var app = getApp();
 var main = {};
@@ -84,6 +96,24 @@ main.initMap = function (that) {
 
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode && me.radian) {
+
+                    if (systemControl.state === "navigating") {
+                        let arrIndex;
+                        let arr = app.resultParent
+                        let [cur] = arr.filter((item ,index) => {
+                            if(nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor) {
+                                arrIndex = index;
+                            }
+                            return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
+                        });
+                        
+                        if(arrIndex!=0 && arrIndex != arr.length -1 && cur) {
+                            console.log("arrIndex",arr[arrIndex+1]);
+                            console.log('me',me.position);
+                            main.detectDis(cur, arr[arrIndex+1], me.position)
+                        }
+                    }
+
                     //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
@@ -92,29 +122,28 @@ main.initMap = function (that) {
                         nowPoint.floor != lastPoint.floor
                     ) {
                         //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
-                        if(systemControl.state === "navigating") {
-                            let [cur] = app.resultParent.filter((item) => {
-                                return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == point.floor;
+                        if (systemControl.state === "navigating") {
+                            let [cur] = app.resultParent.filter((item, index) => {
+                                return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
                             });
-                            console.log('cur',cur);
-                            if(!cur) {
-                                userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                            if (cur) {
+                                userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
 
                                 //动画更新部分
                                 main.changeFocus(nowPoint);
-        
+
                                 lastPoint.x = nowPoint.x;
                                 lastPoint.y = nowPoint.y;
                                 lastPoint.z = nowPoint.z;
-                                lastPoint.floor = nowPoint.floor;                                
+                                lastPoint.floor = nowPoint.floor;
                             }
-                        }else {
+                        } else {
                             //如果不是导航过程当中，只要发生了变化就应该跳转
-                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
 
                             //动画更新部分
                             main.changeFocus(nowPoint);
-    
+
                             lastPoint.x = nowPoint.x;
                             lastPoint.y = nowPoint.y;
                             lastPoint.z = nowPoint.z;
@@ -122,6 +151,8 @@ main.initMap = function (that) {
                         }
 
                     }
+
+
                 }
 
                 TWEEN.update();
@@ -278,5 +309,26 @@ main.changeFocus = (point) => {
     };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
 };
+
+main.detectDis = util.throttle(function (now, next, me) {
+    let distance1 = util.dis3(now, next);
+    let distance2 = util.dis3(me, now);
+    let distance3 = util.dis3(me, next);
+    console.log('distance1',distance1)
+    console.log('distance2',distance2)
+    console.log('distance3',distance3)
+    if (distance2 > distance1*1.1 || distance3 > distance1*1.1) {
+        // wx.showToast({
+        //     title: "您已经偏离",
+        //     icon: "none",
+        //     image: "",
+        //     duration: 2000,
+        //     mask: true,
+        // });
+        app.localization.isOffset = true;
+    }else {
+        app.localization.isOffset = false;
+    }
+}, 1000)
 
 export default main;

@@ -32,7 +32,7 @@ App({
         int_userHeight: 2,
         fontSpriteScale: 4,
         imgSpriteScale: 7,
-        float_mapProportion: 0.3, //** */
+        float_mapProportion: 0.6, //** */
         layerHeight: 15, //** */
         lineHeight: 1,
         bd_p1: { x: 114.417444, y: 30.519147 },
@@ -59,6 +59,7 @@ App({
     localization: {
         lastBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
         nowBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
+        isOffset: false,
         isWXReady: false,
         GPSOpen: 0,
         BluetoothOpen: 1,
