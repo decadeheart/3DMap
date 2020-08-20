@@ -106,15 +106,15 @@ export function throttle(fn, interval) {
     return function (...args) {
         cnt++;
         // console.log(cnt);
-        if (cnt > 4) {
-            wx.showToast({
-                title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
-                icon: "none",
-                image: "",
-                duration: 1500,
-                mask: true,
-            });
-        }
+        // if (cnt > 4) {
+        //     wx.showToast({
+        //         title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
+        //         icon: "none",
+        //         image: "",
+        //         duration: 1500,
+        //         mask: true,
+        //     });
+        // }
         var context = this;
         var backTime = new Date(); //第一次函数return即触发的时间
         if (backTime - enterTime > gapTime) {
@@ -123,4 +123,15 @@ export function throttle(fn, interval) {
             cnt = 0;
         }
     };
+}
+
+// 第三版（解决 event 事件对象问题）
+export function debounce(fn, wait) {
+    let timer;
+    return function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fn.apply(this, arguments)   // 把参数传进去
+        }, wait);
+    }
 }

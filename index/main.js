@@ -1,15 +1,27 @@
-import { createScopedThreejs } from "../util/three";
+import {
+    createScopedThreejs
+} from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
-import { initData } from "../js/data";
-import { beaconUpdate, match2getFloor } from "../js/ibeacon";
+import {
+    initData
+} from "../js/data";
+import {
+    beaconUpdate,
+    match2getFloor
+} from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
-import { autoMoving } from "../js/simNavigate";
+import {
+    autoMoving
+} from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import { showOrientationText } from "../js/directionNotify";
+import {
+    showOrientationText
+} from "../js/directionNotify";
 import userControl from "../js/user";
+import * as util from "../util/util"
 
 var app = getApp();
 var main = {};
@@ -87,7 +99,7 @@ main.initMap = function (that) {
 
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode) {
-                    let flag = false;
+                    let needsUpdateBlueLocation = false; //用于确定蓝牙点是否需要更新
                     //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
@@ -103,17 +115,17 @@ main.initMap = function (that) {
                             });
                             console.log('cur', cur);
                             if (!cur) {
-                                flag = true;
+                                needsUpdateBlueLocation = true;
 
                                 userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                             }
                         } else {
-                            flag = true;
+                            needsUpdateBlueLocation = true;
                             //如果不是导航过程当中，只要发生了变化就应该跳转
                             userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                         }
                     }
-                    if (me.radian && flag
+                    if (me.radian && needsUpdateBlueLocation
                     ) {
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
@@ -122,6 +134,8 @@ main.initMap = function (that) {
                         //动画更新部分
                         main.changeFocus(nowPoint);
                     }
+
+
                 }
                 TWEEN.update();
                 renderer.render(scene, camera);
@@ -277,5 +291,26 @@ main.changeFocus = (point) => {
     };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
 };
+
+main.detectDis = util.throttle(function (now, next, me) {
+    let distance1 = util.dis3(now, next);
+    let distance2 = util.dis3(me, now);
+    let distance3 = util.dis3(me, next);
+    console.log('distance1',distance1)
+    console.log('distance2',distance2)
+    console.log('distance3',distance3)
+    if (distance2 > distance1*1.1 || distance3 > distance1*1.1) {
+        // wx.showToast({
+        //     title: "您已经偏离",
+        //     icon: "none",
+        //     image: "",
+        //     duration: 2000,
+        //     mask: true,
+        // });
+        app.localization.isOffset = true;
+    }else {
+        app.localization.isOffset = false;
+    }
+}, 1000)
 
 export default main;

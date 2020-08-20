@@ -36,16 +36,6 @@ export function openCompass(that) {
 
             rotate(radian);
             app.me.radian = radian;
-            // if (cnt > 0) {
-            //     rotate(radian);
-            //     app.me.radian = radian;
-            // } else {
-            //     setTimeout(() => {
-            //         rotate(radian);
-            //         app.me.radian = radian;
-            //     }, 2000);
-            //     cnt = 1;
-            // }
         }
     });
 }
