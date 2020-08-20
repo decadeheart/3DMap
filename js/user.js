@@ -93,7 +93,7 @@ const userControl = {
         let nextpoint = {
             x: (x === null) ? me.position.x : x,
             y: (y === null) ? me.position.y : y,
-            z: (z === null) ? me.position.z : z + 5
+            z: (z === null) ? me.position.z : z + 2
         };
 
         switch (mode) {

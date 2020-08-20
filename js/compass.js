@@ -34,17 +34,18 @@ export function openCompass(that) {
                 radian = ((curAngle-360) / 360) * 2 * Math.PI;
             }
 
-
-            if (cnt > 0) {
-                rotate(radian);
-                app.me.radian = radian;
-            } else {
-                setTimeout(() => {
-                    rotate(radian);
-                    app.me.radian = radian;
-                }, 2000);
-                cnt = 1;
-            }
+            rotate(radian);
+            app.me.radian = radian;
+            // if (cnt > 0) {
+            //     rotate(radian);
+            //     app.me.radian = radian;
+            // } else {
+            //     setTimeout(() => {
+            //         rotate(radian);
+            //         app.me.radian = radian;
+            //     }, 2000);
+            //     cnt = 1;
+            // }
         }
     });
 }

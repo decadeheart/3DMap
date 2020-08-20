@@ -16,6 +16,7 @@ export function loadModelByFloor(scene, floor) {
     let THREE = app.THREE;
     let loader = new THREE.GLTFLoader();
     building_conf.forEach(function (building) {
+        app.map.isFloorLoaded[floor] = true;
         if (floor <= building.layer_nums) {
             loader.load(
                 map_conf.src_dir + "data/" + map_conf.map_id + "_" + building.building_id + "_" + floor + ".glb",
@@ -26,7 +27,6 @@ export function loadModelByFloor(scene, floor) {
                     // 设置物体参数
                     building.name = building.building_id + "_" + floor + "_" + building.name;
                     setFloor(building, floor);
-                    app.map.isFloorLoaded[floor] = true;
                 }
             );
         }
@@ -34,7 +34,7 @@ export function loadModelByFloor(scene, floor) {
     SPRITE.loadTargetTextByFloor(scene, floor);
 }
 /**
- * @description 设置楼层//并将场景元素添加进map.groundMeshes中
+ * @description 设置楼层
  * @param {*} obj 场景元素
  * @param {*} f 楼层
  */

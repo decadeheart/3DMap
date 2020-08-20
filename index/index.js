@@ -35,14 +35,14 @@ Page({
     onLoad: function () {
         var that = this;
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
-        Object.defineProperty(app.map,"curFloor",{
-            set:function(val){
+        Object.defineProperty(app.map, "curFloor", {
+            set: function (val) {
                 that.setData({
-                    currentFloor:val
+                    currentFloor: val
                 })
             }
         })
-        
+
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -75,10 +75,12 @@ Page({
                 });
                 // 初始化地图（根据用户当前所在楼层加载指定楼层）
                 main.initMap(that);
+                // openCompass需要在me初始化（initMap进行）之后才能正常使用，如果之后出问题了，可以通过添加then函数解决
+                // 启用指南针
+                openCompass(that);
             });
         });
-        // 启用指南针
-        openCompass(this);
+
     },
 
     /**
@@ -121,9 +123,9 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
-        let floor =1+ e.currentTarget.dataset.floor;
+        let floor = 1 + e.currentTarget.dataset.floor;
         this.setData({
-            currentFloor:floor
+            currentFloor: floor
         })
         main.displayOneFloor(floor);
     }, 300),
@@ -203,15 +205,15 @@ Page({
      * @date 2020-07-20
      */
     setStartPoint: util.throttle(function () {
-        if(this.data.currentPointName == "请点击地图选择位置") {
+        if (this.data.currentPointName == "请点击地图选择位置") {
             wx.showToast({
                 title: "请先选择位置",
                 icon: "none",
                 image: "",
                 duration: 500,
                 mask: true,
-            });     
-            return;      
+            });
+            return;
         }
         main.setStartClick();
         let self = this;
@@ -240,15 +242,15 @@ Page({
      * @date 2020-07-20
      */
     setEndPoint: util.throttle(function () {
-        if(this.data.currentPointName == "请点击地图选择位置") {
+        if (this.data.currentPointName == "请点击地图选择位置") {
             wx.showToast({
                 title: "请先选择位置",
                 icon: "none",
                 image: "",
                 duration: 500,
                 mask: true,
-            });      
-            return;      
+            });
+            return;
         }
         main.setEndClick();
         let self = this;
@@ -278,15 +280,15 @@ Page({
      * @description 按钮“到这里去”的点击事件
      */
     goThere: util.throttle(function () {
-        if(this.data.currentPointName == "请点击地图选择位置") {
+        if (this.data.currentPointName == "请点击地图选择位置") {
             wx.showToast({
                 title: "请先选择位置",
                 icon: "none",
                 image: "",
                 duration: 500,
                 mask: true,
-            });      
-            return;      
+            });
+            return;
         }
         main.setEndClick();
         main.setStartMe();
@@ -326,7 +328,7 @@ Page({
      * @description 开始导航
      */
     startNavigate: util.throttle(function () {
-        let self = this;        
+        let self = this;
         app.systemControl.realMode = true;
         app.navigateFlag = 2;
         if (self.startPointName != "我的位置") {

@@ -262,7 +262,7 @@ export function selectObj(index) {
     //获取全局变量并改名
     let me = app.me;
     //定义一个极小的位移量，用于调整坐标点位置
-    let tinyPos = 1.5;
+    let tinyPos = 0;
     //获取鼠标点击位置
     mouse.x = (index.pageX / canvas._width) * 2 - 1;
     mouse.y = -((index.pageY - tinyPos) / canvas._height) * 2 + 1;

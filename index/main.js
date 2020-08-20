@@ -52,6 +52,8 @@ main.initMap = function (that) {
                 let systemControl = app.systemControl;
                 let me = app.me;
 
+
+
                 //如果当前是导航模式，那么静止的管状路线会动起来，并且进行语音播报
                 if (systemControl.state === "navigating") {
                     app.pathControl.textures.forEach(function (item) {
@@ -82,8 +84,10 @@ main.initMap = function (that) {
                 let floor = match2getFloor(nowPoint);
                 if (floor != null) main.displayOneFloor(floor);
 
+
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
-                if (app.systemControl.realMode && me.radian) {
+                if (app.systemControl.realMode) {
+                    let flag = false;
                     //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
@@ -91,39 +95,34 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
+
                         //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
-                        if(systemControl.state === "navigating") {
+                        if (systemControl.state === "navigating") {
                             let [cur] = app.resultParent.filter((item) => {
                                 return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == point.floor;
                             });
-                            console.log('cur',cur);
-                            if(!cur) {
-                                userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                            console.log('cur', cur);
+                            if (!cur) {
+                                flag = true;
 
-                                //动画更新部分
-                                main.changeFocus(nowPoint);
-        
-                                lastPoint.x = nowPoint.x;
-                                lastPoint.y = nowPoint.y;
-                                lastPoint.z = nowPoint.z;
-                                lastPoint.floor = nowPoint.floor;                                
+                                userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                             }
-                        }else {
+                        } else {
+                            flag = true;
                             //如果不是导航过程当中，只要发生了变化就应该跳转
                             userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
-
-                            //动画更新部分
-                            main.changeFocus(nowPoint);
-    
-                            lastPoint.x = nowPoint.x;
-                            lastPoint.y = nowPoint.y;
-                            lastPoint.z = nowPoint.z;
-                            lastPoint.floor = nowPoint.floor;
                         }
-
+                    }
+                    if (me.radian && flag
+                    ) {
+                        lastPoint.x = nowPoint.x;
+                        lastPoint.y = nowPoint.y;
+                        lastPoint.z = nowPoint.z;
+                        lastPoint.floor = nowPoint.floor;
+                        //动画更新部分
+                        main.changeFocus(nowPoint);
                     }
                 }
-
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();
