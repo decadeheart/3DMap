@@ -82,7 +82,7 @@ main.initMap = function (that) {
                 if (floor != null) main.displayOneFloor(floor);
 
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
-                if (app.systemControl.realMode && me.radian) {
+                if (app.systemControl.realMode) {
                     //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
