@@ -21,7 +21,7 @@ const userControl = {
             //当是非导航状态并且是真实模式的情况下可以移动
             if (app.navigateFlag != 1) {
                 console.log('move');
-                userControl.changePosition(x, y, null, "animation");
+                userControl.changePosition(x, y, null, "direction");
             }
             map.preStep = map.stepCount;
         }

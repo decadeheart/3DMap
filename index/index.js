@@ -51,7 +51,7 @@ Page({
                     let text = "您已经偏移";
                     tts(text);
                     that.setData({
-                        navInformation: val,
+                        navInformation: text,
                     });
                 }
             },
@@ -365,6 +365,7 @@ Page({
         this.setData({
             navFlag: 1,
             infoFlag: 1,
+            navInformation: "开始导航",
         });
         main.stopNav();
         main.backToMe();
