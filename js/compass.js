@@ -27,15 +27,18 @@ export function openCompass(that) {
             else curAngle = 0;
 
             let radian;
-            if(curAngle<180){
-                radian = (curAngle / 360) * 2 * Math.PI;
-            }
-            else{
-                radian = ((curAngle-360) / 360) * 2 * Math.PI;
-            }
+            radian = (curAngle / 360) * 2 * Math.PI;
 
-            rotate(radian);
-            app.me.radian = radian;
+            if (cnt > 0) {
+                rotate(radian);
+                app.me.radian = radian;
+            } else {
+                setTimeout(() => {
+                    rotate(radian);
+                    app.me.radian = radian;
+                }, 2000);
+                cnt = 1;
+            }
         }
     });
 }

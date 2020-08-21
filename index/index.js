@@ -15,7 +15,7 @@ Page({
         navFlag: 1,
         startPointName: "我的位置",
         endPointName: "华中科技大学",
-        navInformation: "",
+        navInformation: "开始导航",
         currentPointName: "请点击地图选择位置",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
@@ -51,7 +51,7 @@ Page({
                     let text = "您已经偏移"
                     tts(text)
                     that.setData({
-                        navInformation:val
+                        navInformation:text
                     })
                     
                 }
@@ -370,6 +370,7 @@ Page({
         this.setData({
             navFlag: 1,
             infoFlag: 1,
+            navInformation: "开始导航"
         });
         main.stopNav();
         main.backToMe();
