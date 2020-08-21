@@ -1,5 +1,4 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
-import * as MODEL from "./model";
 var app = getApp();
 /**
  * @description 打开罗盘，转动指南针
@@ -7,8 +6,7 @@ var app = getApp();
  */
 export function openCompass(that) {
     wx.startCompass({
-        success: (res) => {
-        },
+        success: (res) => {},
         fail: (res) => {
             console.log(res);
         },

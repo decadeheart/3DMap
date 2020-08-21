@@ -2,7 +2,7 @@
  * @description 三维勾股定理
  * @param {*} nowLi 节点1
  * @param {*} nowLi2 节点2
- * @returns 
+ * @returns
  */
 export function dis3(nowLi, nowLi2) {
     //勾股定理
@@ -21,7 +21,9 @@ export function dis3(nowLi, nowLi2) {
  */
 export function figureVectorAngle(v1, v2) {
     //v1,v2 must be Three.Vector2
-    if (v1.length() === 0 || v2.length() === 0) { return 0; }
+    if (v1.length() === 0 || v2.length() === 0) {
+        return 0;
+    }
     let res = Math.acos(v1.dot(v2) / (v1.length() * v2.length()));
     //若结果为正，则向量v2在v1的逆时针方向 返回值为弧度
     return v1.cross(v2) > 0 ? res : -res;
@@ -98,27 +100,38 @@ export function CalculateNodeDis(node1, node2) {
  */
 var cnt = 0;
 export function throttle(fn, interval) {
-    var enterTime = 0;//触发的时间
-    var gapTime = interval || 300;//间隔时间，如果interval不传，则默认300ms
+    var enterTime = 0; //触发的时间
+    var gapTime = interval || 300; //间隔时间，如果interval不传，则默认300ms
 
     return function (...args) {
         cnt++;
         // console.log(cnt);
-        if (cnt > 4) {
-            wx.showToast({
-                title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
-                icon: "none",
-                image: "",
-                duration: 1500,
-                mask: true,
-            });
-        }
+        // if (cnt > 4) {
+        //     wx.showToast({
+        //         title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
+        //         icon: "none",
+        //         image: "",
+        //         duration: 1500,
+        //         mask: true,
+        //     });
+        // }
         var context = this;
-        var backTime = new Date();//第一次函数return即触发的时间
+        var backTime = new Date(); //第一次函数return即触发的时间
         if (backTime - enterTime > gapTime) {
             fn.call(context, ...args);
-            enterTime = backTime;//赋值给第一次触发的时间，这样就保存了第二次触发的时间
+            enterTime = backTime; //赋值给第一次触发的时间，这样就保存了第二次触发的时间
             cnt = 0;
         }
     };
+}
+
+// 第三版（解决 event 事件对象问题）
+export function debounce(fn, wait) {
+    let timer;
+    return function () {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            fn.apply(this, arguments)   // 把参数传进去
+        }, wait);
+    }
 }

@@ -1,6 +1,6 @@
 <view class="container" catchtouchmove="{{false}}">
 	<!-- 地图容器 -->
-	<canvas type="webgl" id="map" class="{{isAndroid? 'map-android':'map'}}" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap" hidden="{{showBlue}}"></canvas>
+	<canvas type="webgl" id="map" class="{{isAndroid?'map-android':'map'}} "bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap" hidden="{{showBlue}}"></canvas>
 	<!-- 精灵容器 -->
 	<canvas type="2d" id="sprite" hidden="{{showBlue}}"></canvas>
 	
@@ -49,7 +49,7 @@
 		<image src="{{ allFloorImgUrl }}" class="floor-item" bindtap="displayAllFloor"></image>
 
 		<block wx:key="index" wx:for="{{ floorImgUrl }}">
-			<image src="{{item}}" class="floor-item" bindtap="displayOneFloor" data-floor="{{ index }}"></image>
+			<image src="{{item}}" class="floor-item {{currentFloor==index+1?'floor-item-hover':''}}" bindtap="displayOneFloor" data-floor="{{ index }}"></image>
 		</block>
 		<view class="floor-space"></view>
 	</view>

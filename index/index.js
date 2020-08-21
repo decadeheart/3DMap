@@ -1,6 +1,7 @@
 import main from "./main";
 import { openCompass } from "../js/compass";
 import * as util from "../util/util";
+import tts from "../js/tts";
 
 var app = getApp();
 Page({
@@ -14,13 +15,13 @@ Page({
         navFlag: 1,
         startPointName: "我的位置",
         endPointName: "华中科技大学",
-        navInformation: "前方路口右转",
-        currentPointName: "华中科技大学",
+        navInformation: "开始导航",
+        currentPointName: "请点击地图选择位置",
         distanceInfo: "全程100米，大约耗时2分钟 ",
         // 1 设置起点终点 2 导航和模拟导航 3 结束导航
-        infoFlag: 0,
+        infoFlag: 1,
         showBlue: false,
-        step: 0,
+        currentFloor: 0,
         buttons: [
             {
                 type: "primary",
@@ -35,7 +36,26 @@ Page({
 
     onLoad: function () {
         var that = this;
-
+        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
+        Object.defineProperty(app.map, "curFloor", {
+            set: function (val) {
+                that.setData({
+                    currentFloor: val,
+                });
+            },
+        });
+        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
+        Object.defineProperty(app.localization, "isOffset", {
+            set: function (val) {
+                if (val) {
+                    let text = "您已经偏移";
+                    tts(text);
+                    that.setData({
+                        navInformation: val,
+                    });
+                }
+            },
+        });
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -68,10 +88,11 @@ Page({
                 });
                 // 初始化地图（根据用户当前所在楼层加载指定楼层）
                 main.initMap(that);
+                // openCompass需要在me初始化（initMap进行）之后才能正常使用，如果之后出问题了，可以通过添加then函数解决
+                // 启用指南针
+                openCompass(that);
             });
         });
-        // 启用指南针
-        openCompass(this);
     },
 
     /**
@@ -114,8 +135,11 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
-        let floor = e.currentTarget.dataset.floor;
-        main.displayOneFloor(floor + 1);
+        let floor = 1 + e.currentTarget.dataset.floor;
+        this.setData({
+            currentFloor: floor,
+        });
+        main.displayOneFloor(floor);
     }, 300),
     /**
      * @description 切换起点终点
@@ -193,6 +217,16 @@ Page({
      * @date 2020-07-20
      */
     setStartPoint: util.throttle(function () {
+        if (this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });
+            return;
+        }
         main.setStartClick();
         let self = this;
         this.setData({
@@ -220,12 +254,21 @@ Page({
      * @date 2020-07-20
      */
     setEndPoint: util.throttle(function () {
+        if (this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });
+            return;
+        }
         main.setEndClick();
         let self = this;
         this.setData({
             endPointName: this.data.currentPointName,
         });
-
 
         if (!!app.spriteControl.startSprite) {
             let dis = main.navigateInit();
@@ -242,12 +285,21 @@ Page({
                 main.displayTwoFloor(startFloor, endFloor);
             }
         }
-
     }, 300),
     /**
      * @description 按钮“到这里去”的点击事件
      */
     goThere: util.throttle(function () {
+        if (this.data.currentPointName == "请点击地图选择位置") {
+            wx.showToast({
+                title: "请先选择位置",
+                icon: "none",
+                image: "",
+                duration: 500,
+                mask: true,
+            });
+            return;
+        }
         main.setEndClick();
         main.setStartMe();
         let self = this;
@@ -267,7 +319,6 @@ Page({
         } else {
             main.displayTwoFloor(startFloor, endFloor);
         }
-
     }, 300),
     /**
      * @description 模拟导航
@@ -287,12 +338,13 @@ Page({
      */
     startNavigate: util.throttle(function () {
         let self = this;
-        app.systemControl.state = "navigating";
         app.systemControl.realMode = true;
-        app.navigateFlag = 1;
+        app.systemControl.state = "navigating";
+        app.navigateFlag = 2;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
             let dis = main.navigateInit();
+
             main.backToMe();
             self.setData({
                 navFlag: 3,
@@ -335,9 +387,9 @@ Page({
             ...e,
             type: "touchstart",
         });
-        this.a(e);
+        this.androidTap(e);
     },
-    a: util.throttle(function (e) {
+    androidTap: util.throttle(function (e) {
         if (this.data.isAndroid) {
             if (!app.navigateFlag) {
                 let tmp = main.selectObj(e.touches[0]);
@@ -348,7 +400,7 @@ Page({
                 });
             }
         }
-    }, 300),
+    }, 500),
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
             ...e,

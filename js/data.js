@@ -3,9 +3,9 @@ var DATA;
 /**
  * @description 从服务器加载数据
  */
-export const initData=new Promise((resolve, reject) => {
+export const initData = new Promise((resolve, reject) => {
     wx.request({
-        url: "https://www.cleverguided.com/iLaN/3D-jxqzf/data/jxqzf.json",
+        url: app.map_conf.data_url,
         data: {},
         header: { "content-type": "application/json" },
         method: "GET",

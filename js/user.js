@@ -1,6 +1,5 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as util from "../util/util"
-
 var app = getApp();
 
 const userControl = {
@@ -18,10 +17,11 @@ const userControl = {
             }
             let x = me.position.x + Math.sin(me.radian) * distance;
             let y = me.position.y + Math.cos(me.radian) * distance;
-            if (!(app.systemControl.state === "navigating" && !app.systemControl.realMode)) {
+
+            //当是非导航状态并且是真实模式的情况下可以移动
+            if (app.navigateFlag != 1) {
+                console.log('move');
                 userControl.changePosition(x, y, null, "animation");
-
-
             }
             map.preStep = map.stepCount;
         }
@@ -32,11 +32,8 @@ const userControl = {
     initUser: function (x, y, z) {
         let me = app.me
         userControl.isInitUser = true;
-
         userControl.changePosition(x, y, z, 'direction');
-
         me.floor = app.map.curFloor;
-
         userControl.changeRotation(null, null, 0);
     },
     /**
@@ -75,7 +72,6 @@ const userControl = {
                 me.rotation.y = y;
                 me.rotation.z = z;
             }
-
         }
     },
     /**
@@ -97,7 +93,7 @@ const userControl = {
         let nextpoint = {
             x: (x === null) ? me.position.x : x,
             y: (y === null) ? me.position.y : y,
-            z: (z === null) ? me.position.z : z
+            z: (z === null) ? me.position.z : z + 2
         };
 
         switch (mode) {
@@ -109,7 +105,6 @@ const userControl = {
                 meTween.start();
                 break;
         }
-
     }
 }
 

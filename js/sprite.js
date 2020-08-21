@@ -45,11 +45,7 @@ function makeFontSprite(message) {
     //这句为了防止warning
     sprite.material.map.minFilter = THREE.LinearFilter;
     //缩放比例
-    sprite.scale.set(
-        (map_conf.fontSpriteScale * width) / height,
-        map_conf.fontSpriteScale,
-        1
-    );
+    sprite.scale.set((map_conf.fontSpriteScale * width) / height, map_conf.fontSpriteScale, 1);
     sprite.initScale = {
         x: (map_conf.fontSpriteScale * width) / height,
         y: map_conf.fontSpriteScale,
@@ -60,7 +56,7 @@ function makeFontSprite(message) {
     //销毁threejs元素
     texture.dispose();
     texture = null;
-    spriteMaterial.dispose()
+    spriteMaterial.dispose();
     spriteMaterial = null;
     return sprite;
 }
@@ -160,10 +156,10 @@ export function loadAllTargetText(scene) {
 function disposeObj(parent, child) {
     let THREE = app.THREE;
     if (child.children.length) {
-        let arr = child.children.filter(x => x);
-        arr.forEach(a => {
-            disposeObj(child, a)
-        })
+        let arr = child.children.filter((x) => x);
+        arr.forEach((a) => {
+            disposeObj(child, a);
+        });
     }
     if (child instanceof THREE.Mesh || child instanceof THREE.Line || child instanceof THREE.Sprite) {
         if (child.material.map) {
