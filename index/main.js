@@ -111,12 +111,11 @@ main.initMap = function (that) {
                         //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
                         if (systemControl.state === "navigating") {
                             let [cur] = app.resultParent.filter((item) => {
-                                return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == point.floor;
+                                return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
                             });
                             console.log('cur', cur);
-                            if (!cur) {
+                            if (cur) {
                                 needsUpdateBlueLocation = true;
-
                                 userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                             }
                         } else {
