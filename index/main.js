@@ -38,7 +38,7 @@ main.initMap = function (that) {
             let camera = MODEL.getCamera();
 
             navRender();
-            accChange();
+            // accChange();
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
              * @date 2020-07-31
@@ -80,7 +80,7 @@ main.initMap = function (that) {
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
                 if (floor != null) main.displayOneFloor(floor);
-
+                let flag=false;
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode) {
                     //如果蓝牙的位置发生了变化，人物位置动画更新
@@ -90,16 +90,18 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
+                        flag=true;
                         userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
-
-                        //动画更新部分
-                        main.changeFocus(nowPoint);
-
-                        lastPoint.x = nowPoint.x;
-                        lastPoint.y = nowPoint.y;
-                        lastPoint.z = nowPoint.z;
-                        lastPoint.floor = nowPoint.floor;
                     }
+                }
+                if(me.radian && flag){
+                    lastPoint.x = nowPoint.x;
+                    lastPoint.y = nowPoint.y;
+                    lastPoint.z = nowPoint.z;
+                    lastPoint.floor = nowPoint.floor;
+                    //动画更新部分
+                    main.changeFocus(nowPoint);
+                    
                 }
 
                 TWEEN.update();
