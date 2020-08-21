@@ -134,7 +134,6 @@ main.initMap = function (that) {
                             console.log('cur', cur);
                             if (cur) {
                                 needsUpdateBlueLocation = true;
-
                                 userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                             }
                         } else {
