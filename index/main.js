@@ -1,5 +1,4 @@
 import { createScopedThreejs } from "../util/three";
-import util from "../util/util";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
@@ -11,6 +10,7 @@ import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { showOrientationText } from "../js/directionNotify";
 import userControl from "../js/user";
+import * as util from "../util/util";
 
 var app = getApp();
 var main = {};
@@ -39,6 +39,7 @@ main.initMap = function (that) {
             let camera = MODEL.getCamera();
 
             navRender();
+            //打开步数监测
             accChange();
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
@@ -83,7 +84,7 @@ main.initMap = function (that) {
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
                 if (floor != null) main.displayOneFloor(floor);
-                let flag = false;
+
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode) {
                     //偏移检测
@@ -109,19 +110,32 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-                        flag = true;
-                        userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                        //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
+                        if (systemControl.state === "navigating") {
+                            let [cur] = app.resultParent.filter((item) => {
+                                return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
+                            });
+                            console.log("cur", cur);
+                            if (cur) {
+                                needsUpdateBlueLocation = true;
+
+                                userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                            }
+                        } else {
+                            needsUpdateBlueLocation = true;
+                            //如果不是导航过程当中，只要发生了变化就应该跳转
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                        }
+                    }
+                    if (me.radian && needsUpdateBlueLocation) {
+                        lastPoint.x = nowPoint.x;
+                        lastPoint.y = nowPoint.y;
+                        lastPoint.z = nowPoint.z;
+                        lastPoint.floor = nowPoint.floor;
+                        //动画更新部分
+                        main.changeFocus(nowPoint);
                     }
                 }
-                if (me.radian && flag) {
-                    lastPoint.x = nowPoint.x;
-                    lastPoint.y = nowPoint.y;
-                    lastPoint.z = nowPoint.z;
-                    lastPoint.floor = nowPoint.floor;
-                    //动画更新部分
-                    main.changeFocus(nowPoint);
-                }
-
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();

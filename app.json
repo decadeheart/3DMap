@@ -8,7 +8,7 @@
     "window": {
         "navigationBarBackgroundColor": "#fff",
         "navigationBarTitleText": "智慧标识导航系统",
-        "navigationStyle": "default",
+        "navigationStyle": "custom",
         "navigationBarTextStyle": "black",
         "enablePullDownRefresh": false
     },

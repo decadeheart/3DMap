@@ -128,7 +128,7 @@ Page({
      * @description 显示所有楼层
      */
     displayAllFloor: util.throttle(function () {
-        main.displayAllFloor();
+        //main.displayAllFloor();
     }, 300),
     /**
      * @description 页面点击楼层图片，切换楼层
