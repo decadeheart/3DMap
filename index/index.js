@@ -35,13 +35,13 @@ Page({
         isAndroid: false,
     },
 
-    
+
     onLoad: function () {
         if (app.isReady) {
-            app.canvas=null;
-            app.canvasSprite=null;
-            app.localization.nowBluePosition={ x: 0, y: 0, z: 0, floor: 1 };
-            app.localization.lastBluePosition={ x: 0, y: 0, z: 0, floor: 1 };
+            app.canvas = null;
+            app.canvasSprite = null;
+            app.localization.nowBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
+            app.localization.lastBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
             app.map.isFloorLoaded = [false, false, false, false, false, false, false];
         }
 
@@ -50,32 +50,14 @@ Page({
         Object.defineProperty(app.map, "curFloor", {
             set: function (val) {
                 that.setData({
-<<<<<<< HEAD
                     currentFloor: val
                 })
             }
         })
-=======
-                    currentFloor: val,
-                });
-            },
-        });
->>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         Object.defineProperty(app.localization, "isOffset", {
             set: function (val) {
                 if (val) {
-<<<<<<< HEAD
-                    let text = "您已经偏移"
-                    tts(text)
-                    that.setData({
-                        navInformation: text
-                    })
-
-                }
-            }
-        })
-=======
                     let text = "您已经偏移";
                     tts(text);
                     that.setData({
@@ -84,7 +66,6 @@ Page({
                 }
             },
         });
->>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -121,10 +102,7 @@ Page({
                 openCompass(that);
             });
         });
-<<<<<<< HEAD
         app.isReady = true;
-=======
->>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
     },
     /**
      * @description 弹窗事件，用于提醒用户打开蓝牙
