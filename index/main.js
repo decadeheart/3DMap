@@ -41,6 +41,7 @@ main.initMap = function (that) {
             navRender();
             //打开步数监测
             accChange();
+            
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
              * @date 2020-07-31
@@ -128,12 +129,15 @@ main.initMap = function (that) {
                         }
                     }
                     if (me.radian && needsUpdateBlueLocation) {
+                        //动画更新部分，只有第一次和导航过程中改变视角
+                        if(lastPoint.x==0 || app.navigateFlag ==2){
+                            main.changeFocus(nowPoint);
+                        } 
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
                         lastPoint.z = nowPoint.z;
                         lastPoint.floor = nowPoint.floor;
-                        //动画更新部分
-                        main.changeFocus(nowPoint);
+                        
                     }
                 }
                 TWEEN.update();
@@ -162,8 +166,8 @@ main.initMap = function (that) {
 main.cameraExchange = function (index) {
     MODEL.cameraExchange(index);
 };
-main.displayAllFloor = function () {
-    MODEL.displayAllFloor();
+main.displayAllFloor = function (onShow) {
+    MODEL.displayAllFloor(onShow);
     //为了提高加载性能，暂不使用该函数
     // SPRITE.loadAllTargetText(scene);
 };
