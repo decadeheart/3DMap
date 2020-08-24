@@ -80,7 +80,6 @@ Page({
                 }
             },
         });
-
         main.getBuildingData().then(() => {
             main.startBeaconDiscovery().then((res) => {
                 that.setData({
@@ -94,7 +93,6 @@ Page({
             });
         });
     },
-
     /**
      * @description 弹窗事件，用于提醒用户打开蓝牙
      * @date 2020-07-13
@@ -128,7 +126,7 @@ Page({
      * @description 显示所有楼层
      */
     displayAllFloor: util.throttle(function () {
-        //main.displayAllFloor();
+        main.displayAllFloor();
     }, 300),
     /**
      * @description 页面点击楼层图片，切换楼层

@@ -46,7 +46,7 @@
 
 		<image src="{{ dimensionImgUrl[dimension - 2] }}" class="floor-item" bindtap="changeDimension" mode="aspectFit"></image>
 
-		<!-- <image src="{{ allFloorImgUrl }}" class="floor-item" bindtap="displayAllFloor"></image> -->
+		<image src="{{ allFloorImgUrl }}" class="floor-item" bindtap="displayAllFloor"></image>
 
 		<block wx:key="index" wx:for="{{ floorImgUrl }}">
 			<image src="{{item}}" class="floor-item {{currentFloor==index+1?'floor-item-hover':''}}" bindtap="displayOneFloor" data-floor="{{ index }}"></image>

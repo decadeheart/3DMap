@@ -21,7 +21,7 @@ App({
         stepCount: 0,
         preStep: 0,
         curFloor: 0,
-        isFloorLoaded: [false, false, false, false, false, false],
+        isFloorLoaded: [false, false, false, false, false, false, false],
     },
     map_conf: {
         map_id: "jxqzf",
@@ -42,7 +42,6 @@ App({
     },
     //** */
     building_conf: [
-        
         {
             building_id: "1",
             building_name: "行政楼",
