@@ -395,18 +395,18 @@ Page({
         });
         this.a(e);
     },
-    // a: util.throttle(function (e) {
-    //     if (this.data.isAndroid) {
-    //         if (!app.navigateFlag) {
-    //             let tmp = main.selectObj(e.touches[0]);
-    //             this.setData({
-    //                 navFlag: 1,
-    //                 infoFlag: 1,
-    //                 currentPointName: tmp,
-    //             });
-    //         }
-    //     }
-    // }, 500),
+    a: util.throttle(function (e) {
+        if (this.data.isAndroid) {
+            if (!app.navigateFlag) {
+                let tmp = main.selectObj(e.touches[0]);
+                this.setData({
+                    navFlag: 1,
+                    infoFlag: 1,
+                    currentPointName: tmp,
+                });
+            }
+        }
+    }, 500),
     touchMove(e) {
         app.canvas.dispatchTouchEvent({
             ...e,

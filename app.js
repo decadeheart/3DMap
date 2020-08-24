@@ -21,7 +21,7 @@ App({
         stepCount: 0,
         preStep: 0,
         curFloor: 0,
-        isFloorLoaded: [false, false, false, false, false, false],
+        isFloorLoaded: [false, false, false, false, false, false, false],
     },
     map_conf: {
         map_id: "jxqzf",
