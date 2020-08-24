@@ -105,7 +105,11 @@ export function throttle(fn, interval) {
 
     return function (...args) {
         cnt++;
+<<<<<<< HEAD
         console.log(cnt);
+=======
+        // console.log(cnt);
+>>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
         if (cnt > 4) {
             wx.showToast({
                 title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",

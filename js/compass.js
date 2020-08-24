@@ -26,9 +26,7 @@ export function openCompass(that) {
             else if (curAngle > 225 && curAngle <= 315) curAngle = 270;
             else curAngle = 0;
 
-            let radian;
-            radian = (curAngle / 360) * 2 * Math.PI;
-
+            let radian = (curAngle / 360) * 2 * Math.PI;
             if (cnt > 0) {
                 rotate(radian);
                 app.me.radian = radian;
@@ -36,7 +34,7 @@ export function openCompass(that) {
                 setTimeout(() => {
                     rotate(radian);
                     app.me.radian = radian;
-                }, 2000);
+                }, 1000);
                 cnt = 1;
             }
         }

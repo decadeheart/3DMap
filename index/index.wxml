@@ -1,6 +1,6 @@
 <view class="container" catchtouchmove="{{false}}">
 	<!-- 地图容器 -->
-	<canvas type="webgl" id="map" class="{{isAndroid?'map-android':'map'}} "bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap" hidden="{{showBlue}}"></canvas>
+	<canvas type="webgl" id="map" class="map" bindtouchstart="touchStart" bindtouchmove="touchMove" bindtouchend="touchEnd" bindtap="touchTap" hidden="{{showBlue}}"></canvas>
 	<!-- 精灵容器 -->
 	<canvas type="2d" id="sprite" hidden="{{showBlue}}"></canvas>
 	

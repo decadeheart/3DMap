@@ -50,14 +50,22 @@ Page({
         Object.defineProperty(app.map, "curFloor", {
             set: function (val) {
                 that.setData({
+<<<<<<< HEAD
                     currentFloor: val
                 })
             }
         })
+=======
+                    currentFloor: val,
+                });
+            },
+        });
+>>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         Object.defineProperty(app.localization, "isOffset", {
             set: function (val) {
                 if (val) {
+<<<<<<< HEAD
                     let text = "您已经偏移"
                     tts(text)
                     that.setData({
@@ -67,6 +75,16 @@ Page({
                 }
             }
         })
+=======
+                    let text = "您已经偏移";
+                    tts(text);
+                    that.setData({
+                        navInformation: text,
+                    });
+                }
+            },
+        });
+>>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -91,7 +109,6 @@ Page({
                 }
             },
         });
-
         main.getBuildingData().then(() => {
             main.startBeaconDiscovery().then((res) => {
                 that.setData({
@@ -104,9 +121,11 @@ Page({
                 openCompass(that);
             });
         });
+<<<<<<< HEAD
         app.isReady = true;
+=======
+>>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
     },
-
     /**
      * @description 弹窗事件，用于提醒用户打开蓝牙
      * @date 2020-07-13
@@ -125,7 +144,6 @@ Page({
     },
 
     // 控件点击事件
-
     /**
      * @description 地图二维和三维视角切换
      */
@@ -149,8 +167,8 @@ Page({
     displayOneFloor: util.throttle(function (e) {
         let floor = 1 + e.currentTarget.dataset.floor;
         this.setData({
-            currentFloor: floor
-        })
+            currentFloor: floor,
+        });
         main.displayOneFloor(floor);
     }, 300),
     /**
@@ -285,7 +303,6 @@ Page({
             endPointName: this.data.currentPointName,
         });
 
-
         if (!!app.spriteControl.startSprite) {
             let dis = main.navigateInit();
             self.setData({
@@ -301,7 +318,6 @@ Page({
                 main.displayTwoFloor(startFloor, endFloor);
             }
         }
-
     }, 300),
     /**
      * @description 按钮“到这里去”的点击事件
@@ -336,7 +352,6 @@ Page({
         } else {
             main.displayTwoFloor(startFloor, endFloor);
         }
-
     }, 300),
     /**
      * @description 模拟导航
@@ -383,7 +398,7 @@ Page({
         this.setData({
             navFlag: 1,
             infoFlag: 1,
-            navInformation: "开始导航"
+            navInformation: "开始导航",
         });
         main.stopNav();
         main.backToMe();
@@ -406,9 +421,9 @@ Page({
             ...e,
             type: "touchstart",
         });
-        this.a(e);
+        this.androidTap(e);
     },
-    a: util.throttle(function (e) {
+    androidTap: util.throttle(function (e) {
         if (this.data.isAndroid) {
             if (!app.navigateFlag) {
                 let tmp = main.selectObj(e.touches[0]);

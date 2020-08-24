@@ -43,7 +43,10 @@ App({
     },
     //** */
     building_conf: [
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
         {
             building_id: "1",
             building_name: "行政楼",

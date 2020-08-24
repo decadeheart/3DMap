@@ -1,27 +1,16 @@
-import {
-    createScopedThreejs
-} from "../util/three";
+import { createScopedThreejs } from "../util/three";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
-import {
-    initData
-} from "../js/data";
-import {
-    beaconUpdate,
-    match2getFloor
-} from "../js/ibeacon";
+import { initData } from "../js/data";
+import { beaconUpdate, match2getFloor } from "../js/ibeacon";
 import gps from "../js/gps";
 import accChange from "../js/motionDetection";
-import {
-    autoMoving
-} from "../js/simNavigate";
+import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
-import {
-    showOrientationText
-} from "../js/directionNotify";
+import { showOrientationText } from "../js/directionNotify";
 import userControl from "../js/user";
-import * as util from "../util/util"
+import * as util from "../util/util";
 
 var app = getApp();
 var main = {};
@@ -52,7 +41,11 @@ main.initMap = function (that) {
             navRender();
             //打开步数监测
             accChange();
+<<<<<<< HEAD
             this.displayAllFloor();
+=======
+            
+>>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
              * @date 2020-07-31
@@ -65,7 +58,6 @@ main.initMap = function (that) {
                 let systemControl = app.systemControl;
                 let me = app.me;
                 let needsUpdateBlueLocation = false; //用于确定蓝牙点是否需要更新
-
 
                 //如果当前是导航模式，那么静止的管状路线会动起来，并且进行语音播报
                 if (systemControl.state === "navigating") {
@@ -89,20 +81,17 @@ main.initMap = function (that) {
 
                 //直接改变位置到首个蓝牙点位置
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
-                    needsUpdateBlueLocation = true; 
+                    needsUpdateBlueLocation = true;
                     userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.displayOneFloor(nowPoint.floor);
-                    
                 }
 
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
                 if (floor != null) main.displayOneFloor(floor);
 
-
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode) {
-                    
                     //偏移检测
                     // if (systemControl.state === "navigating") {
                     //     let arrIndex;
@@ -113,28 +102,28 @@ main.initMap = function (that) {
                     //         }
                     //         return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
                     //     });
-                        
+
                     //     if(cur) {
                     //         main.detectDis(cur, arr[arrIndex+1], me.position)
                     //     }
                     // }
 
-                     //如果蓝牙的位置发生了变化，人物位置动画更新
+                    //如果蓝牙的位置发生了变化，人物位置动画更新
                     if (
                         nowPoint.x != lastPoint.x ||
                         nowPoint.y != lastPoint.y ||
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-
                         //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
                         if (systemControl.state === "navigating") {
                             let [cur] = app.resultParent.filter((item) => {
                                 return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
                             });
-                            console.log('cur', cur);
+                            console.log("cur", cur);
                             if (cur) {
                                 needsUpdateBlueLocation = true;
+
                                 userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                             }
                         } else {
@@ -143,17 +132,17 @@ main.initMap = function (that) {
                             userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                         }
                     }
-                    if (me.radian && needsUpdateBlueLocation
-                    ) {
+                    if (me.radian && needsUpdateBlueLocation) {
+                        //动画更新部分，只有第一次和导航过程中改变视角
+                        if(lastPoint.x==0 || app.navigateFlag ==2){
+                            main.changeFocus(nowPoint);
+                        } 
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
                         lastPoint.z = nowPoint.z;
                         lastPoint.floor = nowPoint.floor;
-                        //动画更新部分
-                        main.changeFocus(nowPoint);
+                        
                     }
-
-
                 }
                 TWEEN.update();
                 renderer.render(scene, camera);
@@ -181,8 +170,8 @@ main.initMap = function (that) {
 main.cameraExchange = function (index) {
     MODEL.cameraExchange(index);
 };
-main.displayAllFloor = function () {
-    MODEL.displayAllFloor();
+main.displayAllFloor = function (onShow) {
+    MODEL.displayAllFloor(onShow);
     //为了提高加载性能，暂不使用该函数
     // SPRITE.loadAllTargetText(scene);
 };
@@ -311,16 +300,16 @@ main.changeFocus = (point) => {
 };
 
 main.detectDis = util.throttle(function (now, next, me) {
-    if(next) {
+    if (next) {
         let distance1 = util.dis3(now, next);
         let distance2 = util.dis3(me, now);
         let distance3 = util.dis3(me, next);
         console.log(now);
         console.log(next);
-        console.log('distance1',distance1)
-        console.log('distance2',distance2)
-        console.log('distance3',distance3)
-        if (distance2 + distance3 > 2* distance1) {
+        console.log("distance1", distance1);
+        console.log("distance2", distance2);
+        console.log("distance3", distance3);
+        if (distance2 + distance3 > 2 * distance1) {
             // wx.showToast({
             //     title: "您已经偏离",
             //     icon: "none",
@@ -329,11 +318,10 @@ main.detectDis = util.throttle(function (now, next, me) {
             //     mask: true,
             // });
             app.localization.isOffset = true;
-        }else {
+        } else {
             app.localization.isOffset = false;
         }
     }
-
-}, 1000)
+}, 1000);
 
 export default main;
