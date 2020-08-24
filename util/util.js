@@ -105,16 +105,16 @@ export function throttle(fn, interval) {
 
     return function (...args) {
         cnt++;
-        // console.log(cnt);
-        // if (cnt > 4) {
-        //     wx.showToast({
-        //         title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
-        //         icon: "none",
-        //         image: "",
-        //         duration: 1500,
-        //         mask: true,
-        //     });
-        // }
+        console.log(cnt);
+        if (cnt > 4) {
+            wx.showToast({
+                title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
+                icon: "none",
+                image: "",
+                duration: 1500,
+                mask: true,
+            });
+        }
         var context = this;
         var backTime = new Date(); //第一次函数return即触发的时间
         if (backTime - enterTime > gapTime) {

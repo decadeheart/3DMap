@@ -2,6 +2,7 @@ import main from "./main";
 import { openCompass } from "../js/compass";
 import * as util from "../util/util";
 import tts from "../js/tts";
+// import { displayAllFloor } from "../js/model";
 
 var app = getApp();
 Page({
@@ -34,7 +35,16 @@ Page({
         isAndroid: false,
     },
 
+    
     onLoad: function () {
+        if (app.isReady) {
+            app.canvas=null;
+            app.canvasSprite=null;
+            app.localization.nowBluePosition={ x: 0, y: 0, z: 0, floor: 1 };
+            app.localization.lastBluePosition={ x: 0, y: 0, z: 0, floor: 1 };
+            app.map.isFloorLoaded = [false, false, false, false, false, false, false];
+        }
+
         var that = this;
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         Object.defineProperty(app.map, "curFloor", {
@@ -44,19 +54,19 @@ Page({
                 })
             }
         })
-         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
-         Object.defineProperty(app.localization,"isOffset",{
-            set:function(val){
-                if(val) {
+        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
+        Object.defineProperty(app.localization, "isOffset", {
+            set: function (val) {
+                if (val) {
                     let text = "您已经偏移"
                     tts(text)
                     that.setData({
-                        navInformation:text
+                        navInformation: text
                     })
-                    
+
                 }
             }
-        })       
+        })
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -94,7 +104,7 @@ Page({
                 openCompass(that);
             });
         });
-
+        app.isReady = true;
     },
 
     /**
@@ -183,6 +193,9 @@ Page({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
+        // wx.redirectTo({
+        //     url: 'index'
+        // })
     },
 
     /**
@@ -349,7 +362,7 @@ Page({
         if (self.startPointName != "我的位置") {
             main.setStartMe();
             let dis = main.navigateInit();
-            
+
             main.backToMe();
             self.setData({
                 navFlag: 3,

@@ -7,6 +7,7 @@ App({
         this.map_conf.src_dir = `${url}${map}/`;
         this.map_conf.img_dir = `${url}${map}/target_img/`;
     },
+    isReady: false,
     url: "https://www.cleverguided.com/iLaN/3D-",
     THREE: null,
     canvas: null,
@@ -42,7 +43,7 @@ App({
     },
     //** */
     building_conf: [
-        
+
         {
             building_id: "1",
             building_name: "行政楼",
