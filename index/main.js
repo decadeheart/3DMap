@@ -41,11 +41,7 @@ main.initMap = function (that) {
             navRender();
             //打开步数监测
             accChange();
-<<<<<<< HEAD
-            this.displayAllFloor();
-=======
             
->>>>>>> 0f893771abd11ebd8febc4496926b7c8cb886f0c
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
              * @date 2020-07-31
