@@ -42,6 +42,9 @@ Page({
             app.localization.nowBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
             app.localization.lastBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
             app.map.isFloorLoaded = [false, false, false, false, false, false, false];
+            app.spriteControl.curSprite = null;
+            app.spriteControl.startSprite = null;
+            app.spriteControl.endSprite = null;
             app.spriteControl.targetSprites = [];
             app.map.curFloor = 0;
         }

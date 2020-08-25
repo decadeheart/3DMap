@@ -94,6 +94,14 @@ export function CalculateNodeDis(node1, node2) {
     return d;
 }
 
+/**
+ * @description 修改目标元素的缩放大小
+ * @export
+ * @param {*} scale 缩放比例
+ * @param {*} type 类型
+ * @param {*} target 目标对象
+ * @returns
+ */
 export function changeScale(scale, type, target) {
     if (type == "sprite") {
         target.targetSprites.forEach(function (groups) {

@@ -7,7 +7,8 @@ App({
         this.map.src_dir = `${url}${map}/`;
         this.map.img_dir = `${url}${map}/target_img/`;
     },
-    isReady: false,
+    isReady: false, //当所有元素加载好之后修改为true，重新进入时通过该标志来取消原动画渲染线程并进行部分全局变量初始化
+    threadId: 0, //渲染进程id，配合isReady使用
     url: "https://www.cleverguided.com/iLaN/3D-",
     THREE: null,
     canvas: null,
@@ -18,7 +19,7 @@ App({
     navigateFlag: 0,
     POItarget: [],
     resultParent: [],
-    threadId:0,
+    
     map: {
         stepCount: 0,
         preStep: 0,
@@ -32,8 +33,8 @@ App({
         int_userHeight: 2,
         fontSpriteScale: 4,
         imgSpriteScale: 7,
-        float_mapProportion: 0.6, 
-        layerHeight: 15, 
+        float_mapProportion: 0.6,
+        layerHeight: 15,
         lineHeight: 1,
         bd_p1: { x: 114.417444, y: 30.519147 },
         bd_p2: { x: 114.428314, y: 30.512629 },
@@ -63,17 +64,17 @@ App({
         },
     },
     spriteControl: {
-        endSprite: null,
-        startSprite: null,
         curSprite: null,
+        startSprite: null,
+        endSprite: null,
         targetSprites: [],
-        
+
     },
     pathControl: {
         textures: [],
         texture: null,
         pathGroup: null,
-        
+
     },
     routeClass: {
         startPoint: {},
