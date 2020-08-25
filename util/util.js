@@ -1,3 +1,5 @@
+let app = getApp();
+
 /**
  * @description 三维勾股定理
  * @param {*} nowLi 节点1
@@ -90,6 +92,42 @@ export function CalculateNodeDis(node1, node2) {
     let c = node1.z - node2.z;
     let d = Math.sqrt(a * a + b * b + c * c);
     return d;
+}
+
+export function changeScale(scale, type, target) {
+    if (type == "sprite") {
+        target.targetSprites.forEach(function (groups) {
+            groups.children.forEach(function (sprite) {
+                if (scale < 4) {
+                    if (sprite.level == 3)
+                        sprite.scale.set((sprite.initScale.x * 4) / scale, (sprite.initScale.y * 4) / scale, 1);
+                    else sprite.scale.set((sprite.initScale.x * 5) / scale, (sprite.initScale.y * 5) / scale, 1);
+                }
+                if (sprite.level > scale) {
+                    sprite.visible = false;
+                } else {
+                    sprite.visible = true;
+                }
+                if (scale >= 3 && sprite.level == 2 && !sprite.img) {
+                    sprite.visible = false;
+                }
+            });
+        });
+    }
+    else if (type == "user") {
+        if (target.isInitUser === false) {
+            return;
+        }
+        if (scale > 1)
+            app.me.scale.set(scale, scale, app.me.scale.z);
+    }
+    else if (type == "path") {
+        if (target.pathGroup !== null) {
+            target.pathGroup.children.forEach(function (tube) {
+                tube.scale.set(scale, scale, 1);
+            });
+        }
+    }
 }
 
 /**

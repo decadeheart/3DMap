@@ -33,7 +33,7 @@ export function autoMoving(path) {
         {
             x: path[0].x,
             y: path[0].y,
-            z: path[0].z + app.map_conf.int_userHeight,
+            z: path[0].z + app.map.int_userHeight,
         },
         1000
     );
@@ -44,7 +44,7 @@ export function autoMoving(path) {
     let newT = { x: path[0].x, y: path[0].y, z: path[0].z };
     let newP = { x: path[0].x, y: path[0].y + 15, z: path[0].z + 15 };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
-    let floor = path[0].z / app.map_conf.layerHeight + 1;
+    let floor = path[0].z / app.map.layerHeight + 1;
     MODEL.displayOneFloor(floor);
 
     /**
@@ -72,7 +72,7 @@ export function autoMoving(path) {
             oldP = { x: path[0].x, y: path[0].y, z: path[0].z + 80 };
         }
         if (path[i].z - path[i - 1].z != 0) {
-            let floor = path[i].z / app.map_conf.layerHeight + 1;
+            let floor = path[i].z / app.map.layerHeight + 1;
             MODEL.displayOneFloor(floor);
         }
 
@@ -90,13 +90,13 @@ export function autoMoving(path) {
 
         me.position.x = path[i - 1].x;
         me.position.y = path[i - 1].y;
-        me.position.z = path[i - 1].z + app.map_conf.int_userHeight;
+        me.position.z = path[i - 1].z + app.map.int_userHeight;
         new TWEEN.Tween(me.position)
             .to(
                 {
                     x: path[i].x,
                     y: path[i].y,
-                    z: path[i].z + app.map_conf.int_userHeight,
+                    z: path[i].z + app.map.int_userHeight,
                 },
                 1000
             )

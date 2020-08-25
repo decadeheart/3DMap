@@ -9,7 +9,7 @@ let app = getApp();
  */
 function makeFontSprite(message) {
     //为全局变量改名
-    let map_conf = app.map_conf;
+    let map = app.map;
     let THREE = app.THREE;
     //获取canvas上下文
     let canvas = app.canvasSprite;
@@ -45,10 +45,10 @@ function makeFontSprite(message) {
     //这句为了防止warning
     sprite.material.map.minFilter = THREE.LinearFilter;
     //缩放比例
-    sprite.scale.set((map_conf.fontSpriteScale * width) / height, map_conf.fontSpriteScale, 1);
+    sprite.scale.set((map.fontSpriteScale * width) / height, map.fontSpriteScale, 1);
     sprite.initScale = {
-        x: (map_conf.fontSpriteScale * width) / height,
-        y: map_conf.fontSpriteScale,
+        x: (map.fontSpriteScale * width) / height,
+        y: map.fontSpriteScale,
         z: 1,
     };
     //通过重设canvas大小清空内容
@@ -67,15 +67,15 @@ function makeFontSprite(message) {
  */
 function makeImgSprite(imageURL) {
     //为全局变量改名
-    let map_conf = app.map_conf;
+    let map = app.map;
     let THREE = app.THREE;
     let texture = new THREE.TextureLoader().load(imageURL);
     let material = new THREE.SpriteMaterial({ map: texture, depthTest: true });
     let sprite = new THREE.Sprite(material);
-    sprite.scale.set(map_conf.imgSpriteScale / 2, map_conf.imgSpriteScale / 2, 1);
+    sprite.scale.set(map.imgSpriteScale / 2, map.imgSpriteScale / 2, 1);
     sprite.initScale = {
-        x: map_conf.imgSpriteScale / 2,
-        y: map_conf.imgSpriteScale / 2,
+        x: map.imgSpriteScale / 2,
+        y: map.imgSpriteScale / 2,
         z: 1,
     };
     sprite.img = true;
@@ -98,7 +98,7 @@ export function loadTargetTextByFloor(scene, floor) {
     POItarget.forEach(function (item) {
         if (item.floor == floor) {
             if (item.img) {
-                sprite = makeImgSprite(app.map_conf.img_dir + item.img);
+                sprite = makeImgSprite(app.map.img_dir + item.img);
             } else {
                 sprite = makeFontSprite(item.name);
             }
@@ -132,7 +132,7 @@ export function loadAllTargetText(scene) {
     //添加精灵到精灵组
     POItarget.forEach(function (item) {
         if (item.img) {
-            sprite = makeImgSprite(app.map_conf.img_dir + item.img);
+            sprite = makeImgSprite(app.map.img_dir + item.img);
         } else {
             sprite = makeFontSprite(item.name);
         }

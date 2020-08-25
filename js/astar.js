@@ -236,7 +236,7 @@ function navigate(nodeList, start, end) {
     MODEL.createPathTube(resultParent);
 
     //计算距离，并返回显示文字
-    let distance = (resultParent[resultParent.length - 1].gn * app.map_conf.float_mapProportion).toFixed(1);
+    let distance = (resultParent[resultParent.length - 1].gn * app.map.float_mapProportion).toFixed(1);
     let distancetext = "全长" + distance + "米 大约" + (distance * 0.016).toFixed(1) + "分钟";
 
     return distancetext;

@@ -70,9 +70,9 @@ function dis2(nowLi, nowLi2) {
     }
     return Math.sqrt(a * a + b * b);
 }
-//var scale=dis2(app.map_conf.coor_p1, app.map_conf.coor_p2) / dis2(app.map_conf.bd_p1, app.map_conf.bd_p2);
-var scaleX = Math.abs(app.map_conf.coor_p1.x - app.map_conf.coor_p2.x) / Math.abs(app.map_conf.bd_p1.x - app.map_conf.bd_p2.x);
-var scaleY = Math.abs(app.map_conf.coor_p1.y - app.map_conf.coor_p2.y) / Math.abs(app.map_conf.bd_p1.y - app.map_conf.bd_p2.y);
+//var scale=dis2(app.map.coor_p1, app.map.coor_p2) / dis2(app.map.bd_p1, app.map.bd_p2);
+var scaleX = Math.abs(app.map.coor_p1.x - app.map.coor_p2.x) / Math.abs(app.map.bd_p1.x - app.map.bd_p2.x);
+var scaleY = Math.abs(app.map.coor_p1.y - app.map.coor_p2.y) / Math.abs(app.map.bd_p1.y - app.map.bd_p2.y);
 
 //火星坐标转百度坐标
 function gcj02tobd09(lng, lat) {
@@ -86,10 +86,10 @@ function gcj02tobd09(lng, lat) {
 }
 function getXY(marsLng, marsLat) {
     let [lng, lat] = gcj02tobd09(marsLng, marsLat);
-    let x = app.map_conf.coor_p1.x + (lng - app.map_conf.bd_p1.x) * scaleX;
-    let y = app.map_conf.coor_p1.y + (lat - app.map_conf.bd_p1.y) * scaleY;
-    // if (Math.min(Math.abs(x - app.map_conf.coor_p1.x), Math.abs(x - app.map_conf.coor_p2.x)) > (app.map_conf.coor_p2.x - app.map_conf.coor_p1.x) * 1.5 ||
-    // 	y > app.map_conf.coor_p2.y + (app.map_conf.coor_p2.y - app.map_conf.coor_p1.y) * 1.5 || y < app.map_conf.coor_p1.y - (app.map_conf.coor_p2.y - app.map_conf.coor_p1.y) * 1.5) {
+    let x = app.map.coor_p1.x + (lng - app.map.bd_p1.x) * scaleX;
+    let y = app.map.coor_p1.y + (lat - app.map.bd_p1.y) * scaleY;
+    // if (Math.min(Math.abs(x - app.map.coor_p1.x), Math.abs(x - app.map.coor_p2.x)) > (app.map.coor_p2.x - app.map.coor_p1.x) * 1.5 ||
+    // 	y > app.map.coor_p2.y + (app.map.coor_p2.y - app.map.coor_p1.y) * 1.5 || y < app.map.coor_p1.y - (app.map.coor_p2.y - app.map.coor_p1.y) * 1.5) {
     // 	return;
     // }
     return [x, y];

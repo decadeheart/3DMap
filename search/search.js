@@ -10,7 +10,7 @@ Page({
         buildingRoomGroup: [],
         searchHidden: true,
         floorIndex: 0,
-        searchTitle: app.map_conf.map_name,
+        searchTitle: app.map.map_name,
     },
     onLoad: function () {
         // console.log(this.data)

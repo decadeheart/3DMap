@@ -37,7 +37,7 @@ main.initMap = function (that) {
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-            
+
             // navRender();
             //打开步数监测
             accChange();
@@ -69,9 +69,9 @@ main.initMap = function (that) {
                 }
 
                 //手势缩放时调整文字和图标大小并按等级显示
-                app.spriteControl.changeScale(2200 / camera.position.z); //参数2200为测试得到，不同模型参数需要重新测试
+                util.changeScale(2200 / camera.position.z, "sprite", app.spriteControl); //参数2200为测试得到，不同模型参数需要重新测试
                 // app.pathControl.changeScale(camera.position.z / 500)
-                userControl.changeScale(camera.position.z / 600); //参数600为测试得到，不同模型参数需要重新测试
+                util.changeScale(camera.position.z / 600, "user", userControl); //参数600为测试得到，不同模型参数需要重新测试
 
                 //直接改变位置到首个蓝牙点位置
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
@@ -128,28 +128,28 @@ main.initMap = function (that) {
                     }
                     if (me.radian && needsUpdateBlueLocation) {
                         //动画更新部分，只有第一次和导航过程中改变视角
-                        if(lastPoint.x==0 || app.navigateFlag ==2){
+                        if (lastPoint.x == 0 || app.navigateFlag == 2) {
                             main.changeFocus(nowPoint);
-                        } 
+                        }
                         lastPoint.x = nowPoint.x;
                         lastPoint.y = nowPoint.y;
                         lastPoint.z = nowPoint.z;
                         lastPoint.floor = nowPoint.floor;
-                        
+
                     }
                 }
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();
-                app.threadId=canvas.requestAnimationFrame(navRender);
+                app.threadId = canvas.requestAnimationFrame(navRender);
             }
             //重新进入小程序，之前的navRender还存在，因此需要cancel
-            if(app.isReady){
+            if (app.isReady) {
                 // app.isReady=false;
                 // console.log("threadId",app.threadId)
                 canvas.cancelAnimationFrame(app.threadId);
             }
-            app.threadId=canvas.requestAnimationFrame(navRender);
+            app.threadId = canvas.requestAnimationFrame(navRender);
         });
 
     /** 初始化授权 */
