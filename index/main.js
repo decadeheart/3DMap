@@ -37,18 +37,16 @@ main.initMap = function (that) {
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-
-            navRender();
+            
+            // navRender();
             //打开步数监测
             accChange();
-            
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
              * @date 2020-07-31
              */
             function navRender() {
                 renderer.clear();
-
                 let nowPoint = app.localization.nowBluePosition;
                 let lastPoint = app.localization.lastBluePosition;
                 let systemControl = app.systemControl;
@@ -143,8 +141,15 @@ main.initMap = function (that) {
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();
-                canvas.requestAnimationFrame(navRender);
+                app.threadId=canvas.requestAnimationFrame(navRender);
             }
+            //重新进入小程序，之前的navRender还存在，因此需要cancel
+            if(app.isReady){
+                // app.isReady=false;
+                // console.log("threadId",app.threadId)
+                canvas.cancelAnimationFrame(app.threadId);
+            }
+            app.threadId=canvas.requestAnimationFrame(navRender);
         });
 
     /** 初始化授权 */

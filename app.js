@@ -18,6 +18,7 @@ App({
     navigateFlag: 0,
     POItarget: [],
     resultParent: [],
+    threadId:0,
     map: {
         stepCount: 0,
         preStep: 0,
