@@ -33,8 +33,6 @@ Page({
         compassAngle: "",
         isAndroid: false,
     },
-
-
     onLoad: function () {
         if (app.isReady) {
             app.canvas = null;
@@ -124,7 +122,6 @@ Page({
             });
         });
     },
-
     // 控件点击事件
     /**
      * @description 地图二维和三维视角切换
@@ -197,7 +194,6 @@ Page({
         //     url: 'index'
         // })
     },
-
     /**
      * @description 点击搜索栏，页面跳转
      */
@@ -224,9 +220,7 @@ Page({
             },
         });
     },
-
     // 导航专区
-
     /**
      * @description 设置起点
      * @date 2020-07-20
@@ -385,9 +379,7 @@ Page({
         main.stopNav();
         main.backToMe();
     }, 300),
-
     // 手势事件
-
     touchTap: util.throttle(function (e) {
         if (!app.navigateFlag) {
             let tmp = main.selectObj(e.touches[0]);
