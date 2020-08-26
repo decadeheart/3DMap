@@ -109,7 +109,7 @@ export function changeScale(scale, type, target) {
                 if (scale < 4) {
                     if (sprite.level == 3)
                         sprite.scale.set((sprite.initScale.x * 4) / scale, (sprite.initScale.y * 4) / scale, 1);
-                    else sprite.scale.set((sprite.initScale.x * 5) / scale, (sprite.initScale.y * 5) / scale, 1);
+                    else sprite.scale.set((sprite.initScale.x * 3) / scale, (sprite.initScale.y * 3) / scale, 1);
                 }
                 if (sprite.level > scale) {
                     sprite.visible = false;

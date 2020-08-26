@@ -24,36 +24,31 @@ App({
         stepCount: 0,
         preStep: 0,
         curFloor: 0,
-        isFloorLoaded: [false, false, false, false, false, false, false],
-        map_id: "jxqzf",
-        map_name: "江夏区政府",
+        isFloorLoaded: [false, false, false, false, false, false],/** */
+        map_id: "jxsm",/** */
+        map_name: "江夏市民之家",/** */
         data_url: "",
         src_dir: "",
         img_dir: "",
         int_userHeight: 2,
         fontSpriteScale: 4,
         imgSpriteScale: 7,
-        float_mapProportion: 0.6,
-        layerHeight: 15,
+        float_mapProportion: 1,/** */
+        layerHeight: 30,/** */
         lineHeight: 1,
-        bd_p1: { x: 114.417444, y: 30.519147 },
-        bd_p2: { x: 114.428314, y: 30.512629 },
-        coor_p1: { x: -250, y: 87 },
-        coor_p2: { x: 140, y: -88 },
+        bd_p1: { x: 114.417444, y: 30.519147 },/** */
+        bd_p2: { x: 114.428314, y: 30.512629 },/** */
+        coor_p1: { x: -250, y: 87 },/** */
+        coor_p2: { x: 140, y: -88 },/** */
     },
     building: [
         {
             building_id: "1",
-            building_name: "行政楼",
-            layer_nums: 6,
-            layer_height: 15,
+            building_name: "主楼",
+            layer_nums: 5,
+            layer_height: 30,
         },
-        {
-            building_id: "2",
-            building_name: "会议中心",
-            layer_nums: 2,
-            layer_height: 15,
-        },
+    
     ],
     systemControl: {
         state: "normal",
