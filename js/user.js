@@ -37,17 +37,6 @@ const userControl = {
         userControl.changeRotation(null, null, 0);
     },
     /**
-     * 改变缩放倍数
-     * @param {*} scale  倍数
-     */
-    changeScale: function (scale) {
-        if (this.isInitUser === false) {
-            return;
-        }
-        if (scale > 1)
-            app.me.scale.set(scale, scale, app.me.scale.z);
-    },
-    /**
      * 用户改变旋转方向
      * @param {*} x 
      * @param {*} y 

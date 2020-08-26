@@ -145,8 +145,6 @@ main.initMap = function (that) {
             }
             //重新进入小程序，之前的navRender还存在，因此需要cancel
             if (app.isReady) {
-                // app.isReady=false;
-                // console.log("threadId",app.threadId)
                 canvas.cancelAnimationFrame(app.threadId);
             }
             app.threadId = canvas.requestAnimationFrame(navRender);

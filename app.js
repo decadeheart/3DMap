@@ -19,7 +19,6 @@ App({
     navigateFlag: 0,
     POItarget: [],
     resultParent: [],
-    
     map: {
         stepCount: 0,
         preStep: 0,
@@ -63,13 +62,11 @@ App({
         startSprite: null,
         endSprite: null,
         targetSprites: [],
-
     },
     pathControl: {
         textures: [],
         texture: null,
         pathGroup: null,
-
     },
     routeClass: {
         startPoint: {},
