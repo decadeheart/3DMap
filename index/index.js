@@ -32,30 +32,51 @@ Page({
         ],
         compassAngle: "",
         isAndroid: false,
+        isAllFloor: false
     },
 
+
     onLoad: function () {
+        if (app.isReady) {
+            app.canvas = null;
+            app.canvasSprite = null;
+            app.localization.nowBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
+            app.localization.lastBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
+            app.map.isFloorLoaded = [false, false, false, false, false, false, false];
+            app.spriteControl.curSprite = null;
+            app.spriteControl.startSprite = null;
+            app.spriteControl.endSprite = null;
+            app.spriteControl.targetSprites = [];
+            app.map.curFloor = 0;
+            app.isBeaconGot = false;
+        }
+
         var that = this;
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
+        let tmpValue;
         Object.defineProperty(app.map, "curFloor", {
             set: function (val) {
+                tmpValue = val;
                 that.setData({
-                    currentFloor: val,
-                });
+                    currentFloor: val
+                })
             },
-        });
+            get: function () {
+                return tmpValue;
+            },
+        })
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
-        Object.defineProperty(app.localization, "isOffset", {
-            set: function (val) {
-                if (val) {
-                    let text = "您已经偏移";
-                    tts(text);
-                    that.setData({
-                        navInformation: text,
-                    });
-                }
-            },
-        });
+        // Object.defineProperty(app.localization, "isOffset", {
+        //     set: function (val) {
+        //         if (val) {
+        //             let text = "您已经偏移";
+        //             tts(text);
+        //             that.setData({
+        //                 navInformation: text,
+        //             });
+        //         }
+        //     },
+        // });
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -80,7 +101,6 @@ Page({
                 }
             },
         });
-
         main.getBuildingData().then(() => {
             main.startBeaconDiscovery().then((res) => {
                 that.setData({
@@ -93,8 +113,11 @@ Page({
                 openCompass(that);
             });
         });
+        app.isReady = true;
     },
-
+    onReady:function(){
+        // main.displayAllFloor(true);
+    },
     /**
      * @description 弹窗事件，用于提醒用户打开蓝牙
      * @date 2020-07-13
@@ -113,7 +136,6 @@ Page({
     },
 
     // 控件点击事件
-
     /**
      * @description 地图二维和三维视角切换
      */
@@ -128,7 +150,11 @@ Page({
      * @description 显示所有楼层
      */
     displayAllFloor: util.throttle(function () {
-        main.displayAllFloor();
+        let tmp = this.data.isAllFloor;
+        main.displayAllFloor(tmp);
+        this.setData({
+            isAllFloor: !tmp,
+        });
     }, 300),
     /**
      * @description 页面点击楼层图片，切换楼层
@@ -181,6 +207,9 @@ Page({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
         });
+        // wx.redirectTo({
+        //     url: 'index'
+        // })
     },
 
     /**

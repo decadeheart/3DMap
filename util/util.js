@@ -1,3 +1,5 @@
+let app = getApp();
+
 /**
  * @description 三维勾股定理
  * @param {*} nowLi 节点1
@@ -93,6 +95,50 @@ export function CalculateNodeDis(node1, node2) {
 }
 
 /**
+ * @description 修改目标元素的缩放大小
+ * @export
+ * @param {*} scale 缩放比例
+ * @param {*} type 类型
+ * @param {*} target 目标对象
+ * @returns
+ */
+export function changeScale(scale, type, target) {
+    if (type == "sprite") {
+        target.targetSprites.forEach(function (groups) {
+            groups.children.forEach(function (sprite) {
+                if (scale < 4) {
+                    if (sprite.level == 3)
+                        sprite.scale.set((sprite.initScale.x * 4) / scale, (sprite.initScale.y * 4) / scale, 1);
+                    else sprite.scale.set((sprite.initScale.x * 5) / scale, (sprite.initScale.y * 5) / scale, 1);
+                }
+                if (sprite.level > scale) {
+                    sprite.visible = false;
+                } else {
+                    sprite.visible = true;
+                }
+                if (scale >= 3 && sprite.level == 2 && !sprite.img) {
+                    sprite.visible = false;
+                }
+            });
+        });
+    }
+    else if (type == "user") {
+        if (target.isInitUser === false) {
+            return;
+        }
+        if (scale > 1)
+            app.me.scale.set(scale, scale, app.me.scale.z);
+    }
+    else if (type == "path") {
+        if (target.pathGroup !== null) {
+            target.pathGroup.children.forEach(function (tube) {
+                tube.scale.set(scale, scale, 1);
+            });
+        }
+    }
+}
+
+/**
  * @description 函数节流
  * @param {*} fn 需要节流的函数
  * @param {*} interval 等待时间
@@ -106,15 +152,15 @@ export function throttle(fn, interval) {
     return function (...args) {
         cnt++;
         // console.log(cnt);
-        // if (cnt > 4) {
-        //     wx.showToast({
-        //         title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
-        //         icon: "none",
-        //         image: "",
-        //         duration: 1500,
-        //         mask: true,
-        //     });
-        // }
+        if (cnt > 4) {
+            wx.showToast({
+                title: "慢一点嘛，人家反应不过来啦o(╥﹏╥)o",
+                icon: "none",
+                image: "",
+                duration: 1500,
+                mask: true,
+            });
+        }
         var context = this;
         var backTime = new Date(); //第一次函数return即触发的时间
         if (backTime - enterTime > gapTime) {

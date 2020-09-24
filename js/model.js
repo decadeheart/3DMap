@@ -189,7 +189,7 @@ export function showSprite(sprite, point, type) {
 
     } else {
         //当精灵为时，需要创建精灵贴图
-        let map_conf = app.map_conf;
+        let map = app.map;
         let textureLoader = new THREE.TextureLoader();
         
         //判断终点和起点并设置,用于计算，位置在前
@@ -206,10 +206,10 @@ export function showSprite(sprite, point, type) {
                 depthTest: false,
             });
             sprite = new THREE.Sprite(material);
-            sprite.scale.set(map_conf.imgSpriteScale, map_conf.imgSpriteScale, 1);
+            sprite.scale.set(map.imgSpriteScale, map.imgSpriteScale, 1);
             sprite.initScale = {
-                x: map_conf.imgSpriteScale,
-                y: map_conf.imgSpriteScale,
+                x: map.imgSpriteScale,
+                y: map.imgSpriteScale,
                 z: 1,
             };
             sprite.name = type + "Sprite";
@@ -292,10 +292,10 @@ export function selectObj(index) {
  */
 export function displayAllFloor() {
     let floorArray = app.map.isFloorLoaded;
-    for (let i = 1; i <= floorArray.length; i++) {
+    for (let i = 1; i <floorArray.length; i++) {
         if (!floorArray[i]) {
             loadModelByFloor(scene, i);
-        }
+        } 
     }
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
@@ -424,7 +424,7 @@ export function initPath() {
 export function createPathTube(path) {
     let pointlist = [];
     let floorlist = [];
-    let map_conf = app.map_conf;
+    let map = app.map;
     let pathControl = app.pathControl;
     scene.remove(pathControl.pathGroup);
 
@@ -433,21 +433,21 @@ export function createPathTube(path) {
     if (path.length < 2) {
         return;
     }
-    pointlist.push([new THREE.Vector3(path[0].x, path[0].y, path[0].z + map_conf.lineHeight)]);
+    pointlist.push([new THREE.Vector3(path[0].x, path[0].y, path[0].z + map.lineHeight)]);
     floorlist.push(path[0].floor);
     for (let i = 1; i < path.length; i++) {
         if (path[i].floor !== path[i - 1].floor) {
             pointlist.push([
-                new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map_conf.lineHeight),
-                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight),
+                new THREE.Vector3(path[i - 1].x, path[i - 1].y, path[i - 1].z + map.lineHeight),
+                new THREE.Vector3(path[i].x, path[i].y, path[i].z + map.lineHeight),
             ]);
             floorlist.push(path[i - 1].floor);
             let line = [];
-            line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+            line.push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map.lineHeight));
             pointlist.push(line);
             floorlist.push(path[i].floor);
         } else {
-            pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map_conf.lineHeight));
+            pointlist[pointlist.length - 1].push(new THREE.Vector3(path[i].x, path[i].y, path[i].z + map.lineHeight));
         }
     }
     pointlist.forEach(function (line, i) {

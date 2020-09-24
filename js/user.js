@@ -11,7 +11,7 @@ const userControl = {
         let me = app.me
         map.stepCount += 1;
         if (map.stepCount - map.preStep > 0) {
-            let distance = app.map_conf.float_mapProportion * (map.stepCount - map.preStep) * 2.5;
+            let distance = app.map.float_mapProportion * (map.stepCount - map.preStep) * 2.5;
             if (me.radian * 180 / Math.PI < 20) {
                 me.radian = 0;
             }

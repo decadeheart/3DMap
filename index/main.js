@@ -1,5 +1,4 @@
 import { createScopedThreejs } from "../util/three";
-import util from "../util/util";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
@@ -11,6 +10,7 @@ import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { showOrientationText } from "../js/directionNotify";
 import userControl from "../js/user";
+import * as util from "../util/util";
 
 var app = getApp();
 var main = {};
@@ -39,6 +39,7 @@ main.initMap = function (that) {
             let camera = MODEL.getCamera();
 
             navRender();
+            //打开步数监测
             accChange();
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
@@ -46,7 +47,6 @@ main.initMap = function (that) {
              */
             function navRender() {
                 renderer.clear();
-
                 let nowPoint = app.localization.nowBluePosition;
                 let lastPoint = app.localization.lastBluePosition;
                 let systemControl = app.systemControl;
@@ -69,12 +69,12 @@ main.initMap = function (that) {
                 }
 
                 //手势缩放时调整文字和图标大小并按等级显示
-                app.spriteControl.changeScale(2200 / camera.position.z); //参数2200为测试得到，不同模型参数需要重新测试
+                util.changeScale(2200 / camera.position.z, "sprite", app.spriteControl); //参数2200为测试得到，不同模型参数需要重新测试
                 // app.pathControl.changeScale(camera.position.z / 500)
-                userControl.changeScale(camera.position.z / 600); //参数600为测试得到，不同模型参数需要重新测试
+                util.changeScale(camera.position.z / 600, "user", userControl); //参数600为测试得到，不同模型参数需要重新测试
 
                 //直接改变位置到首个蓝牙点位置
-                if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
+                if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0 && app.canvasSprite)  {
                     needsUpdateBlueLocation = true;
                     userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.displayOneFloor(nowPoint.floor);
@@ -82,8 +82,8 @@ main.initMap = function (that) {
 
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
                 let floor = match2getFloor(nowPoint);
-                if (floor != null) main.displayOneFloor(floor);
-                let flag = false;
+                if (floor != null && app.canvasSprite) main.displayOneFloor(floor);
+
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode) {
                     //偏移检测
@@ -109,24 +109,46 @@ main.initMap = function (that) {
                         nowPoint.z != lastPoint.z ||
                         nowPoint.floor != lastPoint.floor
                     ) {
-                        flag = true;
-                        userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                        //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
+                        if (systemControl.state === "navigating") {
+                            let [cur] = app.resultParent.filter((item) => {
+                                return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
+                            });
+                            console.log("cur", cur);
+                            if (cur) {
+                                needsUpdateBlueLocation = true;
+
+                                userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                            }
+                        } else {
+                            needsUpdateBlueLocation = true;
+                            //如果不是导航过程当中，只要发生了变化就应该跳转
+                            userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                        }
+                    }
+                    if (me.radian && needsUpdateBlueLocation) {
+                        //动画更新部分，只有第一次和导航过程中改变视角
+                        if (lastPoint.x == 0 || app.navigateFlag == 2) {
+                            main.changeFocus(nowPoint);
+                        }
+                        lastPoint.x = nowPoint.x;
+                        lastPoint.y = nowPoint.y;
+                        lastPoint.z = nowPoint.z;
+                        lastPoint.floor = nowPoint.floor;
+
                     }
                 }
-                if (me.radian && flag) {
-                    lastPoint.x = nowPoint.x;
-                    lastPoint.y = nowPoint.y;
-                    lastPoint.z = nowPoint.z;
-                    lastPoint.floor = nowPoint.floor;
-                    //动画更新部分
-                    main.changeFocus(nowPoint);
-                }
-
                 TWEEN.update();
                 renderer.render(scene, camera);
                 renderer.clearDepth();
-                canvas.requestAnimationFrame(navRender);
+                app.threadId = canvas.requestAnimationFrame(navRender);
             }
+            //重新进入小程序，之前的navRender还存在，因此需要cancel
+            
+            if (app.isReady) {
+                canvas.cancelAnimationFrame(app.threadId);
+            }
+            app.threadId = canvas.requestAnimationFrame(navRender);
         });
 
     /** 初始化授权 */
@@ -148,8 +170,13 @@ main.initMap = function (that) {
 main.cameraExchange = function (index) {
     MODEL.cameraExchange(index);
 };
-main.displayAllFloor = function () {
-    MODEL.displayAllFloor();
+main.displayAllFloor = function (isAllFloor) {
+    if(!isAllFloor)
+        MODEL.displayAllFloor();
+    else
+    {
+        MODEL.displayOneFloor(app.map.curFloor);
+    }
     //为了提高加载性能，暂不使用该函数
     // SPRITE.loadAllTargetText(scene);
 };

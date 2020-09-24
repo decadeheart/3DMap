@@ -5,7 +5,7 @@ var DATA;
  */
 export const initData = new Promise((resolve, reject) => {
     wx.request({
-        url: app.map_conf.data_url,
+        url: app.map.data_url,
         data: {},
         header: { "content-type": "application/json" },
         method: "GET",
@@ -41,7 +41,7 @@ var dataPreProcess = (res) => {
     for (let build in target) {
         for (let floor in target[build]) {
             target[build][floor].forEach(function (item) {
-                item.z = (item.floor - 1) * app.map_conf.layerHeight;
+                item.z = (item.floor - 1) * app.map.layerHeight;
                 item.floor = parseInt(floor);
                 item.building = build;
                 app.POItarget.push(item);
@@ -49,10 +49,10 @@ var dataPreProcess = (res) => {
         }
     }
     app.nodeList.forEach(function (node) {
-        node.z = (node.floor - 1) * app.map_conf.layerHeight;
+        node.z = (node.floor - 1) * app.map.layerHeight;
     });
     app.beaconCoordinate.forEach(function (node) {
-        node.z = (node.floor - 1) * app.map_conf.layerHeight;
+        node.z = (node.floor - 1) * app.map.layerHeight;
     });
 };
 

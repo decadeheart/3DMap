@@ -11,15 +11,15 @@ var app = getApp();
  */
 export function loadModelByFloor(scene, floor) {
     //获取必须的全局变量并改名
-    let map_conf = app.map_conf;
-    let building_conf = app.building_conf;
+    let map = app.map;
+    let building = app.building;
     let THREE = app.THREE;
     let loader = new THREE.GLTFLoader();
-    building_conf.forEach(function (building) {
+    building.forEach(function (building) {
         app.map.isFloorLoaded[floor] = true;
         if (floor <= building.layer_nums) {
             loader.load(
-                map_conf.src_dir + "data/" + map_conf.map_id + "_" + building.building_id + "_" + floor + ".glb",
+                map.src_dir + "data/" + map.map_id + "_" + building.building_id + "_" + floor + ".glb",
                 function (glb) {
                     //添加建筑物到场景里
                     let building = glb.scene;
@@ -51,15 +51,15 @@ function setFloor(obj, f) {
  */
 export function loadGround(scene) {
     //获取必须的全局变量并改名
-    let map_conf = app.map_conf;
+    let map = app.map;
     let THREE = app.THREE;
     let loader = new THREE.GLTFLoader();
-    loader.load(map_conf.src_dir + "data/" + map_conf.map_id + ".glb", function (glb) {
+    loader.load(map.src_dir + "data/" + map.map_id + ".glb", function (glb) {
         //添加地面到场景里
         let ground = glb.scene;
         scene.add(ground);
         //设置物体参数
-        ground.name = map_conf.map_id + "_" + "outside";
+        ground.name = map.map_id + "_" + "outside";
         setFloor(ground, 0);
     });
 }
