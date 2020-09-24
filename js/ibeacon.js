@@ -2,10 +2,13 @@ import * as util from "../util/util";
 
 var blueConfig = {
     blueConfig: [],
-    maxBufferLength: 5,
+    maxBufferLength: 8,/**/
     minValidRssi: -90,
     beaconInfo: [],
 };
+//算法中k j 权重调整
+var kScale=0.1;/**/
+var jScale=20;/**/
 var app = getApp();
 /**
  * @description 监听ibeacon更新状态
@@ -92,13 +95,13 @@ function getMaxPossiblePoint() {
             for (i; i < temp.length; i++) {
                 if (temp[i].major === list[j].major && temp[i].minor === list[j].minor) {
                     //算法获得每一个信标的加权进行判断
-                    temp[i].count += blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 6);
+                    temp[i].count += blueConfig.maxBufferLength * k * kScale + (blueConfig.maxBufferLength - j * jScale);
                     break;
                 }
             }
 
             if (i === temp.length) {
-                list[j].count = blueConfig.maxBufferLength * k * 0.2 + (blueConfig.maxBufferLength - j * 6);
+                list[j].count = blueConfig.maxBufferLength * k * kScale + (blueConfig.maxBufferLength - j * jScale);
 
                 temp.push(list[j]);
             }

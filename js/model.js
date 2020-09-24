@@ -65,7 +65,7 @@ export function renderModel(canvasDom, Three) {
         // addHelper();
 
         //加载模型
-        loadGround(scene);
+        // loadGround(scene);
 
         //添加用户贴图
         addUser();
