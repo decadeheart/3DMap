@@ -13,6 +13,7 @@ var app = getApp();
  */
 function beaconUpdate() {
     wx.onBeaconUpdate((res) => {
+        app.isBeaconGot = true;
         let data = [];
         if (!res.beacons.length) return;
         for (let i = 0; i < res.beacons.length; i++) {

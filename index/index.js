@@ -8,6 +8,7 @@ Page({
     data: {
         dimensionImgUrl: ["../img/2D.png", "../img/3D.png"],
         dimension: 3,
+        isAllFloor: false,
         allFloorImgUrl: "../img/more.png",
         floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png", "../img/6F.png"],
         logoUrl: "../img/LOGO_500.png",
@@ -37,37 +38,47 @@ Page({
         if (app.isReady) {
             app.canvas = null;
             app.canvasSprite = null;
-            app.localization.nowBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
-            app.localization.lastBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
+            app.localization.nowBluePosition = { x: 0, y: 0, z: 0, floor: 2 };
+            app.localization.lastBluePosition = { x: 0, y: 0, z: 0, floor: 2 };
             app.map.isFloorLoaded = [false, false, false, false, false, false, false];
             app.spriteControl.curSprite = null;
             app.spriteControl.startSprite = null;
             app.spriteControl.endSprite = null;
             app.spriteControl.targetSprites = [];
             app.map.curFloor = 0;
+            app.isBeaconGot = false;
         }
 
         var that = this;
+        let tmpValue;
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         Object.defineProperty(app.map, "curFloor", {
             set: function (val) {
+                tmpValue = val;
                 that.setData({
                     currentFloor: val
                 })
-            }
-        })
-        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
-        Object.defineProperty(app.localization, "isOffset", {
-            set: function (val) {
-                if (val) {
-                    let text = "您已经偏移";
-                    tts(text);
-                    that.setData({
-                        navInformation: text,
-                    });
-                }
             },
-        });
+            get: function () {
+                return tmpValue;
+            },
+        })
+
+        //下面的函数后期如果使用，应添加get()函数
+
+        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改isOffset的值
+        // Object.defineProperty(app.localization, "isOffset", {
+        //     set: function (val) {
+        //         if (val) {
+        //             let text = "您已经偏移";
+        //             tts(text);
+        //             that.setData({
+        //                 navInformation: text,
+        //             });
+        //         }
+        //     },
+        // });
+
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -137,13 +148,19 @@ Page({
      * @description 显示所有楼层
      */
     displayAllFloor: util.throttle(function () {
-        main.displayAllFloor();
+        console.log("this.data.isAllFloor", this.data.isAllFloor)
+        main.displayAllFloor(this.data.isAllFloor);
+        let tmp = this.data.isAllFloor;
+        this.setData({
+            isAllFloor: !tmp,
+        });
     }, 300),
     /**
      * @description 页面点击楼层图片，切换楼层
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
+        console.log("1111111")
         let floor = 1 + e.currentTarget.dataset.floor;
         this.setData({
             currentFloor: floor,

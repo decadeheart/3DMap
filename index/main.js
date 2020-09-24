@@ -21,6 +21,7 @@ main.initMap = function (that) {
         .node()
         .exec((res) => {
             app.canvasSprite = res[0].node;
+            console.log("canvas", app.canvasSprite);
         });
     wx.createSelectorQuery()
         .select("#map")
@@ -38,9 +39,9 @@ main.initMap = function (that) {
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
 
-            // navRender();
             //打开步数监测
             accChange();
+            // if (!app.isBeaconGot) main.displayOneFloor(1);
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
              * @date 2020-07-31
@@ -74,15 +75,16 @@ main.initMap = function (that) {
                 util.changeScale(camera.position.z / 600, "user", userControl); //参数600为测试得到，不同模型参数需要重新测试
 
                 //直接改变位置到首个蓝牙点位置
-                if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0) {
+                if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0 && app.canvasSprite) {
+                    console.log("nowPoint.x", nowPoint.x)
                     needsUpdateBlueLocation = true;
                     userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.displayOneFloor(nowPoint.floor);
                 }
 
                 //匹配当前点的楼层是否在nodelist中，显示当前楼层
-                let floor = match2getFloor(nowPoint);
-                if (floor != null) main.displayOneFloor(floor);
+                // let floor = match2getFloor(nowPoint);
+                // if (floor != null) main.displayOneFloor(floor);
 
                 //如果是真实模式，非模拟导航，并且me.radian已经加载完毕
                 if (app.systemControl.realMode) {
@@ -169,13 +171,21 @@ main.initMap = function (that) {
 main.cameraExchange = function (index) {
     MODEL.cameraExchange(index);
 };
-main.displayAllFloor = function (onShow) {
-    MODEL.displayAllFloor(onShow);
+main.displayAllFloor = function (isAllFloor) {
+    if(!isAllFloor)
+        MODEL.displayAllFloor();
+    else
+    {
+        console.log("app.map.curFloor",app.map.curFloor)
+        MODEL.displayOneFloor(app.map.curFloor);
+    }
+        
     //为了提高加载性能，暂不使用该函数
     // SPRITE.loadAllTargetText(scene);
 };
 main.displayOneFloor = function (floor) {
-    if (floor == app.map.curFloor) return;
+    console.log("222222")
+    // if (floor == app.map.curFloor) return;
     MODEL.displayOneFloor(floor);
 };
 main.displayTwoFloor = (floor1, floor2) => {

@@ -13,6 +13,7 @@ App({
     THREE: null,
     canvas: null,
     canvasSprite: null,
+    isBeaconGot: false,
     beaconCoordinate: [],
     me: [],
     target: [],
@@ -80,8 +81,8 @@ App({
         time: 0,
     },
     localization: {
-        lastBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
-        nowBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
+        lastBluePosition: { x: 0, y: 0, z: 0, floor: 2 },
+        nowBluePosition: { x: 0, y: 0, z: 0, floor: 2 },
         isOffset: false,
         isWXReady: false,
         GPSOpen: 0,
