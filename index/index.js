@@ -8,8 +8,9 @@ Page({
     data: {
         dimensionImgUrl: ["../img/2D.png", "../img/3D.png"],
         dimension: 3,
+        isAllFloor: false,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png", "../img/6F.png"],
+        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png"],
         logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
@@ -32,10 +33,8 @@ Page({
         ],
         compassAngle: "",
         isAndroid: false,
-        isAllFloor: false
+        isAllFloor: false,
     },
-
-
     onLoad: function () {
         if (app.isReady) {
             app.canvas = null;
@@ -52,19 +51,20 @@ Page({
         }
 
         var that = this;
+        let tmpValue;
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         let tmpValue;
         Object.defineProperty(app.map, "curFloor", {
             set: function (val) {
                 tmpValue = val;
                 that.setData({
-                    currentFloor: val
-                })
+                    currentFloor: val,
+                });
             },
             get: function () {
                 return tmpValue;
             },
-        })
+        });
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         // Object.defineProperty(app.localization, "isOffset", {
         //     set: function (val) {
@@ -115,7 +115,7 @@ Page({
         });
         app.isReady = true;
     },
-    onReady:function(){
+    onReady: function () {
         // main.displayAllFloor(true);
     },
     /**
@@ -134,7 +134,6 @@ Page({
             });
         });
     },
-
     // 控件点击事件
     /**
      * @description 地图二维和三维视角切换
@@ -150,8 +149,9 @@ Page({
      * @description 显示所有楼层
      */
     displayAllFloor: util.throttle(function () {
+        // console.log("this.data.isAllFloor", this.data.isAllFloor)
+        main.displayAllFloor(this.data.isAllFloor);
         let tmp = this.data.isAllFloor;
-        main.displayAllFloor(tmp);
         this.setData({
             isAllFloor: !tmp,
         });
@@ -161,6 +161,7 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
+        console.log("1111111");
         let floor = 1 + e.currentTarget.dataset.floor;
         this.setData({
             currentFloor: floor,
@@ -211,7 +212,6 @@ Page({
         //     url: 'index'
         // })
     },
-
     /**
      * @description 点击搜索栏，页面跳转
      */
@@ -238,9 +238,7 @@ Page({
             },
         });
     },
-
     // 导航专区
-
     /**
      * @description 设置起点
      * @date 2020-07-20
@@ -399,9 +397,7 @@ Page({
         main.stopNav();
         main.backToMe();
     }, 300),
-
     // 手势事件
-
     touchTap: util.throttle(function (e) {
         if (!app.navigateFlag) {
             let tmp = main.selectObj(e.touches[0]);

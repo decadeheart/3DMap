@@ -31,7 +31,7 @@ export function loadModelByFloor(scene, floor) {
             );
         }
     });
-    SPRITE.loadTargetTextByFloor(scene, floor);
+    if (app.canvasSprite) SPRITE.loadTargetTextByFloor(scene, floor);
 }
 /**
  * @description 设置楼层

@@ -45,18 +45,27 @@ export function renderModel(canvasDom, Three) {
         camera.updateProjectionMatrix();
 
         //设置灯光，当前为白色环境光
-        var light = new THREE.AmbientLight(0xffffff);
+        // var light = new THREE.AmbientLight(0xffffff);
+        // scene.add(light);
+        // //添加方向光，可以使建筑物更有立体感
+        // light = new THREE.DirectionalLight(0xffffff, 0.5);
+        // light.position.set(0, 0, 1);
+        // scene.add(light);
+        let light = new THREE.AmbientLight(0xffffff);
+        light.position.set(100, 100, 200);
         scene.add(light);
-        //添加方向光，可以使建筑物更有立体感
+        // 方向光
         light = new THREE.DirectionalLight(0xffffff, 0.5);
         light.position.set(0, 0, 1);
         scene.add(light);
-
+        // light = new THREE.PointLight(0xFFFF00, 1, 400, 1);
+        // light.position.set(0, 0, 25);
+        // scene.add(light);
         //添加辅助工具
         // addHelper();
 
         //加载模型
-        loadGround(scene);
+        // loadGround(scene);
 
         //添加用户贴图
         addUser();
@@ -183,22 +192,20 @@ export function showSprite(sprite, point, type) {
         //当管状路径不为空时，需要清除路径
         if (!!app.pathControl.pathGroup) {
             scene.remove(app.pathControl.pathGroup);
-        }        
+        }
         sprite.position.set(point.x, point.y, point.z + 5);
         sprite.visible = true;
-
     } else {
         //当精灵为时，需要创建精灵贴图
         let map = app.map;
         let textureLoader = new THREE.TextureLoader();
-        
+
         //判断终点和起点并设置,用于计算，位置在前
         if (type == "start") {
             routeClass.startPoint = point;
         } else if (type == "end") {
             routeClass.endPoint = point;
         }
-
 
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
@@ -292,10 +299,10 @@ export function selectObj(index) {
  */
 export function displayAllFloor() {
     let floorArray = app.map.isFloorLoaded;
-    for (let i = 1; i <floorArray.length; i++) {
+    for (let i = 1; i < floorArray.length; i++) {
         if (!floorArray[i]) {
             loadModelByFloor(scene, i);
-        } 
+        }
     }
     scene.children.forEach(function (obj, i) {
         if (!!obj.name) {
@@ -320,11 +327,12 @@ export function displayAllFloor() {
  * @param {*} floor 楼层
  */
 export function displayOneFloor(floor) {
+    console.log("333333", scene);
     let map = app.map;
     if (typeof floor !== "number") {
         floor = parseInt(floor);
     }
-    if (floor == app.map.curFloor) return;
+    // if (floor == app.map.curFloor) return;
     if (!app.map.isFloorLoaded[floor]) {
         loadModelByFloor(scene, floor);
     }
