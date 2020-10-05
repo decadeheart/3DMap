@@ -21,7 +21,7 @@ function makeFontSprite(message) {
     let fontsize = 60;
     let fontColor = "#000000";
     //文字高度（只考虑一行）
-    let height = 128;
+    let height = 144;
     //获取文字长度作为宽度
     let width = context.measureText(message).width;
     //设置canvas宽高（调整大小后canvas内容被清除）
@@ -47,9 +47,9 @@ function makeFontSprite(message) {
     //这句为了防止warning
     sprite.material.map.minFilter = THREE.LinearFilter;
     //缩放比例
-    sprite.scale.set((map.fontSpriteScale * width) / height, map.fontSpriteScale, 1);
+    sprite.scale.set((map.fontSpriteScale * width) / height , map.fontSpriteScale, 1);
     sprite.initScale = {
-        x: (map.fontSpriteScale * width) / height,
+        x: (map.fontSpriteScale * width) / height ,
         y: map.fontSpriteScale,
         z: 1,
     };

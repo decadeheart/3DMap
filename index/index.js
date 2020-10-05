@@ -350,14 +350,20 @@ Page({
      * @description 模拟导航
      */
     simNavigate: util.throttle(function () {
-        app.systemControl.state = "navigating";
-        app.systemControl.realMode = false;
-        main.autoMove(app.resultParent);
+        let text="开始模拟导航";
+        tts(text);
         app.navigateFlag = 1;
         this.setData({
             navFlag: 3,
             infoFlag: 3,
         });
+        setTimeout(()=>{
+            app.systemControl.state = "navigating";
+            app.systemControl.realMode = false;
+            main.autoMove(app.resultParent);
+
+        },4000)
+
     }, 300),
     /**
      * @description 开始导航
