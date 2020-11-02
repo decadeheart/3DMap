@@ -8,15 +8,27 @@ let gravityNew = 0;
  * @description 检测步数变化
  */
 function accChange() {
-    wx.onAccelerometerChange((res) => {
-        oriValues[0] = res.x;
-        oriValues[1] = res.y;
-        oriValues[2] = res.z;
-        gravityNew = Math.sqrt(oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]);
-        detectorNewStep(gravityNew);
-    });
+    wx.startAccelerometer({
+        interval: 'ui',
+        success:()=>{
+            wx.onAccelerometerChange((res) => {
+                oriValues[0] = res.x;
+                oriValues[1] = res.y;
+                oriValues[2] = res.z;
+                gravityNew = Math.sqrt(oriValues[0] * oriValues[0] + oriValues[1] * oriValues[1] + oriValues[2] * oriValues[2]);
+                detectorNewStep(gravityNew);
+            });
+        }
+    })
 }
-
+function cancelAcc(){
+    wx.offAccelerometerChange();
+    wx.stopAccelerometer({
+        success:()=>{
+            //console.log("惯性导航关闭");
+        }
+    })
+}
 //上次传感器的值
 let gravityOld = 0;
 //上次波峰的时间
@@ -57,7 +69,6 @@ function detectorNewStep(values) {
                  * 3.连续记录了9步用户还在运动，之前的数据才有效
                  * */
                 timeOfLastStep = timeOfNow;
-
                 userControl.moveDetect();
             }
 
@@ -119,4 +130,4 @@ function detectorPeak(newValue, oldValue) {
     }
 }
 
-export default accChange;
+export {accChange,cancelAcc} ;

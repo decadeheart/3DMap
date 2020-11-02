@@ -21,6 +21,8 @@ export function autoMoving(path) {
         userControl.changePosition(path[0].x, path[0].y, null, "direction");
         return;
     }
+    let floor = path[0].z / app.map.layerHeight + 1;
+    MODEL.displayOneFloor(floor);
     var me = app.me;
     var camera = MODEL.getCamera();
     var controls = MODEL.getControl();
@@ -44,8 +46,8 @@ export function autoMoving(path) {
     let newT = { x: path[0].x, y: path[0].y, z: path[0].z };
     let newP = { x: path[0].x, y: path[0].y + 15, z: path[0].z + 15 };
     MODEL.animateCamera(camera.position, controls.target, newP, newT);
-    let floor = path[0].z / app.map.layerHeight + 1;
-    MODEL.displayOneFloor(floor);
+    
+
 
     /**
      * @description 在导航路径上图标向前移动

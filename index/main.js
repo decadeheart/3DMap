@@ -5,12 +5,12 @@ import navigate from "../js/astar";
 import { initData } from "../js/data";
 import { beaconUpdate, match2getFloor } from "../js/ibeacon";
 import gps from "../js/gps";
-import accChange from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { showOrientationText } from "../js/directionNotify";
 import userControl from "../js/user";
 import * as util from "../util/util";
+import {accChange,cancelAcc} from "../js/motionDetection";
 
 var app = getApp();
 var main = {};
@@ -39,8 +39,7 @@ main.initMap = function (that) {
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
 
-            //打开步数监测
-            accChange();
+
             // if (!app.isBeaconGot) main.displayOneFloor(1);
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
@@ -113,6 +112,8 @@ main.initMap = function (that) {
                     ) {
                         //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
                         if (systemControl.state === "navigating") {
+                             //打开步数监测
+                            accChange();
                             let [cur] = app.resultParent.filter((item) => {
                                 return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
                             });
@@ -121,6 +122,7 @@ main.initMap = function (that) {
                                 needsUpdateBlueLocation = true;
 
                                 userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                                cancelAcc();
                             }
                         } else {
                             needsUpdateBlueLocation = true;
