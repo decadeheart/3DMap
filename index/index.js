@@ -369,29 +369,23 @@ Page({
      * @description 开始导航
      */
     startNavigate: util.throttle(function () {
-        let text="开始导航";
-        tts(text);
         let self = this;
         self.setData({
             navInformation:"开始导航"
         });
-
         app.systemControl.realMode = true;
         app.systemControl.state = "navigating";
         app.navigateFlag = 2;
         if (self.startPointName != "我的位置") {
-            setTimeout(function(){
-                main.setStartMe();
-                let dis = main.navigateInit();
-
-                main.backToMe();
-                self.setData({
-                    navFlag: 3,
-                    infoFlag: 3,
-                    distanceInfo: dis,
-                    startPointName: "我的位置",
-                });
-            },4000)
+            main.setStartMe();
+            let dis = main.navigateInit();
+            main.backToMe();
+            self.setData({
+                navFlag: 3,
+                infoFlag: 3,
+                distanceInfo: dis,
+                startPointName: "我的位置",
+            });
         }
     }, 300),
     /**

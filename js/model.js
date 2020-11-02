@@ -247,7 +247,7 @@ function getNearPOIName(obj) {
         }
     }
     //超过最大距离时则认定为室外
-    if (util.dis3(list[k], obj) > 20) return "室外"; //参数100为测试得到，不同模型参数需要重新测试
+    if (util.dis3(list[k], obj) > 20) return "室外/不可达区域"; //参数100为测试得到，不同模型参数需要重新测试
     return list[k].name;
 }
 
@@ -551,7 +551,7 @@ export function backToMe() {
     //设置物体可见性
     displayOneFloor(floor);
 
-    // map.curFloor = floor;
+    map.curFloor = floor;
 
     camera.fov = 30;
     camera.updateProjectionMatrix();
