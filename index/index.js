@@ -10,12 +10,12 @@ Page({
         dimension: 3,
         isAllFloor: false,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png"],
+        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png","../img/6F.png"],
         logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
         startPointName: "我的位置",
-        endPointName: "华中科技大学",
+        endPointName: "终点",
         navInformation: "开始导航",
         currentPointName: "请点击地图选择位置",
         distanceInfo: "全程100米，大约耗时2分钟 ",
@@ -51,21 +51,20 @@ Page({
         }
 
         var that = this;
-        let tmpValue;
+        var tmpValue=0;
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
-        let tmpValue;
         Object.defineProperty(app.map, "curFloor", {
-            set: function (val) {
-                tmpValue = val;
+            get: function(){
+                return tmpValue;
+            },
+            set: function(val) {
+                console.log(val,tmpValue)
+                tmpValue= val;
                 that.setData({
                     currentFloor: val,
                 });
-            },
-            get: function () {
-                return tmpValue;
-            },
+            }
         });
-        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         // Object.defineProperty(app.localization, "isOffset", {
         //     set: function (val) {
         //         if (val) {
@@ -161,7 +160,7 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
-        console.log("1111111");
+        // console.log("1111111");
         let floor = 1 + e.currentTarget.dataset.floor;
         this.setData({
             currentFloor: floor,
@@ -207,6 +206,7 @@ Page({
         this.setData({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
+
         });
         // wx.redirectTo({
         //     url: 'index'
@@ -351,34 +351,47 @@ Page({
      * @description 模拟导航
      */
     simNavigate: util.throttle(function () {
-        app.systemControl.state = "navigating";
-        app.systemControl.realMode = false;
-        main.autoMove(app.resultParent);
+        let text="开始模拟导航";
+        tts(text);
         app.navigateFlag = 1;
         this.setData({
             navFlag: 3,
             infoFlag: 3,
         });
+        setTimeout(()=>{
+            app.systemControl.state = "navigating";
+            app.systemControl.realMode = false;
+            main.autoMove(app.resultParent);
+        },2000)
+        
     }, 300),
     /**
      * @description 开始导航
      */
     startNavigate: util.throttle(function () {
+        let text="开始导航";
+        tts(text);
         let self = this;
+        self.setData({
+            navInformation:"开始导航"
+        });
+
         app.systemControl.realMode = true;
         app.systemControl.state = "navigating";
         app.navigateFlag = 2;
         if (self.startPointName != "我的位置") {
-            main.setStartMe();
-            let dis = main.navigateInit();
+            setTimeout(function(){
+                main.setStartMe();
+                let dis = main.navigateInit();
 
-            main.backToMe();
-            self.setData({
-                navFlag: 3,
-                infoFlag: 3,
-                distanceInfo: dis,
-                startPointName: "我的位置",
-            });
+                main.backToMe();
+                self.setData({
+                    navFlag: 3,
+                    infoFlag: 3,
+                    distanceInfo: dis,
+                    startPointName: "我的位置",
+                });
+            },4000)
         }
     }, 300),
     /**

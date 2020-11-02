@@ -6,6 +6,7 @@ App({
         this.map.data_url = url + map + "/data/" + map + ".json";
         this.map.src_dir = `${url}${map}/`;
         this.map.img_dir = `${url}${map}/target_img/`;
+        
     },
     isReady: false, //当所有元素加载好之后修改为true，重新进入时通过该标志来取消原动画渲染线程并进行部分全局变量初始化
     threadId: 0, //渲染进程id，配合isReady使用
@@ -33,7 +34,7 @@ App({
         int_userHeight: 2,
         fontSpriteScale: 4,
         imgSpriteScale: 7,
-        float_mapProportion: 0.6, //** */
+        float_mapProportion: 0.3, //** */
         layerHeight: 15, //** */
         lineHeight: 1,
         bd_p1: { x: 114.417444, y: 30.519147 },

@@ -15,11 +15,14 @@ export const initData = new Promise((resolve, reject) => {
             dataPreProcess(res);
             DATA = res.data.target;
             resolve();
+
         },
         fail: (err) => {
             reject(err);
         },
     });
+    //从服务器获取ttsToken并添加到app.ttsToken
+    getTtsToken();
 });
 
 /**
@@ -110,4 +113,28 @@ export function getSearchData() {
         buildingRoomGroup.push(eachBuilding);
     });
     return [buildingList, buildingData, buildingRoomGroup];
+}
+
+/**
+ * @description 从服务器获取百度tts的Token
+ */
+
+function getTtsToken(){
+    let url="http://172.26.104.68:8080/getToken";
+    wx.request({
+        url: url,
+        data: {},
+        header: { "content-type": "application/json" },
+        method: "GET",
+        dataType: "json",
+        responseType: "text",
+        success: (res) => {
+            app.ttsToken=res;
+            resolve();
+
+        },
+        fail: (err) => {
+            reject(err);
+        },
+    });
 }

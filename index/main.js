@@ -5,7 +5,7 @@ import navigate from "../js/astar";
 import { initData } from "../js/data";
 import { beaconUpdate, match2getFloor } from "../js/ibeacon";
 import gps from "../js/gps";
-import accChange from "../js/motionDetection";
+import {accChange,cancelAcc} from "../js/motionDetection";
 import { autoMoving } from "../js/simNavigate";
 import * as TWEEN from "../util/tween.min"; //动画操作
 import { showOrientationText } from "../js/directionNotify";
@@ -21,7 +21,7 @@ main.initMap = function (that) {
         .node()
         .exec((res) => {
             app.canvasSprite = res[0].node;
-            console.log("canvas", app.canvasSprite);
+            // console.log("canvas", app.canvasSprite);
         });
     wx.createSelectorQuery()
         .select("#map")
@@ -39,8 +39,6 @@ main.initMap = function (that) {
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
 
-            //打开步数监测
-            accChange();
             // if (!app.isBeaconGot) main.displayOneFloor(1);
             /**
              * @description 新开的一个循环线程，检测导航状态时更新显示导航文字，检测蓝牙变化更新位置
@@ -67,7 +65,7 @@ main.initMap = function (that) {
                             navInformation: text,
                         });
                     }
-                }
+                } 
 
                 //手势缩放时调整文字和图标大小并按等级显示
                 util.changeScale(2200 / camera.position.z, "sprite", app.spriteControl); //参数2200为测试得到，不同模型参数需要重新测试
@@ -76,7 +74,7 @@ main.initMap = function (that) {
 
                 //直接改变位置到首个蓝牙点位置
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0 && app.canvasSprite) {
-                    console.log("nowPoint.x", nowPoint.x);
+                    // console.log("nowPoint.x", nowPoint.x);
                     needsUpdateBlueLocation = true;
                     userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.displayOneFloor(nowPoint.floor);
@@ -113,19 +111,21 @@ main.initMap = function (that) {
                     ) {
                         //如果是在真实模式的导航过程中，只能在resultPatent路线上的时候跳转
                         if (systemControl.state === "navigating") {
+                            //打开步数监测
+                            accChange();
                             let [cur] = app.resultParent.filter((item) => {
                                 return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
                             });
-                            console.log("cur", cur);
+                            // console.log("cur", cur);
                             if (cur) {
                                 needsUpdateBlueLocation = true;
-
                                 userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                             }
                         } else {
                             needsUpdateBlueLocation = true;
                             //如果不是导航过程当中，只要发生了变化就应该跳转
                             userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                            cancelAcc();
                         }
                     }
                     if (me.radian && needsUpdateBlueLocation) {
@@ -149,6 +149,7 @@ main.initMap = function (that) {
                 canvas.cancelAnimationFrame(app.threadId);
             }
             app.threadId = canvas.requestAnimationFrame(navRender);
+
         });
 
     /** 初始化授权 */
@@ -179,7 +180,6 @@ main.displayAllFloor = function (isAllFloor) {
     // SPRITE.loadAllTargetText(scene);
 };
 main.displayOneFloor = function (floor) {
-    console.log("222222");
     // if (floor == app.map.curFloor) return;
     MODEL.displayOneFloor(floor);
 };
