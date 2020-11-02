@@ -45,12 +45,6 @@ export function renderModel(canvasDom, Three) {
         camera.updateProjectionMatrix();
 
         //设置灯光，当前为白色环境光
-        // var light = new THREE.AmbientLight(0xffffff);
-        // scene.add(light);
-        // //添加方向光，可以使建筑物更有立体感
-        // light = new THREE.DirectionalLight(0xffffff, 0.5);
-        // light.position.set(0, 0, 1);
-        // scene.add(light);
         let light = new THREE.AmbientLight(0xffffff);
         light.position.set(100, 100, 200);
         scene.add(light);
@@ -58,14 +52,14 @@ export function renderModel(canvasDom, Three) {
         light = new THREE.DirectionalLight(0xffffff, 0.5);
         light.position.set(0, 0, 1);
         scene.add(light);
-        // light = new THREE.PointLight(0xFFFF00, 1, 400, 1);
-        // light.position.set(0, 0, 25);
+        light = new THREE.PointLight(0x00ff00, 1, 400, 1);
+        light.position.set(0, 0, 25);
         // scene.add(light);
         //添加辅助工具
         // addHelper();
 
         //加载模型
-        // loadGround(scene);
+        loadGround(scene);
 
         //添加用户贴图
         addUser();
@@ -195,7 +189,6 @@ export function showSprite(sprite, point, type) {
         }
         sprite.position.set(point.x, point.y, point.z + 5);
         sprite.visible = true;
-
     } else {
         //当精灵为时，需要创建精灵贴图
         let map = app.map;
@@ -207,7 +200,6 @@ export function showSprite(sprite, point, type) {
         } else if (type == "end") {
             routeClass.endPoint = point;
         }
-
 
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
@@ -255,7 +247,7 @@ function getNearPOIName(obj) {
         }
     }
     //超过最大距离时则认定为室外
-    if (util.dis3(list[k], obj) > 100) return "室外"; //参数100为测试得到，不同模型参数需要重新测试
+    if (util.dis3(list[k], obj) > 20) return "室外/不可达区域"; //参数100为测试得到，不同模型参数需要重新测试
     return list[k].name;
 }
 
@@ -329,7 +321,7 @@ export function displayAllFloor() {
  * @param {*} floor 楼层
  */
 export function displayOneFloor(floor) {
-    console.log("333333", scene)
+    // console.log("333333", scene);
     let map = app.map;
     if (typeof floor !== "number") {
         floor = parseInt(floor);

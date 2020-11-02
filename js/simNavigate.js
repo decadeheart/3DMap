@@ -1,7 +1,6 @@
 import * as TWEEN from "../util/tween.min"; //动画操作
 import * as MODEL from "../js/model";
 import userControl from "./user"; //用户贴图
-import * as SPRITE from "./sprite";
 import * as util from "../util/util";
 
 var app = getApp();
@@ -26,6 +25,9 @@ export function autoMoving(path) {
     var me = app.me;
     var camera = MODEL.getCamera();
     var controls = MODEL.getControl();
+
+    let floor = path[0].z / app.map.layerHeight + 1;
+    MODEL.displayOneFloor(floor);
 
     let THREE = app.THREE;
     /** 首先从我的当前位置移动到导航路径的起点 */
@@ -75,7 +77,9 @@ export function autoMoving(path) {
         }
         if (path[i].z - path[i - 1].z != 0) {
             let floor = path[i].z / app.map.layerHeight + 1;
+            
             MODEL.displayOneFloor(floor);
+            // console.log("curFloor:",app.map.curFloor,floor)
         }
 
         let newT = { x: path[i].x, y: path[i].y, z: path[i].z + 5 };

@@ -21,7 +21,7 @@ main.initMap = function (that) {
         .node()
         .exec((res) => {
             app.canvasSprite = res[0].node;
-            console.log("canvas", app.canvasSprite);
+            // console.log("canvas", app.canvasSprite);
         });
     wx.createSelectorQuery()
         .select("#map")
@@ -38,7 +38,6 @@ main.initMap = function (that) {
             let renderer = MODEL.getRenderer();
             let scene = MODEL.getScene();
             let camera = MODEL.getCamera();
-
 
             // if (!app.isBeaconGot) main.displayOneFloor(1);
             /**
@@ -66,7 +65,7 @@ main.initMap = function (that) {
                             navInformation: text,
                         });
                     }
-                }
+                } 
 
                 //手势缩放时调整文字和图标大小并按等级显示
                 util.changeScale(2200 / camera.position.z, "sprite", app.spriteControl); //参数2200为测试得到，不同模型参数需要重新测试
@@ -75,7 +74,7 @@ main.initMap = function (that) {
 
                 //直接改变位置到首个蓝牙点位置
                 if (lastPoint.x == 0 && lastPoint.y == 0 && lastPoint.z == 0 && nowPoint.x != 0 && app.canvasSprite) {
-                    console.log("nowPoint.x", nowPoint.x)
+                    // console.log("nowPoint.x", nowPoint.x);
                     needsUpdateBlueLocation = true;
                     userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "direction");
                     main.displayOneFloor(nowPoint.floor);
@@ -117,10 +116,9 @@ main.initMap = function (that) {
                             let [cur] = app.resultParent.filter((item) => {
                                 return nowPoint.x == item.x && nowPoint.y == item.y && nowPoint.floor == item.floor;
                             });
-                            console.log("cur", cur);
+                            // console.log("cur", cur);
                             if (cur) {
                                 needsUpdateBlueLocation = true;
-
                                 userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
                                 cancelAcc();
                             }
@@ -128,6 +126,7 @@ main.initMap = function (that) {
                             needsUpdateBlueLocation = true;
                             //如果不是导航过程当中，只要发生了变化就应该跳转
                             userControl.changePosition(nowPoint.x, nowPoint.y, nowPoint.z, "animation");
+                            cancelAcc();
                         }
                     }
                     if (me.radian && needsUpdateBlueLocation) {
@@ -139,7 +138,6 @@ main.initMap = function (that) {
                         lastPoint.y = nowPoint.y;
                         lastPoint.z = nowPoint.z;
                         lastPoint.floor = nowPoint.floor;
-
                     }
                 }
                 TWEEN.update();
@@ -152,6 +150,7 @@ main.initMap = function (that) {
                 canvas.cancelAnimationFrame(app.threadId);
             }
             app.threadId = canvas.requestAnimationFrame(navRender);
+
         });
 
     /** 初始化授权 */
@@ -174,19 +173,14 @@ main.cameraExchange = function (index) {
     MODEL.cameraExchange(index);
 };
 main.displayAllFloor = function (isAllFloor) {
-    if(!isAllFloor)
-        MODEL.displayAllFloor();
-    else
-    {
-        console.log("app.map.curFloor",app.map.curFloor)
+    if (!isAllFloor) MODEL.displayAllFloor();
+    else {
         MODEL.displayOneFloor(app.map.curFloor);
     }
-        
     //为了提高加载性能，暂不使用该函数
     // SPRITE.loadAllTargetText(scene);
 };
 main.displayOneFloor = function (floor) {
-    console.log("222222")
     // if (floor == app.map.curFloor) return;
     MODEL.displayOneFloor(floor);
 };

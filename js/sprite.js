@@ -13,7 +13,7 @@ function makeFontSprite(message) {
     let THREE = app.THREE;
     //获取canvas上下文
     let canvas = app.canvasSprite;
-    console.log("canvas0", canvas);
+    // console.log("canvas0", canvas);
     
     let context = canvas.getContext("2d");
     //字体类型、大小、颜色
