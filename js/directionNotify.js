@@ -106,7 +106,6 @@ export function showOrientationText() {
     if (preNearestNode === nearestNode) {
         return;
     }
-
     preNearestNode = nearestNode;
     let index;
     let currtext;
