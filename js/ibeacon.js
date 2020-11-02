@@ -2,13 +2,13 @@ import * as util from "../util/util";
 
 var blueConfig = {
     blueConfig: [],
-    maxBufferLength: 5,/**/
+    maxBufferLength: 8,/**/
     minValidRssi: -90,
     beaconInfo: [],
 };
 //算法中k j 权重调整
-var kScale=1;/**/
-var jScale=2;/**/
+var kScale=0.1;
+var jScale=20;
 var app = getApp();
 /**
  * @description 监听ibeacon更新状态

@@ -10,7 +10,7 @@ Page({
         dimension: 3,
         isAllFloor: false,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png","../img/6F.png"],
+        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png"],
         logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,

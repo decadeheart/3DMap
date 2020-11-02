@@ -26,9 +26,6 @@ export function autoMoving(path) {
     var camera = MODEL.getCamera();
     var controls = MODEL.getControl();
 
-    let floor = path[0].z / app.map.layerHeight + 1;
-    MODEL.displayOneFloor(floor);
-
     let THREE = app.THREE;
     /** 首先从我的当前位置移动到导航路径的起点 */
 
