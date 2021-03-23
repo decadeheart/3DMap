@@ -18,10 +18,25 @@ export function loadModelByFloor(scene, floor) {
     building.forEach(function (building) {
         app.map.isFloorLoaded[floor] = true;
         if (floor <= building.layer_nums) {
+            // loader.load(
+            //     map.src_dir + "data/" + map.map_id + "_" + building.building_id + "_" + floor + ".glb",
+            //     function (glb) {
+            //         //添加建筑物到场景里
+            //         let building = glb.scene;
+            //         scene.add(building);
+            //         // 设置物体参数
+            //         building.name = building.building_id + "_" + floor + "_" + building.name;
+            //         setFloor(building, floor);
+            //     }
+            // );
+            const before = Date.now();
             loader.load(
-                map.src_dir + "data/" + map.map_id + "_" + building.building_id + "_" + floor + ".glb",
+                map.src_dir + "data/changsha_out.glb",
                 function (glb) {
                     //添加建筑物到场景里
+                    console.log('glb',glb)
+                    const after = Date.now();
+                    console.log('time-cost:',after - before);
                     let building = glb.scene;
                     scene.add(building);
                     // 设置物体参数

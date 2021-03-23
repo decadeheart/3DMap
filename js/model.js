@@ -293,7 +293,12 @@ export function selectObj(index) {
  */
 export function displayAllFloor() {
     let floorArray = app.map.isFloorLoaded;
-    for (let i = 1; i < floorArray.length; i++) {
+    // for (let i = 1; i < floorArray.length; i++) {
+    //     if (!floorArray[i]) {
+    //         loadModelByFloor(scene, i);
+    //     }
+    // }
+    for (let i = 1; i < 2; i++) {
         if (!floorArray[i]) {
             loadModelByFloor(scene, i);
         }
