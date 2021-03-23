@@ -65,7 +65,7 @@ export function renderModel(canvasDom, Three) {
         // addHelper();
 
         //加载模型
-        // loadGround(scene);
+        loadGround(scene);
 
         //添加用户贴图
         addUser();
@@ -328,43 +328,43 @@ export function displayAllFloor() {
  * @export
  * @param {*} floor 楼层
  */
-export function displayOneFloor(floor) {
-    console.log("333333", scene)
-    let map = app.map;
-    if (typeof floor !== "number") {
-        floor = parseInt(floor);
-    }
-    // if (floor == app.map.curFloor) return;
-    if (!app.map.isFloorLoaded[floor]) {
-        loadModelByFloor(scene, floor);
-    }
-    scene.children.forEach(function (obj) {
-        if (!!obj.name) {
-            setVisible(obj);
-        }
-    });
-    /**
-     * @description 设置物体是否可见
-     * @param {*} obj 物体
-     * @returns
-     */
-    function setVisible(obj) {
-        parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
-        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
-        if (obj.name.indexOf("outside") !== -1) {
-            obj.visible = true;
-            return;
-        } else {
-            obj.children.forEach(function (child) {
-                setVisible(child);
-            });
-        }
-        if (obj.name === "user" || obj.name === "sprite" + floor) {
-            obj.visible = true;
-        }
-    }
-    map.curFloor = floor;
-}
+export function displayOneFloor(floor) {}
+//     // console.log("333333", scene)
+//     let map = app.map;
+//     if (typeof floor !== "number") {
+//         floor = parseInt(floor);
+//     }
+//     // if (floor == app.map.curFloor) return;
+//     if (!app.map.isFloorLoaded[floor]) {
+//         loadModelByFloor(scene, floor);
+//     }
+//     scene.children.forEach(function (obj) {
+//         if (!!obj.name) {
+//             setVisible(obj);
+//         }
+//     });
+//     /**
+//      * @description 设置物体是否可见
+//      * @param {*} obj 物体
+//      * @returns
+//      */
+//     function setVisible(obj) {
+//         parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
+//         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
+//         if (obj.name.indexOf("outside") !== -1) {
+//             obj.visible = true;
+//             return;
+//         } else {
+//             obj.children.forEach(function (child) {
+//                 setVisible(child);
+//             });
+//         }
+//         if (obj.name === "user" || obj.name === "sprite" + floor) {
+//             obj.visible = true;
+//         }
+//     }
+//     map.curFloor = floor;
+// }
 /**
  * @description 显示指定的两个楼层
  * @export

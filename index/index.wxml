@@ -44,7 +44,7 @@
 	<view class="floor-container">
 		<view class="floor-space"></view>
 
-		<image src="{{ dimensionImgUrl[dimension - 2] }}" class="floor-item" bindtap="changeDimension" mode="aspectFit"></image>
+		<image src="{{ dimensionImgUrl[dimension - 2] }}" class="floor-item" bindtap="changeDimension" mode="aspectFit" webp="{{ true }}"></image>
 
 		<image src="{{ allFloorImgUrl }}" class="floor-item" bindtap="displayAllFloor"></image>
 

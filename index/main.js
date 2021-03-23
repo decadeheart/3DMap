@@ -1,4 +1,4 @@
-import { createScopedThreejs } from "../util/three";
+import { createScopedThreejs } from "../util/three.js";
 import * as MODEL from "../js/model";
 import * as SPRITE from "../js/sprite";
 import navigate from "../js/astar";
@@ -172,19 +172,18 @@ main.cameraExchange = function (index) {
     MODEL.cameraExchange(index);
 };
 main.displayAllFloor = function (isAllFloor) {
-    if(!isAllFloor)
+    if (!isAllFloor)
         MODEL.displayAllFloor();
-    else
-    {
-        console.log("app.map.curFloor",app.map.curFloor)
+    else {
+        console.log("app.map.curFloor", app.map.curFloor)
         MODEL.displayOneFloor(app.map.curFloor);
     }
-        
+
     //为了提高加载性能，暂不使用该函数
     // SPRITE.loadAllTargetText(scene);
 };
 main.displayOneFloor = function (floor) {
-    console.log("222222")
+    // console.log("222222")
     // if (floor == app.map.curFloor) return;
     MODEL.displayOneFloor(floor);
 };
