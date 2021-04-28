@@ -7,8 +7,8 @@ var blueConfig = {
     beaconInfo: [],
 };
 //算法中k j 权重调整
-var kScale=0.1;/**/
-var jScale=20;/**/
+var kScale=0.1;
+var jScale=20;
 var app = getApp();
 /**
  * @description 监听ibeacon更新状态

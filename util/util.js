@@ -91,6 +91,12 @@ export function CalculateNodeDis(node1, node2) {
     let b = node1.y - node2.y;
     let c = node1.z - node2.z;
     let d = Math.sqrt(a * a + b * b + c * c);
+    if(node1.floor!==node2.floor){
+        //-1表示楼梯，1表示电梯
+        if(node1.priority===-1||node2.priority===-1){
+            d = d*10;
+        }
+    }
     return d;
 }
 

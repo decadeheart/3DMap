@@ -38,13 +38,13 @@ function getDirectionText(index) {
                 while (i + 1 < resultParent.length && resultParent[i + 1].floor !== resultParent[i].floor) {
                     i = i + 1;
                 }
-                text = "从电梯到达" + resultParent[i].floor + "楼";
+                text = "从电梯、楼梯到达" + resultParent[i].floor + "楼";
             } else if (resultParent[index + 1].floor - resultParent[index].floor > 0) {
                 let i = index;
                 while (i + 1 < resultParent.length && resultParent[i + 1].floor !== resultParent[i].floor) {
                     i = i + 1;
                 }
-                text = "从电梯到达" + resultParent[i].floor + "楼";
+                text = "从电梯、楼梯到达" + resultParent[i].floor + "楼";
             } else {
                 text = "直行"; //刚上来
             }
@@ -58,9 +58,9 @@ function getDirectionText(index) {
             i = i + 1;
         }
         if (resultParent[i].floor > resultParent[index].floor) {
-            text = "从电梯/楼梯到达" + resultParent[i].floor + "楼";
+            text = "从电梯、楼梯到达" + resultParent[i].floor + "楼";
         } else if (resultParent[i].floor < resultParent[index].floor) {
-            text = "从电梯/楼梯到达" + resultParent[i].floor + "楼";
+            text = "从电梯、楼梯到达" + resultParent[i].floor + "楼";
         } else {
             text = "直行";
         }
@@ -106,7 +106,6 @@ export function showOrientationText() {
     if (preNearestNode === nearestNode) {
         return;
     }
-
     preNearestNode = nearestNode;
     let index;
     let currtext;

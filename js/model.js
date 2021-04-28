@@ -45,12 +45,6 @@ export function renderModel(canvasDom, Three) {
         camera.updateProjectionMatrix();
 
         //设置灯光，当前为白色环境光
-        // var light = new THREE.AmbientLight(0xffffff);
-        // scene.add(light);
-        // //添加方向光，可以使建筑物更有立体感
-        // light = new THREE.DirectionalLight(0xffffff, 0.5);
-        // light.position.set(0, 0, 1);
-        // scene.add(light);
         let light = new THREE.AmbientLight(0xffffff);
         light.position.set(100, 100, 200);
         scene.add(light);
@@ -58,14 +52,14 @@ export function renderModel(canvasDom, Three) {
         light = new THREE.DirectionalLight(0xffffff, 0.5);
         light.position.set(0, 0, 1);
         scene.add(light);
-        // light = new THREE.PointLight(0xFFFF00, 1, 400, 1);
-        // light.position.set(0, 0, 25);
+        light = new THREE.PointLight(0x00ff00, 1, 400, 1);
+        light.position.set(0, 0, 25);
         // scene.add(light);
         //添加辅助工具
         // addHelper();
 
         //加载模型
-        loadGround(scene);
+        // loadGround(scene);
 
         //添加用户贴图
         addUser();
@@ -195,7 +189,6 @@ export function showSprite(sprite, point, type) {
         }
         sprite.position.set(point.x, point.y, point.z + 5);
         sprite.visible = true;
-
     } else {
         //当精灵为时，需要创建精灵贴图
         let map = app.map;
@@ -207,7 +200,6 @@ export function showSprite(sprite, point, type) {
         } else if (type == "end") {
             routeClass.endPoint = point;
         }
-
 
         textureLoader.load("../img/" + type + ".png", function (texture) {
             let material = new THREE.SpriteMaterial({
@@ -255,7 +247,7 @@ function getNearPOIName(obj) {
         }
     }
     //超过最大距离时则认定为室外
-    if (util.dis3(list[k], obj) > 100) return "室外"; //参数100为测试得到，不同模型参数需要重新测试
+    if (util.dis3(list[k], obj) > 20) return "室外/不可达区域"; //参数100为测试得到，不同模型参数需要重新测试
     return list[k].name;
 }
 
@@ -301,7 +293,12 @@ export function selectObj(index) {
  */
 export function displayAllFloor() {
     let floorArray = app.map.isFloorLoaded;
-    for (let i = 1; i < floorArray.length; i++) {
+    // for (let i = 1; i < floorArray.length; i++) {
+    //     if (!floorArray[i]) {
+    //         loadModelByFloor(scene, i);
+    //     }
+    // }
+    for (let i = 1; i < 2; i++) {
         if (!floorArray[i]) {
             loadModelByFloor(scene, i);
         }
@@ -328,43 +325,44 @@ export function displayAllFloor() {
  * @export
  * @param {*} floor 楼层
  */
-export function displayOneFloor(floor) {}
-//     // console.log("333333", scene)
-//     let map = app.map;
-//     if (typeof floor !== "number") {
-//         floor = parseInt(floor);
-//     }
-//     // if (floor == app.map.curFloor) return;
-//     if (!app.map.isFloorLoaded[floor]) {
-//         loadModelByFloor(scene, floor);
-//     }
-//     scene.children.forEach(function (obj) {
-//         if (!!obj.name) {
-//             setVisible(obj);
-//         }
-//     });
-//     /**
-//      * @description 设置物体是否可见
-//      * @param {*} obj 物体
-//      * @returns
-//      */
-//     function setVisible(obj) {
-//         parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
-//         obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
-//         if (obj.name.indexOf("outside") !== -1) {
-//             obj.visible = true;
-//             return;
-//         } else {
-//             obj.children.forEach(function (child) {
-//                 setVisible(child);
-//             });
-//         }
-//         if (obj.name === "user" || obj.name === "sprite" + floor) {
-//             obj.visible = true;
-//         }
-//     }
-//     map.curFloor = floor;
-// }
+// export function displayOneFloor(floor) { }
+export function displayOneFloor(floor) {
+    // console.log("333333", scene);
+    let map = app.map;
+    if (typeof floor !== "number") {
+        floor = parseInt(floor);
+    }
+    // if (floor == app.map.curFloor) return;
+    if (!app.map.isFloorLoaded[floor]) {
+        loadModelByFloor(scene, floor);
+    }
+    scene.children.forEach(function (obj) {
+        if (!!obj.name) {
+            setVisible(obj);
+        }
+    });
+    /**
+     * @description 设置物体是否可见
+     * @param {*} obj 物体
+     * @returns
+     */
+    function setVisible(obj) {
+        parseInt(obj.floor) === floor ? (obj.visible = true) : (obj.visible = false);
+        obj.name === "path" || obj.name === "text" ? (obj.visible = true) : null;
+        if (obj.name.indexOf("outside") !== -1) {
+            obj.visible = true;
+            return;
+        } else {
+            obj.children.forEach(function (child) {
+                setVisible(child);
+            });
+        }
+        if (obj.name === "user" || obj.name === "sprite" + floor) {
+            obj.visible = true;
+        }
+    }
+    map.curFloor = floor;
+}
 /**
  * @description 显示指定的两个楼层
  * @export

@@ -10,12 +10,12 @@ Page({
         dimension: 3,
         isAllFloor: false,
         allFloorImgUrl: "../img/more.png",
-        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png", "../img/5F.png"],
+        floorImgUrl: ["../img/1F.png", "../img/2F.png", "../img/3F.png", "../img/4F.png"],
         logoUrl: "../img/LOGO_500.png",
         // 1 显示搜索框 2 显示起点终点 3 显示导航路线提示
         navFlag: 1,
         startPointName: "我的位置",
-        endPointName: "华中科技大学",
+        endPointName: "终点",
         navInformation: "开始导航",
         currentPointName: "请点击地图选择位置",
         distanceInfo: "全程100米，大约耗时2分钟 ",
@@ -33,13 +33,14 @@ Page({
         ],
         compassAngle: "",
         isAndroid: false,
+        isAllFloor: false,
     },
     onLoad: function () {
         if (app.isReady) {
             app.canvas = null;
             app.canvasSprite = null;
-            app.localization.nowBluePosition = { x: 0, y: 0, z: 0, floor: 2 };
-            app.localization.lastBluePosition = { x: 0, y: 0, z: 0, floor: 2 };
+            app.localization.nowBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
+            app.localization.lastBluePosition = { x: 0, y: 0, z: 0, floor: 1 };
             app.map.isFloorLoaded = [false, false, false, false, false, false, false];
             app.spriteControl.curSprite = null;
             app.spriteControl.startSprite = null;
@@ -50,23 +51,20 @@ Page({
         }
 
         var that = this;
-        let tmpValue;
+        var tmpValue=0;
         //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改currentFloor的值
         Object.defineProperty(app.map, "curFloor", {
-            set: function (val) {
-                tmpValue = val;
-                that.setData({
-                    currentFloor: val
-                })
-            },
-            get: function () {
+            get: function(){
                 return tmpValue;
             },
-        })
-
-        //下面的函数后期如果使用，应添加get()函数
-
-        //使用观察者模式，检测app.map.curFloor值发生改变时，动态修改isOffset的值
+            set: function(val) {
+                console.log(val,tmpValue)
+                tmpValue= val;
+                that.setData({
+                    currentFloor: val,
+                });
+            }
+        });
         // Object.defineProperty(app.localization, "isOffset", {
         //     set: function (val) {
         //         if (val) {
@@ -78,7 +76,6 @@ Page({
         //         }
         //     },
         // });
-
         // 最先应该获取设备的型号，也很快
         wx.getSystemInfo({
             success: function (res) {
@@ -117,6 +114,9 @@ Page({
         });
         app.isReady = true;
     },
+    onReady: function () {
+        // main.displayAllFloor(true);
+    },
     /**
      * @description 弹窗事件，用于提醒用户打开蓝牙
      * @date 2020-07-13
@@ -148,7 +148,7 @@ Page({
      * @description 显示所有楼层
      */
     displayAllFloor: util.throttle(function () {
-        console.log("this.data.isAllFloor", this.data.isAllFloor)
+        // console.log("this.data.isAllFloor", this.data.isAllFloor)
         main.displayAllFloor(this.data.isAllFloor);
         let tmp = this.data.isAllFloor;
         this.setData({
@@ -160,7 +160,7 @@ Page({
      * @param {*} e wxml的参数通过e获取
      */
     displayOneFloor: util.throttle(function (e) {
-        console.log("1111111")
+        // console.log("1111111");
         let floor = 1 + e.currentTarget.dataset.floor;
         this.setData({
             currentFloor: floor,
@@ -206,6 +206,7 @@ Page({
         this.setData({
             navFlag: this.data.navFlag == 3 ? 1 : Number(this.data.navFlag) + 1,
             infoFlag: this.data.infoFlag == 3 ? 1 : Number(this.data.infoFlag) + 1,
+
         });
         // wx.redirectTo({
         //     url: 'index'
@@ -350,27 +351,34 @@ Page({
      * @description 模拟导航
      */
     simNavigate: util.throttle(function () {
-        app.systemControl.state = "navigating";
-        app.systemControl.realMode = false;
-        main.autoMove(app.resultParent);
+        let text="开始模拟导航";
+        tts(text);
         app.navigateFlag = 1;
         this.setData({
             navFlag: 3,
             infoFlag: 3,
         });
+        setTimeout(()=>{
+            app.systemControl.state = "navigating";
+            app.systemControl.realMode = false;
+            main.autoMove(app.resultParent);
+        },2000)
+        
     }, 300),
     /**
      * @description 开始导航
      */
     startNavigate: util.throttle(function () {
         let self = this;
+        self.setData({
+            navInformation:"开始导航"
+        });
         app.systemControl.realMode = true;
         app.systemControl.state = "navigating";
         app.navigateFlag = 2;
         if (self.startPointName != "我的位置") {
             main.setStartMe();
             let dis = main.navigateInit();
-
             main.backToMe();
             self.setData({
                 navFlag: 3,
@@ -412,7 +420,7 @@ Page({
             ...e,
             type: "touchstart",
         });
-        this.androidTap(e);
+        // this.androidTap(e);
     },
     androidTap: util.throttle(function (e) {
         if (this.data.isAndroid) {

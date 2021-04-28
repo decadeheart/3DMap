@@ -4,7 +4,7 @@
         "mp-halfScreenDialog": "weui-miniprogram/half-screen-dialog/half-screen-dialog",
         "mp-searchbar": "weui-miniprogram/searchbar/searchbar"
     },
-    "navigationBarTitleText": "江夏区政府欢迎您",
+    "navigationBarTitleText": "江夏区市民之家欢迎您", 
     "disableScroll": true,
     "backgroundTextStyle": "dark",
     "enablePullDownRefresh": false,

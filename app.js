@@ -6,6 +6,7 @@ App({
         this.map.data_url = url + map + "/data/" + map + ".json";
         this.map.src_dir = `${url}${map}/`;
         this.map.img_dir = `${url}${map}/target_img/`;
+        
     },
     isReady: false, //当所有元素加载好之后修改为true，重新进入时通过该标志来取消原动画渲染线程并进行部分全局变量初始化
     threadId: 0, //渲染进程id，配合isReady使用
@@ -24,31 +25,31 @@ App({
         stepCount: 0,
         preStep: 0,
         curFloor: 0,
-        isFloorLoaded: [false, false, false, false, false, false],/** */
-        map_id: "jxsm",/** */
-        map_name: "江夏市民之家",/** */
+        isFloorLoaded: [false, false, false, false, false, false],
+        map_id: "jxsm",
+        map_name: "江夏市民之家",
         data_url: "",
         src_dir: "",
         img_dir: "",
         int_userHeight: 2,
         fontSpriteScale: 4,
         imgSpriteScale: 7,
-        float_mapProportion: 1,/** */
-        layerHeight: 30,/** */
+        float_mapProportion: 1, //** */
+        layerHeight: 30, //** */
         lineHeight: 1,
-        bd_p1: { x: 114.417444, y: 30.519147 },/** */
-        bd_p2: { x: 114.428314, y: 30.512629 },/** */
-        coor_p1: { x: -250, y: 87 },/** */
-        coor_p2: { x: 140, y: -88 },/** */
+        bd_p1: { x: 114.417444, y: 30.519147 },
+        bd_p2: { x: 114.428314, y: 30.512629 },
+        coor_p1: { x: -250, y: 87 },
+        coor_p2: { x: 140, y: -88 },
     },
     building: [
+        //** */
         {
             building_id: "1",
             building_name: "主楼",
             layer_nums: 5,
             layer_height: 30,
         },
-    
     ],
     systemControl: {
         state: "normal",
@@ -76,8 +77,8 @@ App({
         time: 0,
     },
     localization: {
-        lastBluePosition: { x: 0, y: 0, z: 0, floor: 2 },
-        nowBluePosition: { x: 0, y: 0, z: 0, floor: 2 },
+        lastBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
+        nowBluePosition: { x: 0, y: 0, z: 0, floor: 1 },
         isOffset: false,
         isWXReady: false,
         GPSOpen: 0,

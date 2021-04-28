@@ -13,7 +13,7 @@ function makeFontSprite(message) {
     let THREE = app.THREE;
     //获取canvas上下文
     let canvas = app.canvasSprite;
-    console.log("canvas0", canvas);
+    // console.log("canvas0", canvas);
     
     let context = canvas.getContext("2d");
     //字体类型、大小、颜色
@@ -21,9 +21,10 @@ function makeFontSprite(message) {
     let fontsize = 60;
     let fontColor = "#000000";
     //文字高度（只考虑一行）
-    let height = 128;
+    let height = 144;
     //获取文字长度作为宽度
-    let width = context.measureText(message).width;
+    let width = context.measureText(message).width*6;
+    // console.log("width", width);
     //设置canvas宽高（调整大小后canvas内容被清除）
     canvas.width = width;
     canvas.height = height;
@@ -47,9 +48,9 @@ function makeFontSprite(message) {
     //这句为了防止warning
     sprite.material.map.minFilter = THREE.LinearFilter;
     //缩放比例
-    sprite.scale.set((map.fontSpriteScale * width) / height, map.fontSpriteScale, 1);
+    sprite.scale.set((map.fontSpriteScale * width) / height , map.fontSpriteScale, 1);
     sprite.initScale = {
-        x: (map.fontSpriteScale * width) / height,
+        x: (map.fontSpriteScale * width) / height ,
         y: map.fontSpriteScale,
         z: 1,
     };
