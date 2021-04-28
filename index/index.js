@@ -420,7 +420,7 @@ Page({
             ...e,
             type: "touchstart",
         });
-        // this.androidTap(e);
+        this.androidTap(e);
     },
     androidTap: util.throttle(function (e) {
         if (this.data.isAndroid) {
